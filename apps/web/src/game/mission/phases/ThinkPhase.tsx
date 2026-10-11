@@ -39,7 +39,11 @@ export function ThinkPhase({ mission, exits, firstVote, confidence, onSeal, onCo
     if (sealed) afterRef.current?.querySelector<HTMLElement>('button')?.focus();
   }, [sealed]);
 
-  const note = !unlocked ? 'The seal unlocks when the breathing ring finishes.' : !picked ? 'Pick an exit first.' : 'Tap how sure you are. That tap seals your vote.';
+  const note = !unlocked
+    ? 'The seal unlocks when the breathing ring finishes.'
+    : !picked
+      ? 'Pick an exit first.'
+      : 'Tap how sure you are. That tap seals your vote.';
 
   return (
     <div className="msn-phase msn-think">

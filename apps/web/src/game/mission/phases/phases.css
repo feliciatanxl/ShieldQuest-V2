@@ -328,14 +328,16 @@
   padding: 0.5rem 0.75rem;
   border-radius: var(--radius-sm);
   background: rgba(45, 212, 191, 0.14);
+  background: color-mix(in srgb, var(--msn-g-shieldfin, var(--teal)) 14%, transparent);
   font-size: 0.92rem;
   overflow: hidden;
 }
 .msn-freeze__nudge {
   background: rgba(245, 158, 11, 0.16);
+  background: color-mix(in srgb, var(--msn-g-cluepaw, var(--amber)) 16%, transparent);
 }
 .msn-freeze__nudge .msn-paw {
-  color: #f59e0b;
+  color: var(--msn-g-cluepaw, var(--amber));
   flex: none;
 }
 .msn-freeze__manta {
@@ -391,17 +393,18 @@
   color: var(--text-2);
   font-size: 0.82rem;
 }
+/* Guardian colours come from the shared GUARDIANS data via --msn-g-<id> (GUARDIAN_COLOR_VARS on the phase root). */
 .msn-guardians__btn[data-guardian='cluepaw'] > svg {
-  color: #f59e0b;
+  color: var(--msn-g-cluepaw, var(--amber));
 }
 .msn-guardians__btn[data-guardian='bytebuddy'] > svg {
-  color: #38bdf8;
+  color: var(--msn-g-bytebuddy, var(--sky));
 }
 .msn-guardians__btn[data-guardian='echo'] > svg {
-  color: #a78bfa;
+  color: var(--msn-g-echo, var(--violet));
 }
 .msn-guardians__btn[data-guardian='beacon'] > svg {
-  color: #facc15;
+  color: var(--msn-g-beacon, var(--gold));
 }
 .msn-guardians__btn[aria-pressed='true'] {
   border-color: var(--sky);
@@ -507,7 +510,7 @@
   border-left: 0.3rem dashed var(--attention);
 }
 .msn-scenelist__item[data-sniffed] {
-  outline: 2px solid #f59e0b;
+  outline: 2px solid var(--msn-g-cluepaw, var(--amber));
   outline-offset: 1px;
 }
 .msn-scenelist__item[data-scanned] {
@@ -1129,7 +1132,7 @@
   border-top-color: var(--safe);
 }
 .msn-perspective--counter {
-  border-top-color: #a78bfa;
+  border-top-color: var(--msn-g-echo, var(--violet));
   background: #f3efff;
 }
 .msn-perspective--counter:focus-visible {
@@ -1451,7 +1454,7 @@
   box-shadow: var(--focus);
 }
 .msn-tile[data-beacon='lit'] {
-  border-color: #facc15;
+  border-color: var(--msn-g-beacon, var(--gold));
   box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.35), 0 0 1.2rem rgba(250, 204, 21, 0.25);
 }
 .msn-tile[data-beacon='dim'] {
@@ -1464,7 +1467,7 @@
   gap: 0.3rem;
   font-size: 0.8rem;
   font-weight: 700;
-  color: #facc15;
+  color: var(--msn-g-beacon, var(--gold));
 }
 .msn-shield__preview {
   display: grid;

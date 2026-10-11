@@ -93,7 +93,12 @@ export function InspectCard({ mission, item, call, firstLook, readEarly, sniffed
               <StatusBadge status="unknown" label="Can't verify" /> VeriFox: {crossCheck.result}
             </p>
           ) : (
-            <button type="button" className="ui-btn ui-btn--secondary ui-btn--sm msn-inspect__verify-btn" disabled={crossCheck.used} onClick={crossCheck.onUse}>
+            <button
+              type="button"
+              className="ui-btn ui-btn--secondary ui-btn--sm msn-inspect__verify-btn"
+              disabled={crossCheck.used}
+              onClick={crossCheck.onUse}
+            >
               <Icon name="eye" />
               <span>{crossCheck.used ? 'VeriFox already checked a claim' : 'VeriFox: Check the Source'}</span>
             </button>

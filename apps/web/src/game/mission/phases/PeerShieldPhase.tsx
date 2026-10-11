@@ -4,7 +4,7 @@ import { Button } from '../../../ui/Button';
 import { Icon } from '../../../ui/Icon';
 import { StatusBadge, type Status } from '../../../ui/StatusBadge';
 import { MeterBar } from '../parts/MeterBar';
-import { SHIELD_SLOT_LABEL, castName, initials, residentName, seededShuffle, shieldPreview } from '../runLogic';
+import { GUARDIAN_COLOR_VARS, SHIELD_SLOT_LABEL, castName, initials, residentName, seededShuffle, shieldPreview } from '../runLogic';
 import { PhaseHeading } from './PhaseHeading';
 import './phases.css';
 
@@ -85,7 +85,7 @@ export function PeerShieldPhase({
   };
 
   return (
-    <div className="msn-phase msn-shield">
+    <div className="msn-phase msn-shield" style={GUARDIAN_COLOR_VARS}>
       <p className="msn-shield__banner">{shield.timeLabel}</p>
       <PhaseHeading kicker="D · Defend Your Community" title={`Help ${friend}`}>
         <p className="msn-phase__sub">{shield.setup}</p>
@@ -130,7 +130,14 @@ export function PeerShieldPhase({
               </legend>
               <div className="msn-slot__tiles">
                 {dealt[slot].map((tile) => {
-                  const lit = beaconLit && slot === 'channel' ? (tile.quality === 'great' ? 'lit' : tile.quality === 'harmful' ? 'dim' : undefined) : undefined;
+                  const lit =
+                    beaconLit && slot === 'channel'
+                      ? tile.quality === 'great'
+                        ? 'lit'
+                        : tile.quality === 'harmful'
+                          ? 'dim'
+                          : undefined
+                      : undefined;
                   return (
                     <label key={tile.id} className="msn-tile" data-beacon={lit}>
                       <input

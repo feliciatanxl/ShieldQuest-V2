@@ -1,0 +1,215 @@
+import type { Mission } from '../../mission';
+
+// M01 Free Skins (GAME_DESIGN.md §9.2). Game scam: a "free skins" giveaway that is really an account takeover.
+// Junior-first wording. No statistics on purpose: there is no current Singapore gaming-scam data [S21].
+
+export const freeSkins: Mission = {
+  id: 'free-skins',
+  version: 1,
+  title: 'Free Skins',
+  district: 'school-street',
+  scene: 'canteen',
+  bands: ['junior', 'teen'],
+  theme: 'Game scam',
+  premise: 'A stranger offers Kai a rare skin bundle for free. All Kai has to do is send the code that just came by SMS.',
+  skillFocus: ['S', 'I'],
+  timeOfDay: 'afternoon',
+  scaffold: 'guided',
+  resident: 'kai',
+  cast: [
+    { id: 'kai', name: 'Kai', role: 'resident', anchor: 'table', pose: 'phone', look: { body: '#38bdf8', accent: '#0c4a6e', hair: 'short' } },
+    { id: 'mira', name: 'Mira', role: 'friend', anchor: 'bench', pose: 'phone', look: { body: '#f472b6', accent: '#831843', hair: 'long' } },
+    { id: 'zed', name: 'ProGamer_Zed', role: 'stranger', faceless: true, look: { body: '#334155', accent: '#0f172a', hair: 'none' } },
+    { id: 'ms-lim', name: 'Ms Lim', role: 'trusted', anchor: 'corridor', pose: 'stand', look: { body: '#a3e635', accent: '#365314', hair: 'bun' } },
+  ],
+  intro: 'Lunch break in the school canteen. Kai is playing his favourite game when a new chat pops up.',
+  live: {
+    durationSec: 48,
+    decisionPrompt: 'Kai has the code on his screen. What should Kai do?',
+    beats: [
+      { id: 'b1', at: 1, from: 'narrator', channel: 'notification', text: 'New ChatLah message from ProGamer_Zed. His profile says: joined 3 days ago.' },
+      { id: 'b2', at: 4, from: 'zed', channel: 'chat', text: 'Hi Kai! I am giving away 10 rare skin bundles today. FREE! Want one? 🎁', tactic: 'too-good', attachment: { kind: 'image', label: 'Galaxy Dragon skin bundle', detail: 'Rare · usually 2,000 gems' } },
+      { id: 'b3', at: 9, from: 'mira', channel: 'speech', text: 'Kai, I did it just now! He said mine will come in an hour.', tactic: 'everyone-does-it' },
+      { id: 'b4', at: 14, from: 'zed', channel: 'chat', text: 'Easy. You will get a 6-digit code by SMS. Just send it to me so I can gift the skins.', tactic: 'small-ask' },
+      { id: 'b5', at: 19, from: 'narrator', channel: 'notification', text: 'SMS: Your game sign-in code is 482 913. Do not share this code with anyone.', attachment: { kind: 'code', label: 'Sign-in code', detail: 'Sent to Kai\'s phone' } },
+      { id: 'b6', at: 23, from: 'kai', channel: 'chat', text: 'Why do you need my code?' },
+      { id: 'b7', at: 27, from: 'zed', channel: 'chat', text: "It's how gifting works. See? Here is Mira's gift. 😎", tactic: 'fake-proof', attachment: { kind: 'screenshot', label: 'gift_sent.png', detail: 'A "Gift sent!" picture with Mira\'s name on it' } },
+      { id: 'b8', at: 32, from: 'zed', channel: 'chat', text: 'Only 5 mins left!! After that the skins are gone.', tactic: 'urgency' },
+      { id: 'b9', at: 37, from: 'zed', channel: 'chat', text: "Don't tell teachers or parents ok. They will stop the giveaway and nobody gets anything.", tactic: 'secrecy' },
+      { id: 'b10', at: 41, from: 'narrator', channel: 'notification', text: "The game's own app shows a banner: Weekend event! Play 3 matches to earn a free badge." },
+      { id: 'b11', at: 45, from: 'zed', channel: 'chat', text: 'Last bundle. Send the code NOW. 👀', tactic: 'urgency' },
+    ],
+  },
+  clues: [
+    { id: 'c-new', label: 'Zed\'s profile is only 3 days old', target: { kind: 'beat', beatId: 'b1' }, redFlag: true, explain: 'A brand-new profile giving away rare items is a warning sign. Fake accounts are easy to make, and easy to throw away.' },
+    { id: 'c-free', label: 'Rare skins for free, from a stranger', target: { kind: 'beat', beatId: 'b2' }, redFlag: true, tactic: 'too-good', explain: 'Why would a stranger give away something worth 2,000 gems? The free prize is the bait.' },
+    { id: 'c-code', label: 'Zed wants the code sent to Kai\'s phone', target: { kind: 'beat', beatId: 'b4' }, redFlag: true, tactic: 'small-ask', explain: 'The SMS code is a sign-in key to Kai\'s account. Whoever has it can log in as Kai. Never share one-time codes, even with friends.' },
+    { id: 'c-proof', label: 'A "gift sent" picture from Zed', target: { kind: 'beat', beatId: 'b7' }, redFlag: true, tactic: 'fake-proof', explain: 'Anyone can make a picture like this. And Mira has not actually got her skins yet. Proof from the person asking is not proof.' },
+    { id: 'c-rush', label: '"Only 5 mins left!!"', target: { kind: 'beat', beatId: 'b8' }, redFlag: true, tactic: 'urgency', explain: 'The rush is there so Kai sends the code before he can stop and ask someone.' },
+    { id: 'c-secret', label: '"Don\'t tell teachers or parents"', target: { kind: 'beat', beatId: 'b9' }, redFlag: true, tactic: 'secrecy', explain: 'Zed wants to keep away the people who would spot the trick. When someone says "don\'t tell", that is the time to tell.' },
+    { id: 'c-mira', label: "Mira's phone is posting the same \"free skins\" offer", target: { kind: 'anchor', anchor: 'bench' }, redFlag: true, explain: 'Mira is not typing that. After she sent her code, someone took over her account. Now it sends the same offer to all her friends.' },
+    { id: 'c-event', label: "The game's own event banner", target: { kind: 'beat', beatId: 'b10' }, redFlag: false, explain: 'This one is normal. Real events show up inside the game\'s own app, and you earn rewards by playing. They never ask for your code.' },
+  ],
+  influence: {
+    from: 'mira',
+    hidden: { label: "Zed's account-taking trick", description: 'Every code Zed collects lets him log in to one more account. Then he uses that account to send the same offer to more friends.' },
+    question: 'Pull the thread from Mira. Who really gains when Mira\'s account shares the offer?',
+    options: [
+      { id: 'i-mira', text: 'Mira. She gets extra skins for every friend who joins.', correct: false, explain: 'Mira has not even got her own skins. She is not the one gaining. She was tricked too.' },
+      { id: 'i-zed', text: 'Zed. Each code lets him take over another account and reach more friends.', correct: true, explain: "Right. Zed now controls Mira's account and uses it to message her friends. Kai's code would give him Kai's account too." },
+      { id: 'i-game', text: 'The game company. It is a real promotion.', correct: false, explain: 'Real game events happen inside the game\'s own app. They never ask for the code from your SMS.' },
+    ],
+  },
+  forecast: {
+    question: 'If Kai sends the code, what is most likely to happen by tomorrow?',
+    horizon: 'tonight',
+    options: [
+      { id: 'f-skins', text: 'Kai gets the rare skins.', likely: false },
+      { id: 'f-takeover', text: 'Someone logs in as Kai, takes his items and messages his friends.', likely: true },
+      { id: 'f-thanks', text: 'Zed sends Kai another free gift as a thank-you.', likely: false },
+    ],
+    explain: 'The code is a key to Kai\'s account. Whoever has the key can log in, take what is there and use the account to trick more friends.',
+  },
+  choices: [
+    {
+      id: 'send-code',
+      label: 'Send Zed the code',
+      safety: 'risky',
+      outcome: {
+        title: 'Gift on the way!',
+        text: 'Zed replies "Gift on the way! 🎁". Kai can\'t wait to see the Galaxy Dragon in his locker.',
+        mood: 'shiny',
+        effects: { risk: 1 },
+      },
+      feedback: {
+        tactic: 'too-good',
+        saferMove: 'never send a code from your SMS to anyone, and check giveaways inside the game\'s own app',
+        ifItHappened: 'tell a parent or teacher straight away, use the game\'s own help page together to get the account back, and warn your friends.',
+      },
+      aftershock: {
+        id: 'account-taken',
+        polarity: 'risk',
+        afterMissions: 1,
+        timeLabel: 'THE NEXT DAY',
+        title: "Kai can't log in",
+        text: "Kai's password doesn't work any more. His skins and items are gone. His account is sending the same \"free skins\" message to his friends.",
+        effects: { trust: -2, risk: 1 },
+        fact: {
+          text: 'Never share one-time codes, even with friends. A code sent to your phone is a key to your account.',
+          source: 'SPF advisory on account takeovers, 12 Mar 2026',
+          asOf: '2026-10-08',
+        },
+        recovery: {
+          prompt: 'It already happened. What should Kai do now?',
+          options: [
+            { id: 'r-tell', text: 'Tell a parent or teacher, use the game\'s own help page with them, and warn friends not to send codes.', good: true, response: 'That is the strongest move. A grown-up can help Kai get his account back, and a quick warning stops friends from sending their codes. Beacon lights up.', help: ['trusted-adult'] },
+            { id: 'r-new', text: 'Make a new account and say nothing.', good: false, response: 'It can feel embarrassing, and that is normal. But the old account is still messaging Kai\'s friends. It is not too late: telling a grown-up helps get it back and keeps friends safe.' },
+            { id: 'r-zed', text: 'Message Zed and ask him nicely to give it back.', good: false, response: 'Zed gains from keeping the account, so he is not going to help. Go to people who can: a parent, a teacher, and the game\'s own help page.' },
+          ],
+        },
+      },
+    },
+    {
+      id: 'ask-proof',
+      label: 'Ask Zed to prove it is real first',
+      safety: 'unsure',
+      outcome: {
+        title: 'More "proof" arrives',
+        text: 'Zed sends a video of skins being "gifted" and a "verified" badge. It all looks real, and all of it comes from Zed.',
+        mood: 'sober',
+        effects: { risk: 1 },
+      },
+      feedback: {
+        tactic: 'fake-proof',
+        saferMove: 'check giveaways inside the game\'s own app, and remember that no real gift needs your code',
+        ifItHappened: 'if you already sent a code, tell a grown-up right away and use the game\'s own help page to change your password.',
+      },
+    },
+    {
+      id: 'keep-code',
+      label: "Don't send it. Screenshot the chat, tell a teacher and report Zed",
+      safety: 'safe',
+      outcome: {
+        title: 'Kai keeps his key',
+        text: 'Kai screenshots the chat and shows Ms Lim in the corridor. She helps him report and block Zed in the game. Kai also tells Mira: "I think your account got hacked."',
+        mood: 'warm',
+        effects: { trust: 2, risk: -1 },
+      },
+      feedback: {
+        tactic: 'small-ask',
+        designedTo: 'make handing over a key to your account feel like a tiny, harmless step',
+        saferMove: 'keep codes to yourself, screenshot the chat, and tell a trusted adult',
+        ifItHappened: 'if a friend already sent their code, help them tell a grown-up and use the game\'s own help page.',
+      },
+      aftershock: {
+        id: 'afterglow-warning',
+        polarity: 'protective',
+        afterMissions: 1,
+        timeLabel: 'TWO DAYS LATER',
+        title: 'Afterglow: the warning works',
+        text: 'Kai\'s message in the class chat, "Never send your code, even to friends", stops two classmates from sending theirs. With her dad\'s help, Mira gets her account back.',
+        effects: { trust: 1 },
+      },
+    },
+  ],
+  perspectives: [
+    { id: 'p-evidence', role: 'Evidence Checker', leaning: 'keep-code', text: 'Every bit of proof came from Zed. The game\'s own app has no giveaway like this.' },
+    { id: 'p-supporter', role: 'Peer Supporter', leaning: 'send-code', text: 'Mira did it, and she is our friend. Saying no feels like missing out when everyone else gets one.' },
+    { id: 'p-lead', role: 'Safety Lead', leaning: 'keep-code', text: 'The code is a key. You would not give your house key to a stranger, even for a free gift.' },
+  ],
+  peerShield: {
+    friend: 'mira',
+    timeLabel: 'THE NEXT EVENING',
+    setup: 'Mira can\'t log in to her game. Zed has messaged her: "Get me 2 codes from friends and I will give your account back." She messages Kai.',
+    messages: [
+      { from: 'mira', text: 'kai my account got hacked 😭 all my skins are gone' },
+      { from: 'mira', text: 'Zed says if I get your code he will give it back. pls??' },
+      { from: 'mira', text: "don't tell anyone ok, my mum will be so upset" },
+    ],
+    start: { guard: 55, doubt: 25 },
+    slots: {
+      opener: [
+        { id: 'o-glad', text: "Mira, I'm really glad you told me.", quality: 'great', why: 'Thanking her for telling lowers her guard.', guard: -20, doubt: 5 },
+        { id: 'o-wait', text: 'Oh no. OK, wait.', quality: 'ok', why: 'Calm, but it does not make her feel safe yet.', guard: -5, doubt: 5 },
+        { id: 'o-why', text: 'Why did you send him your code?!', quality: 'harmful', why: 'Blame makes people hide the problem instead of fixing it.', guard: 30, doubt: -5 },
+      ],
+      reason: [
+        { id: 'r-trick', text: 'Zed tricked you. This isn\'t on you. He won\'t give it back, he just wants more accounts.', quality: 'great', why: 'Blames the trick, not Mira, and shows what Zed really wants.', guard: -5, doubt: 20 },
+        { id: 'r-sus', text: "I don't think Zed is nice.", quality: 'ok', why: 'True, but she needs a clear reason.', guard: 0, doubt: 10 },
+        { id: 'r-give', text: "OK, I'll send my code so you get yours back.", quality: 'harmful', why: 'This hands Zed one more account. He gains, and Mira still loses hers.', guard: -5, doubt: -20 },
+      ],
+      offer: [
+        { id: 'f-come', text: "I'll come with you to tell Ms Lim tomorrow.", quality: 'great', why: 'Offering to go together makes the next step easier.', guard: -10, doubt: 10 },
+        { id: 'f-ask', text: 'You can ask someone for help.', quality: 'ok', why: 'Kind, but it leaves her to do it alone.', guard: -5, doubt: 5 },
+        { id: 'f-secret', text: "OK, I won't tell anyone.", quality: 'harmful', why: 'Keeping it secret is exactly what Zed needs.', guard: -5, doubt: -10 },
+      ],
+      channel: [
+        { id: 'c-adult', text: "Tell your mum or Ms Lim, and use the game's own help page with them.", quality: 'great', why: 'A grown-up and the official help page can really get the account back.', guard: -5, doubt: 15 },
+        { id: 'c-newacc', text: 'Maybe just make a new account?', quality: 'ok', why: 'It moves on, but the old account keeps tricking her friends.', guard: 0, doubt: 5 },
+        { id: 'c-zed', text: 'Message Zed and ask him nicely.', quality: 'harmful', why: 'Zed gains from keeping the account. Asking him only gives him more chances.', guard: 0, doubt: -15 },
+      ],
+    },
+    outcomes: {
+      success: 'Mira: "ok... can you come with me to Ms Lim tomorrow? thanks for not being angry." She does not send Zed anything.',
+      partial: 'Mira: "ok maybe." She has not told anyone yet. Kai could check on her tomorrow.',
+      fail: 'Mira: "forget it." Seen. Kai can still tell a grown-up, so Mira gets help.',
+    },
+  },
+  ifThen: {
+    if: 'someone asks for a code that was sent to my phone, even a friend',
+    then: "I won't send it, and I'll tell a grown-up I trust",
+  },
+  help: ['trusted-adult', 'tinkle-friend', 'mindline-1771', 'scamshield-1799'],
+  sources: [
+    { label: 'Advisory on the compromise of WhatsApp accounts: never share one-time codes (12 Mar 2026)', publisher: 'Singapore Police Force', asOf: '2026-10-08' },
+    { label: 'Advisory on fake platforms selling gaming accounts (25 Nov 2022). Tactic only; no statistics used', publisher: 'Singapore Police Force', asOf: '2026-10-08' },
+    { label: 'Get support from our partners (Tinkle Friend, mindline 1771)', publisher: 'Online Safety Commission', asOf: '2026-10-08', url: 'https://www.osc.gov.sg' },
+    { label: 'ScamShield Helpline 1799', publisher: 'Singapore Police Force, Contact Us', asOf: '2026-10-08', url: 'https://www.police.gov.sg/contact-us' },
+  ],
+  review: {
+    status: 'draft',
+    reviewers: [],
+    reviewBy: '2026-12-31',
+    notes: 'Drafted from GDD §9.2 and verified sources; needs two human sign-offs (content + safeguarding) before any pilot.',
+  },
+};

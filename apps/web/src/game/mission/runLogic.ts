@@ -2,6 +2,7 @@
 // (runs are shuffled from a seed), so the solo player, the squad client and tests share one source of truth.
 
 import {
+  GUARDIANS,
   MISSION_PHASES,
   PHASE_SKILL,
   SKILLS,
@@ -374,6 +375,11 @@ export function canCrossCheck(clue: Clue | undefined, beat: LiveBeat | undefined
 
 export const CROSS_CHECK_RESULT = "Can't verify from here. Check with an official source you find yourself.";
 
+/** Guardian colours from the shared data as CSS custom properties (--msn-g-<id>), for a phase's root style. */
+export const GUARDIAN_COLOR_VARS: Readonly<Record<string, string>> = Object.fromEntries(
+  GUARDIANS.map((g) => [`--msn-g-${g.id}`, g.color]),
+);
+
 // ---------------------------------------------------------------------------------------------
 // Pressure Surge (teen and young-adult only; never changes any timer)
 
@@ -550,6 +556,19 @@ export const SKILL_RULE: Record<SkillId, string> = {
   L: 'Make your final seal on the safer exit.',
   D: 'Help the friend open up in Peer Shield.',
 };
+
+/** The same rules in simpler words for the junior band (10-13). */
+export const SKILL_RULE_JUNIOR: Record<SkillId, string> = {
+  S: 'Find most of the warning signs, and do not pin lots of normal things.',
+  H: 'Press HOLD yourself, before the moment is nearly over.',
+  I: 'Pull the thread and spot who really gains, on your first try.',
+  E: 'Pick the future that is most likely to happen.',
+  L: 'Choose the safest exit at the end.',
+  D: 'Help your friend feel OK about getting help.',
+};
+
+export const skillRule = (skill: SkillId, band: BandId | null): string =>
+  band === 'junior' ? SKILL_RULE_JUNIOR[skill] : SKILL_RULE[skill];
 
 export const SKILL_PROMPT: Record<SkillId, string> = {
   S: 'What looks off? Tap anything that catches your eye.',

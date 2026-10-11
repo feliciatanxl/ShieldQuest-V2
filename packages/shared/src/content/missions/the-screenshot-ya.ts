@@ -1,0 +1,231 @@
+import type { Mission } from '../../mission';
+
+// M02 The Screenshot, 17-24 variant (GAME_DESIGN.md §9.2): an edited clip of a coursemate in a poly CCA chat.
+// More ambiguous evidence for this band: the target jokes about himself, and calling it out is only partly safe.
+
+export const theScreenshotYa: Mission = {
+  id: 'the-screenshot-ya',
+  version: 1,
+  title: 'The Screenshot',
+  district: 'school-street',
+  scene: 'canteen',
+  bands: ['young-adult'],
+  theme: 'Cyberbullying',
+  premise: 'An edited clip of coursemate Jun Hao lands in the CCA chat. The reacts pile up, a meme page is watching, and Aisha is told it is just banter.',
+  skillFocus: ['I', 'L', 'D'],
+  timeOfDay: 'afternoon',
+  scaffold: 'light',
+  resident: 'aisha',
+  cast: [
+    { id: 'aisha', name: 'Aisha', role: 'resident', anchor: 'table', pose: 'phone', look: { body: '#2dd4bf', accent: '#134e4a', hair: 'hijab' } },
+    { id: 'bryan', name: 'Bryan', role: 'pressurer', anchor: 'drinks-stall', pose: 'lean', look: { body: '#fb923c', accent: '#7c2d12', hair: 'cap' } },
+    { id: 'meme', name: 'LumenPoly_Memes_admin', role: 'stranger', faceless: true, look: { body: '#334155', accent: '#0f172a', hair: 'none' } },
+    { id: 'jun-hao', name: 'Jun Hao', role: 'bystander', anchor: 'corridor', pose: 'lean', look: { body: '#818cf8', accent: '#312e81', hair: 'short' } },
+    { id: 'coach-lim', name: 'Coach Lim', role: 'trusted', anchor: 'lockers', pose: 'stand', look: { body: '#facc15', accent: '#713f12', hair: 'short' } },
+  ],
+  intro: 'Lumen Poly canteen, lunch hour. Aisha\'s dance CCA chat, "LP Dance Fam", starts buzzing non-stop.',
+  live: {
+    durationSec: 55,
+    decisionPrompt: 'The chat is waiting for Aisha\'s react. What should Aisha do?',
+    beats: [
+      { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'Forty unread messages in two minutes. Aisha opens the chat.' },
+      { id: 'b2', at: 3, from: 'meme', channel: 'chat', text: "LOOOL Jun Hao's 'solo' at rehearsal 💀💀", attachment: { kind: 'image', label: 'Edited still of Jun Hao', detail: 'Slowed down, clown stickers on his face, caption: "main character energy"' } },
+      { id: 'b3', at: 7, from: 'narrator', channel: 'notification', text: '22 people reacted 😂 in 30 seconds.' },
+      { id: 'b4', at: 12, from: 'bryan', channel: 'speech', text: "React lah, it's banter. Everyone's doing it.", tactic: 'everyone-does-it' },
+      { id: 'b5', at: 17, from: 'meme', channel: 'chat', text: 'Best caption gets featured on LumenPoly Memes tonight 🔥', tactic: 'too-good' },
+      { id: 'b6', at: 22, from: 'narrator', channel: 'notification', text: 'The image has been forwarded 12 times.' },
+      { id: 'b7', at: 27, from: 'jun-hao', channel: 'chat', text: 'haha ok guys' },
+      { id: 'b8', at: 32, from: 'coach-lim', channel: 'chat', text: 'Reminder: full rehearsal Saturday 9am at the studio. Bring water.' },
+      { id: 'b9', at: 37, from: 'meme', channel: 'chat', text: 'Chill, it\'s a joke. He literally posts dance fails of himself.', tactic: 'small-ask' },
+      { id: 'b10', at: 43, from: 'meme', channel: 'chat', text: "Don't send this to Coach ah. What happens in LP Dance Fam stays here 🤐", tactic: 'secrecy' },
+      { id: 'b11', at: 49, from: 'bryan', channel: 'speech', text: "If you don't react they'll think you're on his side. Don't make it weird.", tactic: 'loyalty' },
+    ],
+  },
+  clues: [
+    { id: 'c-edit', label: 'A still edited to mock Jun Hao', target: { kind: 'beat', beatId: 'b2' }, redFlag: true, explain: 'Clown stickers and a slowed-down "fail" are made to get people laughing at him, not with him. That is the line between banter and bullying.' },
+    { id: 'c-reacts', label: '22 laughing reacts in 30 seconds', target: { kind: 'beat', beatId: 'b3' }, redFlag: true, tactic: 'everyone-does-it', explain: 'A flood of reacts makes joining in feel automatic. Each one is also another person laughing at Jun Hao.' },
+    { id: 'c-feature', label: '"Best caption gets featured on LumenPoly Memes"', target: { kind: 'beat', beatId: 'b5' }, redFlag: true, tactic: 'too-good', explain: 'The page farms content from the chat. Aisha\'s caption would carry her name; the page would get the views.' },
+    { id: 'c-forward', label: 'Forwarded 12 times already', target: { kind: 'beat', beatId: 'b6' }, redFlag: true, explain: 'It is already leaving the CCA. Once it is on a public page, it can never be fully pulled back.' },
+    { id: 'c-joke', label: '"He posts dance fails of himself"', target: { kind: 'beat', beatId: 'b9' }, redFlag: true, tactic: 'small-ask', explain: 'Laughing at yourself is a choice Jun Hao makes. Someone else editing him to be laughed at is not the same thing, and "it\'s a joke" is how it gets waved through.' },
+    { id: 'c-secret', label: '"Don\'t send this to Coach"', target: { kind: 'beat', beatId: 'b10' }, redFlag: true, tactic: 'secrecy', explain: 'The admin knows an adult would shut this down. Being told to keep it from Coach is the signal to tell Coach.' },
+    { id: 'c-left', label: "Jun Hao's screen: \"You left LP Dance Fam\"", target: { kind: 'anchor', anchor: 'corridor' }, redFlag: true, explain: 'His "haha ok guys" was saving face. A minute later he quietly left the chat and is standing alone by the corridor.' },
+    { id: 'c-coach', label: "Coach Lim's rehearsal reminder", target: { kind: 'beat', beatId: 'b8' }, redFlag: false, explain: 'A normal CCA message. Not everything in a busy chat is a problem; the edited still is.' },
+    { id: 'c-showcase', label: 'Showcase poster: Jun Hao\'s comedy dance won "Best Comedy"', target: { kind: 'anchor', anchor: 'noticeboard' }, redFlag: false, explain: 'True: Jun Hao is funny on purpose. That is not a red flag, and it is not permission. He chose that joke; he did not choose this one.' },
+  ],
+  influence: {
+    from: 'bryan',
+    hidden: { label: 'The LumenPoly Memes page', description: 'The page admin posts clips in group chats first, then reposts the ones with the best captions. Every react is free content and new followers for the page.' },
+    question: 'Pull the thread from Bryan. Who really gains when Aisha reacts?',
+    options: [
+      { id: 'i-bryan', text: 'Bryan. He gets featured if enough people react.', correct: false, explain: 'Bryan gets nothing but the comfort of not standing out. He is being swept along too.' },
+      { id: 'i-page', text: 'The meme page. Every react and caption brings it views and followers.', correct: true, explain: 'Right. The admin is testing the clip in the chat before posting it publicly. The CCA is doing the page\'s marketing for free.' },
+      { id: 'i-nobody', text: "Nobody. It's banter between friends.", correct: false, explain: 'Banter works when everyone is in on it. Here a page gains followers and Jun Hao pays the cost.' },
+    ],
+  },
+  forecast: {
+    question: 'If Aisha adds a caption, what is most likely by next week?',
+    horizon: 'next-week',
+    options: [
+      { id: 'f-forget', text: "It's forgotten by tomorrow.", likely: false },
+      { id: 'f-spread', text: 'The clip reaches people outside the CCA, with her caption on it.', likely: true },
+      { id: 'f-repost', text: 'Jun Hao reposts it himself.', likely: false },
+    ],
+    explain: 'The page was waiting for captions to repost. Once it is public, strangers share it, and Aisha\'s words travel with it.',
+  },
+  choices: [
+    {
+      id: 'react-caption',
+      label: 'Add a laughing react and a caption',
+      safety: 'risky',
+      outcome: {
+        title: '"LEGEND 🔥"',
+        text: 'Aisha\'s caption gets 40 laughs and a "LEGEND 🔥" from the admin. Bryan fist-bumps her. For a moment she is the funniest person in the CCA.',
+        mood: 'shiny',
+        effects: { risk: 1 },
+      },
+      feedback: {
+        tactic: 'everyone-does-it',
+        designedTo: 'make joining in feel like the normal, safe thing because everyone else already has',
+        saferMove: 'skip the react, check on the person privately, and report the post to the platform',
+        ifItHappened: 'delete your react or caption, apologise privately, report the reposts and tell a trusted adult in charge, like the CCA advisor.',
+      },
+      aftershock: {
+        id: 'clip-public',
+        polarity: 'risk',
+        afterMissions: 1,
+        timeLabel: 'ONE WEEK LATER',
+        title: 'The clip goes public',
+        text: 'The edited clip is on LumenPoly Memes with Aisha\'s caption on top. People from other courses are sharing it. Jun Hao has quit the CCA, and the CCA advisor has asked to speak with everyone who posted.',
+        effects: { trust: -2, risk: 1 },
+        fact: {
+          text: 'Report it on the platform first. For online harassment, if there is no proper response within 24 hours, you can go to the Online Safety Commission. Singapore has laws against harassment and online harms.',
+          source: 'MinLaw, The Online Safety Commission begins operations on 29 June 2026',
+          asOf: '2026-10-08',
+        },
+        recovery: {
+          prompt: 'It already happened. What can Aisha do now?',
+          options: [
+            { id: 'r-repair', text: 'Delete her caption, apologise to Jun Hao privately, report the reposts and talk to the CCA advisor honestly.', good: true, response: 'That is the strongest move. Owning her part takes courage, it helps Jun Hao, and it gives the advisor what they need to get the reposts down. Beacon lights up.', help: ['trusted-adult', 'osc', 'mindline-1771'] },
+            { id: 'r-hold', text: 'Leave it. Deleting now would look like admitting something.', good: false, response: 'That worry is understandable. But the caption keeps adding to the hurt every time it is shared. Taking it down and saying sorry is the stronger move, and a trusted adult can help with the rest.' },
+            { id: 'r-relax', text: 'Comment "it was just a joke, relax" under the repost.', good: false, response: 'Defending it keeps the post active and puts more eyes on it. It is not too late to delete, apologise and report instead.' },
+          ],
+        },
+      },
+    },
+    {
+      id: 'stay-silent',
+      label: 'Stay silent and scroll past',
+      safety: 'unsure',
+      outcome: {
+        title: 'Aisha scrolls on',
+        text: 'Aisha doesn\'t react. The count keeps climbing anyway, and Jun Hao has no idea anyone in the CCA is on his side.',
+        mood: 'sober',
+        effects: {},
+      },
+      feedback: {
+        tactic: 'everyone-does-it',
+        saferMove: 'not join in, and also check on the person privately and report the post',
+        ifItHappened: 'if you stayed quiet, it is not too late to message the person, report the post and tell the CCA advisor.',
+      },
+    },
+    {
+      id: 'support-report',
+      label: 'Don\'t react. Message Jun Hao privately, report the post and tell the CCA advisor',
+      safety: 'safe',
+      outcome: {
+        title: 'One direct message',
+        text: 'Aisha messages Jun Hao: "Hey, that post was out of line. You ok?" She reports the image on ChatLah and shows Coach Lim, who messages the advisor. Jun Hao replies: "honestly not really. thanks for asking."',
+        mood: 'warm',
+        effects: { trust: 2, risk: -1 },
+      },
+      feedback: {
+        tactic: 'everyone-does-it',
+        saferMove: 'support the person directly, report it to the platform, and bring in a trusted adult',
+        ifItHappened: 'if it already went public, keep reporting reposts; if the platform does not respond properly, the Online Safety Commission can step in.',
+      },
+      aftershock: {
+        id: 'afterglow-removed',
+        polarity: 'protective',
+        afterMissions: 1,
+        timeLabel: 'ONE WEEK LATER',
+        title: 'Afterglow: the clip comes down',
+        text: 'Two CCA members follow Aisha\'s lead and report the post. The image never reaches the meme page. Jun Hao turns up for Saturday rehearsal and tells Aisha her message helped.',
+        effects: { trust: 1 },
+      },
+    },
+    {
+      id: 'call-out',
+      label: 'Call it out in the group: "Not funny. Take it down."',
+      safety: 'unsure',
+      outcome: {
+        title: 'A few people stop',
+        text: 'Two people delete their reacts. The admin replies "wah so sensitive 🙄" and a few people mute Aisha. The image is still up, and Jun Hao still hasn\'t heard from anyone directly.',
+        mood: 'mixed',
+        effects: { trust: 1 },
+      },
+      feedback: {
+        tactic: 'everyone-does-it',
+        saferMove: 'pair speaking up with a private check-in and a report, so the person gets support and the post comes down',
+        ifItHappened: 'if speaking up made you a target too, screenshot it, report it and tell a trusted adult. You do not have to handle it alone.',
+      },
+    },
+  ],
+  perspectives: [
+    { id: 'p-evidence', role: 'Evidence Checker', leaning: 'call-out', text: 'Twelve forwards already. Saying "not funny" in the group right now might stop the next twelve.' },
+    { id: 'p-supporter', role: 'Peer Supporter', leaning: 'support-report', text: 'He left the chat. He needs one person to reach out directly more than he needs a debate in the group.' },
+    { id: 'p-lead', role: 'Safety Lead', leaning: 'support-report', text: 'A report gets it taken down; the advisor can stop the page. Speaking up alone leaves the post up.' },
+  ],
+  peerShield: {
+    friend: 'bryan',
+    timeLabel: 'THREE DAYS LATER',
+    setup: 'The clip made it onto LumenPoly Memes with Bryan\'s caption. The advisor wants to talk to everyone who posted. Bryan messages Aisha late at night.',
+    messages: [
+      { from: 'bryan', text: 'bro the advisor wants to see everyone who posted' },
+      { from: 'bryan', text: 'I only wrote one caption. should I just delete my account and say I wasn\'t involved' },
+      { from: 'bryan', text: "don't tell anyone I asked ok" },
+    ],
+    start: { guard: 55, doubt: 25 },
+    slots: {
+      opener: [
+        { id: 'o-thanks', text: "Thanks for telling me. That's not easy.", quality: 'great', why: 'Recognising that he reached out lowers his guard.', guard: -20, doubt: 5 },
+        { id: 'o-ok', text: "Ok. Let's think.", quality: 'ok', why: 'Calm, but it does not tell him you are on his side.', guard: -5, doubt: 5 },
+        { id: 'o-shame', text: 'Wow, so you were one of them?', quality: 'harmful', why: 'Shame makes people defend themselves and hide.', guard: 30, doubt: -5 },
+      ],
+      reason: [
+        { id: 'r-page', text: 'The page used everyone\'s captions to farm views. What matters now is Jun Hao, and owning it early counts.', quality: 'great', why: 'Names who gained, keeps the focus on the person hurt, and makes honesty the easier path.', guard: -5, doubt: 20 },
+        { id: 'r-worse', text: 'Deleting your account might look worse.', quality: 'ok', why: 'True, but it is about how it looks, not about Jun Hao.', guard: 0, doubt: 10 },
+        { id: 'r-dismiss', text: "Everyone posted something. It's not that serious.", quality: 'harmful', why: 'Waving it away makes the cover-up feel reasonable.', guard: -5, doubt: -15 },
+      ],
+      offer: [
+        { id: 'f-together', text: 'Want to message Jun Hao together and say sorry properly?', quality: 'great', why: 'A concrete offer to do the hard part together.', guard: -10, doubt: 10 },
+        { id: 'f-maybe', text: 'You could say sorry, I guess.', quality: 'ok', why: 'Right idea, but he is left to do it alone.', guard: -5, doubt: 5 },
+        { id: 'f-cover', text: 'Just delete everything. No one can prove it.', quality: 'harmful', why: 'A cover-up leaves Jun Hao with the hurt and Bryan with the worry.', guard: -5, doubt: -10 },
+      ],
+      channel: [
+        { id: 'c-advisor', text: 'Tell the advisor the truth and report the repost. If the page ignores reports, the Online Safety Commission can step in.', quality: 'great', why: 'Points to the people and channels that can actually get it taken down.', guard: -5, doubt: 15 },
+        { id: 'c-forum', text: 'Maybe ask an online forum what to do.', quality: 'ok', why: 'Strangers online cannot fix this, and it may spread the story further.', guard: 0, doubt: 0 },
+        { id: 'c-expose', text: 'DM the admin and threaten to expose him.', quality: 'harmful', why: 'Threats escalate things and could put Bryan in more trouble.', guard: 0, doubt: -15 },
+      ],
+    },
+    outcomes: {
+      success: 'Bryan: "ok. I\'ll message Jun Hao first, then see the advisor tomorrow. thanks for not making it worse."',
+      partial: 'Bryan: "maybe. let me sleep on it." He has not deleted anything yet. A check-in tomorrow could help.',
+      fail: 'Bryan: "forget it, I\'ll handle it." His account goes dark. Aisha can still tell the advisor what she knows.',
+    },
+  },
+  ifThen: {
+    if: 'someone posts an edited photo or clip to mock a person in my chat',
+    then: "I won't react. I'll message them privately, report it and tell someone who can act",
+  },
+  help: ['trusted-adult', 'osc', 'mindline-1771', 'sos-1767'],
+  sources: [
+    { label: 'The Online Safety Commission begins operations on 29 June 2026', publisher: 'Ministry of Law', asOf: '2026-10-08', url: 'https://www.osc.gov.sg' },
+    { label: 'Get support from our partners (mindline 1771, SOS 1767)', publisher: 'Online Safety Commission', asOf: '2026-10-08' },
+  ],
+  review: {
+    status: 'draft',
+    reviewers: [],
+    reviewBy: '2026-12-31',
+    notes: 'Drafted from GDD §9.2 and verified sources; needs two human sign-offs (content + safeguarding) before any pilot.',
+  },
+};

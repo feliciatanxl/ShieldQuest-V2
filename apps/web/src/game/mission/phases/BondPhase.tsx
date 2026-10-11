@@ -4,6 +4,7 @@ import {
   guardianById,
   guardianForSkill,
   skillById,
+  type BandId,
   type GuardianId,
   type Mission,
   type RunSummary,
@@ -15,7 +16,7 @@ import { Icon } from '../../../ui/Icon';
 import { StatusBadge } from '../../../ui/StatusBadge';
 import type { RenderMode } from '../../../world';
 import { GuardianStage } from '../parts/MissionStage';
-import { SKILL_ORDER, SKILL_RULE, sortedBeats } from '../runLogic';
+import { SKILL_ORDER, skillRule, sortedBeats } from '../runLogic';
 import { PhaseHeading } from './PhaseHeading';
 import './phases.css';
 
@@ -37,6 +38,8 @@ export interface BondPhaseProps {
   onUnfold?: () => void;
   reduced?: boolean;
   renderMode?: RenderMode;
+  /** Junior players get the rules in simpler words. */
+  band?: BandId | null;
 }
 
 const LETTER_MS = 420;
@@ -59,6 +62,7 @@ export function BondPhase({
   onUnfold,
   reduced,
   renderMode,
+  band = null,
 }: BondPhaseProps) {
   const wildcard = mission.scaffold === 'wildcard';
   const [guess, setGuess] = useState<SkillId[]>([]);
@@ -162,7 +166,7 @@ export function BondPhase({
                       <StatusBadge status="safe" label="Lit" />
                     ) : (
                       <span className="msn-letter__rule">
-                        <StatusBadge status="unknown" label="Not this time" /> {SKILL_RULE[s]}
+                        <StatusBadge status="unknown" label="Not this time" /> {skillRule(s, band)}
                       </span>
                     )
                   ) : (
@@ -199,7 +203,7 @@ export function BondPhase({
                       {g.name} {level === 1 ? 'unfolded!' : `grew to bond ${'I'.repeat(Math.min(3, level))}`}
                     </p>
                     <p>
-                      <strong>Earned by {skill.name}:</strong> {SKILL_RULE[g.skill]}
+                      <strong>Earned by {skill.name}:</strong> {skillRule(g.skill, band)}
                     </p>
                     <p>
                       <strong>Ability, {g.abilityName}:</strong> {g.ability} Once per moment.
@@ -234,7 +238,8 @@ export function BondPhase({
           )}
           {cleanHold && (
             <li>
-              <Icon name="eye" /> <strong>Clean Hold:</strong> you pinned every genuine warning sign{summary.falseAlarms === 0 ? ', with no false alarms' : ''}.
+              <Icon name="eye" /> <strong>Clean Hold:</strong> you pinned every genuine warning sign
+              {summary.falseAlarms === 0 ? ', with no false alarms' : ''}.
             </li>
           )}
           {summary.changedMind && (

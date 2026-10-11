@@ -9,6 +9,7 @@ import type { SurgeState } from '../runReducer';
 import {
   AUTO_FREEZE_LINE,
   BOARD_COLUMNS,
+  GUARDIAN_COLOR_VARS,
   HOLD_HEADER,
   CROSS_CHECK_RESULT,
   beatViews,
@@ -91,8 +92,14 @@ function itemStatus(item: Inspectable, looks: readonly string[], calls: Readonly
 function Manta() {
   return (
     <svg viewBox="0 0 120 60" width="140" height="70" aria-hidden="true">
-      <path d="M60 8 L112 34 L72 30 L64 52 L60 40 L56 52 L48 30 L8 34 Z" fill="#2dd4bf" stroke="#0f766e" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M60 8 L60 40" stroke="#0f766e" strokeWidth="1.5" />
+      <path
+        d="M60 8 L112 34 L72 30 L64 52 L60 40 L56 52 L48 30 L8 34 Z"
+        fill="var(--msn-g-shieldfin, var(--teal))"
+        stroke="var(--ink)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path d="M60 8 L60 40" stroke="var(--ink)" strokeWidth="1.5" />
     </svg>
   );
 }
@@ -287,7 +294,11 @@ export function FreezePhase(props: FreezePhaseProps) {
             <span>
               <strong>ByteBuddy: {guardianById('bytebuddy').abilityName}</strong>
               <small>
-                {scanned ? (hasScanTargets ? 'Links, codes, payments and jobs outlined' : 'No links, codes or payments here') : 'Outlines links, codes, payments and job offers'}
+                {scanned
+                  ? hasScanTargets
+                    ? 'Links, codes, payments and jobs outlined'
+                    : 'No links, codes or payments here'
+                  : 'Outlines links, codes, payments and job offers'}
               </small>
             </span>
           </button>
@@ -337,7 +348,7 @@ export function FreezePhase(props: FreezePhaseProps) {
   const sections: InspectSection[] = ['messages', 'around', 'people'];
 
   return (
-    <div ref={rootRef} className="msn-phase msn-freeze" data-surge={surge === 'showing' ? '' : undefined}>
+    <div ref={rootRef} className="msn-phase msn-freeze" style={GUARDIAN_COLOR_VARS} data-surge={surge === 'showing' ? '' : undefined}>
       <PhaseHeading kicker="H · Hold Before Acting" title="Investigate">
         {header}
       </PhaseHeading>
@@ -485,7 +496,12 @@ export function FreezePhase(props: FreezePhaseProps) {
                       <ul className="msn-board__pins">
                         {pins.map((c) => (
                           <li key={c.id}>
-                            <button type="button" className="msn-board__pin" data-tentative={calls[c.id] ? undefined : ''} onClick={() => select(keyForClue(c))}>
+                            <button
+                              type="button"
+                              className="msn-board__pin"
+                              data-tentative={calls[c.id] ? undefined : ''}
+                              onClick={() => select(keyForClue(c))}
+                            >
                               <Icon name="pin" />
                               <span>
                                 {c.label}
@@ -507,7 +523,9 @@ export function FreezePhase(props: FreezePhaseProps) {
 
           <div className="msn-freeze__done">
             <p className="msn-freeze__done-note">
-              {checked < clueItems.length ? `${clueItems.length - checked} details still unchecked. Take your time.` : 'You checked everything. Ready when you are.'}
+              {checked < clueItems.length
+                ? `${clueItems.length - checked} details still unchecked. Take your time.`
+                : 'You checked everything. Ready when you are.'}
             </p>
             <Button block icon="check" onClick={onDone}>
               Done investigating

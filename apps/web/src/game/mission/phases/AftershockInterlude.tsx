@@ -96,7 +96,12 @@ export function AftershockInterlude({ pending, found, band, seed, reduced, onRes
               </p>
             )}
           </PhaseHeading>
-          <TimelineRibbon label={spec.timeLabel} tone={risk ? 'risk' : 'protective'} play={!reduced} caption={risk ? 'Fast-forward…' : 'A little later…'} />
+          <TimelineRibbon
+            label={spec.timeLabel}
+            tone={risk ? 'risk' : 'protective'}
+            play={!reduced}
+            caption={risk ? 'Fast-forward…' : 'A little later…'}
+          />
           <Button size="lg" block iconRight="arrowRight" onClick={() => setStep(risk ? 'trace' : 'scene')}>
             See what happened
           </Button>

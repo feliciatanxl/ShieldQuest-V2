@@ -509,6 +509,7 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
             onUnfold={() => cue('unfold')}
             reduced={reduced}
             renderMode={renderMode}
+            band={band}
           />
         ) : (
           <p className="msn-saving" role="status">

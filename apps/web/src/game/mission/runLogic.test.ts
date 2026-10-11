@@ -15,10 +15,13 @@ import {
   railLetters,
   ringTactics,
   seededShuffle,
+  sentenceCase,
   shieldSlotsFor,
+  skillRule,
   sniffTarget,
   stageHotspots,
   surgeLine,
+  withStop,
 } from './runLogic';
 
 const mission = missionById('easy-money') as Mission;
@@ -163,5 +166,33 @@ describe('band dials', () => {
       const next = nextMissionId(m, m.bands[0] ?? null);
       if (next) expect(missionById(next)?.district).toBe(m.district);
     }
+  });
+});
+
+describe('copy helpers', () => {
+  it('ends authored labels with exactly one full stop', () => {
+    expect(withStop('Show the poster to Mum.')).toBe('Show the poster to Mum.');
+    expect(withStop('Say no')).toBe('Say no.');
+    expect(withStop('Really?')).toBe('Really?');
+  });
+
+  it('turns capital time labels into sentence case', () => {
+    expect(sentenceCase('2AM, THREE WEEKS LATER')).toBe('2am, three weeks later');
+    expect(sentenceCase('TWO DAYS LATER')).toBe('Two days later');
+  });
+
+  it('gives juniors simpler rule wording for every letter', () => {
+    for (const s of ['S', 'H', 'I', 'E', 'L', 'D'] as const) {
+      expect(skillRule(s, 'junior')).not.toBe(skillRule(s, 'teen'));
+      expect(skillRule(s, 'junior').length).toBeGreaterThan(10);
+    }
+  });
+
+  it("builds Echo's safe-exit case from the tactic counter, not a council card already on screen", () => {
+    const risky = mission.choices.find((c) => c.safety === 'risky')!;
+    const view = counterView(mission, risky.id)!;
+    expect(view.choice.safety).toBe('safe');
+    expect(mission.perspectives.some((p) => p.text === view.argument)).toBe(false);
+    expect(view.prompt.length).toBeGreaterThan(0);
   });
 });

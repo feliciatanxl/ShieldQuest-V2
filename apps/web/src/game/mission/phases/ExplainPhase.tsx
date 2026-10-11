@@ -6,7 +6,16 @@ import { StatusBadge } from '../../../ui/StatusBadge';
 import { ExitPatternSwatch } from '../parts/ExitCard';
 import { ExitGroup } from '../parts/ExitGroup';
 import { SealEnvelope } from '../parts/SealEnvelope';
-import { ECHO_COUNCIL_LABEL, MAX_REASONS, REASON_CHIPS, councilMood, counterView, exitFor, type ExitView } from '../runLogic';
+import {
+  ECHO_COUNCIL_LABEL,
+  GUARDIAN_COLOR_VARS,
+  MAX_REASONS,
+  REASON_CHIPS,
+  councilMood,
+  counterView,
+  exitFor,
+  type ExitView,
+} from '../runLogic';
 import { PhaseHeading } from './PhaseHeading';
 import './phases.css';
 
@@ -73,7 +82,7 @@ export function ExplainPhase({
   }, [showCounter]);
 
   return (
-    <div className="msn-phase msn-explain">
+    <div className="msn-phase msn-explain" style={GUARDIAN_COLOR_VARS}>
       <PhaseHeading kicker="L · Lead the Right Choice" title="Explain">
         <p className="msn-phase__sub">
           You sealed Exit {firstExit?.letter}. Here is how others might see it. You can keep your choice or change it.
@@ -216,7 +225,13 @@ export function ExplainPhase({
         </h3>
         <SealEnvelope
           sealed={resealed}
-          sealedLabel={finalExit ? `Final seal: Exit ${finalExit.letter}. ${finalChoice !== firstVote ? 'You changed your mind: that is thinking, not weakness.' : 'You kept your choice.'}` : 'Sealed.'}
+          sealedLabel={
+            finalExit
+              ? `Final seal: Exit ${finalExit.letter}. ${
+                  finalChoice !== firstVote ? 'You changed your mind: that is thinking, not weakness.' : 'You kept your choice.'
+                }`
+              : 'Sealed.'
+          }
         >
           <ExitGroup
             exits={exits}
