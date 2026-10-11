@@ -24,9 +24,19 @@ const PULL_AT = 0.78;
 
 /** Chat handles like "LegendVault" or "ProGamer_Zed" get soft break points so they wrap at word joins. */
 function softBreaks(name: string): ReactNode[] {
-  return name
-    .split(/(?<=[a-z])(?=[A-Z])|(?<=_)/)
-    .flatMap((part, i) => (i === 0 ? [part] : [<wbr key={i} />, part]));
+  // A plain loop rather than a lookbehind regex, which older iOS Safari cannot even parse.
+  const out: ReactNode[] = [];
+  let start = 0;
+  for (let i = 1; i < name.length; i++) {
+    const prev = name[i - 1]!;
+    const ch = name[i]!;
+    if (prev === '_' || (/[a-z]/.test(prev) && /[A-Z]/.test(ch))) {
+      out.push(name.slice(start, i), <wbr key={i} />);
+      start = i;
+    }
+  }
+  out.push(name.slice(start));
+  return out;
 }
 
 /** Identify the Influence: Pull the String from the pusher to the edge, read the Gain Tag, then answer. */
