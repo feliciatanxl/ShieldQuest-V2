@@ -426,3 +426,19 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+## ShieldQuest V2 (Node / Vite)
+dist/
+dev-dist/
+.env
+.env.*
+!.env.example
+*.log
+coverage/
+playwright-report/
+test-results/
+apps/server/data/
+.vite/
+
+## Local Claude Code config
+.claude/

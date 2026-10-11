@@ -1,0 +1,1582 @@
+/* Mission player parts (prefix: msn-). Mobile-first; rem everywhere except the fixed 76 px HOLD button.
+   Status is always shape + icon + word; animation is calm and never flashes more than 3 times a second. */
+
+/* ------------------------------------------------------------------------------------------------
+   Reduced motion: every msn- animation collapses to its end state (setting or OS preference). */
+:root[data-motion='reduced'] [class*='msn-'],
+:root[data-motion='reduced'] [class*='msn-']::before,
+:root[data-motion='reduced'] [class*='msn-']::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0ms !important;
+  transition-duration: 1ms !important;
+  transition-delay: 0ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) [class*='msn-'],
+  :root:not([data-motion='full']) [class*='msn-']::before,
+  :root:not([data-motion='full']) [class*='msn-']::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Shared surfaces */
+.msn-paper {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-sm);
+}
+.msn-paper a {
+  color: #0f766e;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Layout: 3D stage + bottom sheet (portrait), side by side (landscape, tablet landscape, desktop). */
+.msn-layout {
+  --msn-top-h: auto;
+  position: relative;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 58fr) minmax(0, 42fr);
+  grid-template-areas: 'top' 'stage' 'sheet';
+  background: var(--bg);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+.msn-layout[data-emphasis='panel'] {
+  grid-template-rows: auto minmax(0, 34fr) minmax(0, 66fr);
+}
+.msn-layout[data-emphasis='stage'] {
+  grid-template-rows: auto minmax(0, 68fr) minmax(0, 32fr);
+}
+.msn-layout[data-emphasis='sheet-only'] {
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: 'top' 'sheet';
+}
+
+.msn-layout__top {
+  grid-area: top;
+  z-index: 4;
+}
+.msn-layout__stage {
+  grid-area: stage;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 10%, var(--bg-3), var(--bg-2) 55%, var(--bg));
+  transition: filter 400ms var(--ease-out);
+}
+.msn-layout[data-frozen] .msn-layout__stage {
+  filter: saturate(0.55) brightness(0.95);
+}
+.msn-layout[data-frozen] .msn-layout__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgba(207, 232, 255, 0.35), inset 0 0 4rem rgba(159, 179, 200, 0.28);
+}
+
+.msn-layout__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  padding-inline: 0.75rem;
+  pointer-events: none;
+  z-index: 2;
+}
+/* Portrait: HOLD and its tactic pop own the seam, so captions move to the top of the stage. */
+.msn-layout[data-hold] .msn-layout__caption {
+  top: 0.6rem;
+  bottom: auto;
+}
+.msn-layout__caption--inline {
+  position: static;
+  margin-bottom: 0.5rem;
+}
+
+.msn-layout__sheet {
+  grid-area: sheet;
+  position: relative;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-solid);
+  border-top: 1px solid var(--line);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  margin-top: -0.75rem;
+  z-index: 3;
+  box-shadow: 0 -0.5rem 1.5rem rgba(2, 6, 23, 0.35);
+}
+.msn-layout[data-emphasis='sheet-only'] .msn-layout__sheet {
+  margin-top: 0;
+  border-radius: 0;
+  border-top: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.msn-layout__prompt {
+  margin: 0;
+  padding: 0.55rem var(--gutter) 0;
+  font-size: 0.92rem;
+  color: var(--amber);
+  font-weight: 650;
+}
+.msn-layout__sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding: 0.75rem var(--gutter) calc(1rem + var(--safe-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+.msn-layout[data-emphasis='sheet-only'] .msn-layout__sheet-body {
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+/* Portrait: HOLD straddles the seam, so the sheet content starts below it. */
+.msn-layout[data-hold] .msn-layout__sheet {
+  padding-top: 40px;
+}
+
+.msn-layout__hold {
+  grid-area: sheet;
+  align-self: start;
+  justify-self: center;
+  margin-top: -68px;
+  z-index: 5;
+  pointer-events: none;
+}
+.msn-layout__hold > * {
+  pointer-events: auto;
+}
+
+@media (orientation: landscape) and (min-width: 37.5rem), (min-width: 48rem) {
+  .msn-layout {
+    grid-template-columns: minmax(0, 62fr) minmax(0, 38fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: 'top top' 'stage sheet';
+  }
+  .msn-layout[data-emphasis='panel'] {
+    grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .msn-layout[data-emphasis='stage'] {
+    grid-template-columns: minmax(0, 70fr) minmax(0, 30fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .msn-layout[data-emphasis='sheet-only'] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'top' 'sheet';
+  }
+  .msn-layout__sheet {
+    margin-top: 0;
+    border-radius: 0;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    box-shadow: -0.5rem 0 1.5rem rgba(2, 6, 23, 0.25);
+  }
+  .msn-layout[data-hold] .msn-layout__sheet {
+    padding-top: 0;
+  }
+  .msn-layout__hold {
+    grid-area: stage;
+    align-self: end;
+    justify-self: end;
+    margin: 0 1rem calc(1rem + var(--safe-bottom)) 0;
+  }
+  .msn-layout[data-hold] .msn-layout__caption {
+    top: auto;
+    bottom: 0.75rem;
+    padding-right: 8.5rem;
+  }
+}
+@media (min-width: 80rem) {
+  .msn-layout__sheet-body {
+    padding-inline: 1.75rem;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Top bar: back, district chip, S.H.I.E.L.D. rail, Aa, Need to talk, Pause. Wraps the rail below on
+   narrow screens or at large text sizes (container query, so the text-size setting is respected). */
+.msn-top {
+  container-type: inline-size;
+  padding: calc(0.3rem + var(--safe-top)) 0.6rem 0.3rem;
+  background: rgba(20, 32, 51, 0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+.msn-top__inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'back district actions' 'rail rail rail';
+  align-items: center;
+  column-gap: 0.5rem;
+  row-gap: 0.2rem;
+}
+.msn-top__back {
+  grid-area: back;
+  text-decoration: none;
+}
+.msn-top__district {
+  grid-area: district;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: 100%;
+  min-height: 2rem;
+  padding: 0.2rem 0.75rem 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.msn-top__district-dot {
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 0.2rem;
+  transform: rotate(45deg);
+  background: var(--msn-district, var(--teal));
+}
+.msn-top__district--title {
+  border: 0;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+/* At large text sizes on a phone the name wraps to two short lines rather than collapsing to "S…". */
+.msn-top__district-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+.msn-top__rail {
+  grid-area: rail;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+.msn-top__actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.msn-top__aa {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: min(1.05rem, 22px);
+}
+/* Icon buttons carry no reading text, so they stay a fixed 48 px (the tap minimum) instead of growing with the
+   text-size setting; at 200% on a 360 px phone the bar would otherwise push Pause off-screen. */
+.msn-top .ui-iconbtn {
+  width: 48px;
+  height: 48px;
+}
+.msn-top .ui-iconbtn svg {
+  width: 22px;
+  height: 22px;
+}
+@container (min-width: 46rem) {
+  .msn-top__inner {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas: 'back district rail actions';
+  }
+}
+
+/* S.H.I.E.L.D. rail */
+.msn-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.msn-rail__list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: min(0.25rem, 1.2cqi);
+  margin: 0;
+  padding: 0;
+}
+/* Sizes are capped by the bar's width (cqi) so all six letters fit at 200% text on a 360 px phone. */
+.msn-rail__item {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: min(1.75rem, 13cqi);
+  height: min(1.9rem, 13cqi);
+  border-radius: 0.45rem;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: min(0.95rem, 7cqi);
+  transition: transform var(--dur) var(--ease-out);
+}
+.msn-rail__item[data-done] {
+  color: var(--text-2);
+}
+.msn-rail__item[data-current] {
+  color: var(--text);
+  font-weight: 800;
+  font-size: min(1.2rem, 8.5cqi);
+  min-width: min(2.2rem, 15cqi);
+  height: min(2.2rem, 15cqi);
+  outline: 2px solid var(--amber);
+  outline-offset: -2px;
+  background: rgba(242, 193, 78, 0.14);
+}
+/* A bar wider than the glyph (not text-decoration), so an underlined "I" never reads as "!". */
+.msn-rail__item[data-current] .msn-rail__letter {
+  display: inline-block;
+  padding: 0 0.22em 0.08em;
+  line-height: 1;
+  border-bottom: 0.13em solid currentColor;
+}
+.msn-rail__check {
+  position: absolute;
+  right: -0.2rem;
+  bottom: -0.15rem;
+}
+.msn-rail__btn {
+  display: grid;
+  place-items: center;
+  /* A 48 px hit area whatever the text size; the negative margin keeps the rail compact. */
+  min-width: 48px;
+  min-height: 48px;
+  margin: -9px -10px;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  position: relative;
+}
+.msn-rail__tip {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-2);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Stage */
+.msn-stage {
+  position: absolute;
+  inset: 0;
+}
+.msn-stage > * {
+  width: 100%;
+  height: 100%;
+}
+.msn-guardian-stage {
+  display: grid;
+  place-items: center;
+  max-width: 100%;
+  aspect-ratio: 1;
+}
+.msn-guardian-stage > * {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Caption band */
+.msn-caption {
+  min-height: 1.75rem;
+  display: flex;
+  justify-content: center;
+}
+.msn-caption[data-empty] {
+  visibility: hidden;
+}
+.msn-caption__text {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(10, 16, 32, 0.82);
+  color: var(--text);
+  font-size: 1.125rem; /* phone captions >= 18 px */
+  font-weight: 650;
+  line-height: 1.3;
+  text-align: center;
+  animation: msn-fade-up 240ms var(--ease-out);
+}
+
+/* ------------------------------------------------------------------------------------------------
+   HOLD button + Pressure Ring (fixed 76 px button, GAME_DESIGN.md 10.1) */
+.msn-hold {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.msn-hold__ring {
+  position: absolute;
+  inset: 0;
+  width: 112px;
+  height: 112px;
+  overflow: visible;
+}
+.msn-hold__seg {
+  fill: none;
+  stroke: rgba(159, 179, 200, 0.3);
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke 300ms var(--ease-out);
+}
+.msn-hold__seg[data-lit] {
+  stroke: var(--attention);
+}
+.msn-hold__charge {
+  fill: none;
+  stroke: var(--frost);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition-property: stroke-dashoffset;
+  transition-timing-function: linear;
+}
+.msn-hold__btn {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 3px solid var(--paper);
+  background: radial-gradient(circle at 35% 30%, #4fd8c8, var(--teal) 55%, #1f8f84);
+  color: var(--ink);
+  box-shadow: 0 0.4rem 1.2rem rgba(2, 6, 23, 0.55), inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms var(--ease-out), background var(--dur);
+}
+.msn-hold__btn:focus-visible {
+  border-radius: 50%;
+}
+.msn-hold[data-charging] .msn-hold__btn {
+  transform: scale(0.94);
+}
+.msn-hold__btn:disabled {
+  cursor: default;
+}
+.msn-hold__word {
+  font-family: var(--font-display);
+  font-weight: 750;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+}
+.msn-hold[data-status='held'] .msn-hold__btn {
+  background: radial-gradient(circle at 35% 30%, #e6f3ff, var(--frost) 55%, var(--still-blue));
+  border-color: var(--frost);
+}
+.msn-hold[data-status='surge'] .msn-hold__btn {
+  animation: msn-pulse 1.4s var(--ease-out) infinite;
+}
+.msn-hold__pop {
+  position: absolute;
+  bottom: calc(100% - 0.4rem);
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--attention);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  box-shadow: var(--shadow-sm);
+  animation: msn-pop 2.6s var(--ease-out) forwards;
+  pointer-events: none;
+}
+@keyframes msn-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.9);
+  }
+  12%,
+  70% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+@keyframes msn-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 200, 69, 0.6), 0 0.4rem 1.2rem rgba(2, 6, 23, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 0.6rem rgba(255, 200, 69, 0), 0 0.4rem 1.2rem rgba(2, 6, 23, 0.55);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+   ChatLah thread */
+.msn-chat {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.msn-chat__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  max-width: 100%;
+  animation: msn-fade-up 260ms var(--ease-out);
+}
+.msn-chat__row[data-side='out'] {
+  justify-content: flex-end;
+}
+.msn-chat__row[data-channel='notification'] {
+  justify-content: stretch;
+}
+.msn-chat__scene {
+  align-self: center;
+  max-width: 34rem;
+  padding: 0.35rem 0.75rem;
+  text-align: center;
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.95rem;
+  animation: msn-fade-up 260ms var(--ease-out);
+}
+.msn-chat__scene p {
+  margin: 0;
+}
+.msn-chat__scene-btn {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0.35rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  font-style: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+.msn-chat__scene-btn:hover {
+  border-color: var(--line-strong);
+}
+.msn-chat__scene-btn .msn-bubble__mark {
+  align-self: center;
+}
+.msn-chat__scene[data-frozen] {
+  opacity: 0.75;
+  border: 1px dashed rgba(207, 232, 255, 0.5);
+  border-radius: var(--radius-sm);
+}
+.msn-chat__frozen-tag {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--frost);
+}
+.msn-avatar {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.msn-avatar[data-faceless] {
+  background: repeating-linear-gradient(135deg, #334155 0 4px, #2a3446 4px 8px);
+  color: var(--muted);
+}
+.msn-typing {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 1rem 1rem 1rem 0.3rem;
+  background: var(--surface-2);
+}
+.msn-typing span {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: msn-typing 1.2s ease-in-out infinite;
+}
+.msn-typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.msn-typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes msn-typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-0.2rem);
+    opacity: 1;
+  }
+}
+
+.msn-bubble {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: min(85%, 30rem);
+  padding: 0.6rem 0.85rem;
+  border-radius: 1.1rem 1.1rem 1.1rem 0.35rem;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid transparent;
+  text-align: left;
+  font: inherit;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+button.msn-bubble {
+  cursor: pointer;
+  min-height: var(--tap);
+}
+.msn-bubble--out {
+  border-radius: 1.1rem 1.1rem 0.35rem 1.1rem;
+  background: var(--teal);
+  color: var(--ink);
+}
+.msn-bubble--speech {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 1.4rem;
+}
+.msn-bubble--speech::before {
+  content: '';
+  position: absolute;
+  left: -0.35rem;
+  bottom: 0.4rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  background: inherit;
+  border-radius: 0 0 0 0.8rem;
+  transform: rotate(20deg);
+}
+.msn-bubble--notification {
+  max-width: 100%;
+  width: 100%;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(42, 47, 107, 0.95), rgba(36, 54, 90, 0.95));
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-sm);
+}
+.msn-bubble__who {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  opacity: 0.85;
+}
+.msn-bubble__app {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--frost);
+}
+.msn-bubble__text {
+  font-size: 1rem;
+}
+.msn-bubble__attach {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.65rem;
+  background: rgba(10, 16, 32, 0.28);
+  font-size: 0.9rem;
+}
+.msn-bubble--speech .msn-bubble__attach,
+.msn-bubble--out .msn-bubble__attach {
+  background: rgba(29, 36, 64, 0.1);
+}
+.msn-bubble__attach > span {
+  display: grid;
+}
+.msn-bubble__attach-detail {
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+.msn-bubble__scan,
+.msn-bubble__sniff {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  background: rgba(92, 196, 242, 0.18);
+  color: inherit;
+}
+.msn-bubble__sniff {
+  background: rgba(245, 158, 11, 0.2);
+}
+.msn-bubble__mark {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--paper);
+  color: var(--ink);
+}
+.msn-bubble__mark[data-mark='flag'] {
+  background: var(--risk);
+  color: var(--ink);
+}
+.msn-bubble__mark[data-mark='fine'] {
+  background: var(--safe);
+  color: var(--ink);
+}
+.msn-bubble--tap:hover {
+  border-color: var(--line-strong);
+}
+.msn-bubble--frozen {
+  opacity: 0.78;
+  border: 1px dashed rgba(207, 232, 255, 0.65);
+  filter: saturate(0.4);
+  transform: rotate(-0.6deg);
+}
+.msn-bubble--frozen .msn-chat__frozen-tag {
+  margin-top: 0;
+}
+.msn-bubble--scanned {
+  outline: 2px dashed var(--sky);
+  outline-offset: 2px;
+}
+.msn-bubble--sniffed {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+.msn-bubble--shimmer {
+  background-image: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.16) 45%, transparent 60%);
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  animation: msn-shimmer 3.2s ease-in-out infinite;
+}
+@keyframes msn-shimmer {
+  0% {
+    background-position: 130% 0;
+  }
+  60%,
+  100% {
+    background-position: -40% 0;
+  }
+}
+.msn-paw {
+  color: #b45309;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Inspect card */
+.msn-inspect {
+  display: grid;
+  gap: 0.75rem;
+  color: var(--ink);
+}
+.msn-inspect__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.msn-inspect__kind,
+.msn-inspect__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--paper-2);
+  color: var(--ink-2);
+}
+.msn-inspect__tag {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+.msn-inspect__quote {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-left: 4px solid var(--ink-2);
+  background: #fff;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.msn-inspect__quote figcaption {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--ink-2);
+}
+.msn-inspect__quote blockquote {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+.msn-inspect__attach {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 0.35rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.msn-inspect__place p {
+  margin: 0 0 0.35rem;
+}
+.msn-inspect__title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+.msn-inspect__notice {
+  font-weight: 800;
+}
+.msn-inspect__guardian {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--radius-sm);
+  background: #fff7e6;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.msn-inspect__guardian[data-guardian='bytebuddy'] {
+  background: #e0f2fe;
+}
+.msn-inspect__guardian[data-guardian='verifox'] {
+  background: #ffe4e6;
+}
+.msn-inspect__verify-btn {
+  --btn-fg: var(--ink);
+  --btn-line: rgba(29, 36, 64, 0.35);
+}
+.msn-inspect__actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.5rem;
+}
+.msn-inspect__actions .ui-btn[aria-pressed='true'] {
+  box-shadow: 0 0 0 3px var(--ink);
+}
+.msn-inspect__fine {
+  --btn-bg: #fff;
+  --btn-line: rgba(29, 36, 64, 0.3);
+}
+.msn-inspect__result:empty {
+  display: none;
+}
+.msn-inspect__result p {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+}
+.msn-inspect__result .ui-status {
+  color: #0f766e;
+}
+.msn-inspect__none {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Exits (letter + neutral pattern; deliberately no status shapes) */
+.msn-exit {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 4rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+  transition: border-color var(--dur), background var(--dur), transform var(--dur) var(--ease-out);
+}
+.msn-exit:hover:not(:disabled) {
+  border-color: var(--frost);
+}
+.msn-exit[data-selected] {
+  border-color: var(--gold);
+  background: rgba(242, 193, 78, 0.12);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.msn-exit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.msn-exit__badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--frost);
+}
+.msn-exit__letter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+  text-shadow: 0 0 0.3rem var(--bg), 0 0 0.6rem var(--bg);
+}
+.msn-exit__body {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.msn-exit__label {
+  font-weight: 650;
+  line-height: 1.3;
+}
+.msn-exit__detail {
+  font-size: 0.88rem;
+  color: var(--text-2);
+}
+.msn-exit__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.msn-exit__tag {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-weight: 700;
+}
+.msn-exit__dots {
+  letter-spacing: 0.15em;
+  color: var(--text-2);
+}
+.msn-exit__key {
+  min-width: 1.6rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--line-strong);
+  font-family: inherit;
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-align: center;
+}
+.msn-exit__tick {
+  position: absolute;
+  top: -0.45rem;
+  right: -0.45rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  display: none;
+  background: var(--gold);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.msn-exit[data-selected] .msn-exit__tick {
+  display: block;
+}
+.msn-exit[data-selected] .msn-exit__tick::after {
+  content: '';
+  position: absolute;
+  left: 0.42rem;
+  top: 0.22rem;
+  width: 0.38rem;
+  height: 0.7rem;
+  border: solid var(--ink);
+  border-width: 0 0.16rem 0.16rem 0;
+  transform: rotate(45deg);
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Confidence shields */
+.msn-conf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.msn-conf__btn {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  min-height: 4.25rem;
+  padding: 0.55rem 0.35rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  transition: transform var(--dur) var(--ease-out), border-color var(--dur);
+}
+.msn-conf__btn:hover:not(:disabled) {
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+.msn-conf__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.msn-conf__btn[data-picked] {
+  border-color: var(--gold);
+  background: rgba(242, 193, 78, 0.16);
+}
+.msn-conf__shields {
+  display: inline-flex;
+  gap: 0.1rem;
+}
+.msn-conf__shields svg path {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.8;
+}
+.msn-conf__shields svg[data-on] path {
+  fill: var(--gold);
+  stroke: var(--gold);
+}
+.msn-conf__word {
+  font-size: 0.92rem;
+  text-align: center;
+  line-height: 1.2;
+}
+.msn-conf__note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Breathing ring (the 10 s seal lock) */
+.msn-breathe {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0;
+}
+.msn-breathe__ring {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--frost);
+  background: radial-gradient(circle, rgba(207, 232, 255, 0.22), transparent 70%);
+  transform: scale(0.82);
+  transition: transform 2.5s ease-in-out, border-color var(--dur);
+}
+.msn-breathe[data-in] .msn-breathe__ring {
+  transform: scale(1);
+}
+.msn-breathe[data-done] .msn-breathe__ring {
+  transform: scale(0.9);
+  border-color: var(--gold);
+}
+.msn-breathe__count {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+.msn-breathe__words {
+  margin: 0;
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Seal envelope */
+.msn-envelope {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+}
+.msn-envelope__card {
+  width: 100%;
+  transition: transform 500ms var(--ease-out), opacity 400ms var(--ease-out);
+  transform-origin: 50% 100%;
+}
+.msn-envelope__body {
+  display: none;
+  position: relative;
+  width: 7rem;
+  height: 4.6rem;
+  border-radius: 0.5rem;
+  background: var(--paper-2);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.msn-envelope__flap {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2.9rem;
+  background: var(--paper);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top;
+  animation: msn-flap 520ms var(--ease-out) both;
+}
+.msn-envelope__wax {
+  position: absolute;
+  left: 50%;
+  top: 2.2rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: inset 0 0 0 3px rgba(29, 36, 64, 0.2);
+  animation: msn-pop-in 300ms 420ms var(--ease-out) both;
+}
+.msn-envelope[data-sealed] .msn-envelope__card {
+  display: none;
+}
+.msn-envelope[data-sealed] .msn-envelope__body {
+  display: block;
+  animation: msn-fold 520ms var(--ease-out);
+}
+.msn-envelope__label {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+}
+@keyframes msn-flap {
+  from {
+    transform: rotateX(180deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+@keyframes msn-fold {
+  from {
+    transform: scale(1.4, 0.4);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Effect dials */
+.msn-dials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+.msn-dial {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.msn-dial dt {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.msn-dial dd {
+  margin: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+.msn-dial__num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.msn-dial__word {
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+.msn-dial__scale {
+  display: flex;
+  gap: 0.18rem;
+  margin-top: 0.15rem;
+}
+.msn-dial__tick {
+  flex: 1;
+  height: 0.45rem;
+  border-radius: 0.2rem;
+  background: rgba(159, 179, 200, 0.25);
+}
+.msn-dial__tick[data-centre] {
+  background: rgba(159, 179, 200, 0.5);
+  flex: 0 0 0.2rem;
+}
+.msn-dial__tick[data-on] {
+  background: var(--text);
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Feedback card */
+.msn-feedback {
+  display: grid;
+  gap: 0.5rem;
+}
+.msn-feedback__kicker {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.msn-feedback__text {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.msn-feedback__counter {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+.msn-feedback__ring {
+  display: inline-block;
+  margin-right: 0.35rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: var(--attention);
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   GUARD / DOUBT meters */
+.msn-meter {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+.msn-meter__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.msn-meter__title {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+}
+.msn-meter__word {
+  font-size: 0.9rem;
+  color: var(--text-2);
+}
+.msn-meter__num {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+.msn-meter__delta {
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0 0.35rem;
+  border-radius: 0.35rem;
+  background: rgba(159, 179, 200, 0.2);
+  animation: msn-fade-up 300ms var(--ease-out);
+}
+.msn-meter__bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+.msn-meter__seg {
+  height: 0.6rem;
+  border-radius: 0.25rem;
+  background: rgba(159, 179, 200, 0.22);
+  transition: background 300ms var(--ease-out);
+}
+.msn-meter__seg[data-on] {
+  background: var(--text-2);
+}
+.msn-meter[data-kind='doubt'] .msn-meter__seg[data-on] {
+  background: var(--safe);
+}
+.msn-meter[data-kind='guard'] .msn-meter__seg[data-on] {
+  background: var(--attention);
+}
+.msn-meter__help {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Timeline Ribbon */
+.msn-ribbon {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+.msn-ribbon__track {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 30rem;
+}
+.msn-ribbon__now {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.msn-ribbon__line {
+  position: relative;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(159, 179, 200, 0.25);
+  overflow: hidden;
+}
+.msn-ribbon__ticks {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, var(--muted) 0 2px, transparent 2px 1.1rem);
+  opacity: 0.6;
+}
+.msn-ribbon[data-play] .msn-ribbon__ticks {
+  animation: msn-ticks 1.6s cubic-bezier(0.5, 0, 0.2, 1) both;
+}
+@keyframes msn-ticks {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.msn-ribbon__seed {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50% 50% 50% 0.2rem;
+  transform: rotate(-45deg);
+  background: var(--frost);
+  box-shadow: 0 0 0 3px rgba(207, 232, 255, 0.25);
+}
+.msn-ribbon[data-tone='protective'] .msn-ribbon__seed {
+  background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(242, 193, 78, 0.3), 0 0 1rem rgba(242, 193, 78, 0.5);
+}
+.msn-ribbon[data-tone='seed'] .msn-ribbon__seed {
+  background: var(--still-blue);
+  animation: msn-seed-drop 700ms var(--ease-out) both;
+}
+@keyframes msn-seed-drop {
+  from {
+    transform: translateY(-1.5rem) rotate(-45deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(-45deg);
+    opacity: 1;
+  }
+}
+.msn-ribbon__label {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+.msn-ribbon[data-tone='seed'] .msn-ribbon__label {
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+.msn-ribbon__caption {
+  margin: 0;
+  color: var(--text-2);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Pause ("Take a break") */
+.msn-pause {
+  border: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  background: transparent;
+  color: var(--text);
+}
+.msn-pause::backdrop {
+  background: rgba(12, 18, 34, 0.92);
+  backdrop-filter: blur(6px);
+}
+.msn-pause__inner {
+  min-height: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: calc(2rem + var(--safe-top)) var(--gutter) calc(2rem + var(--safe-bottom));
+  text-align: center;
+  max-width: 34rem;
+  margin: 0 auto;
+}
+.msn-pause__moon {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  box-shadow: inset -1.1rem -0.4rem 0 0 var(--gold);
+  margin-bottom: 0.5rem;
+}
+.msn-pause__soft {
+  color: var(--text-2);
+}
+.msn-pause__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0 1rem;
+}
+.msn-pause__help {
+  width: 100%;
+  text-align: left;
+}
+.msn-pause__help summary {
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Shared keyframes */
+@keyframes msn-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes msn-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Exit radiogroup */
+.msn-exits {
+  display: grid;
+  gap: 0.5rem;
+}

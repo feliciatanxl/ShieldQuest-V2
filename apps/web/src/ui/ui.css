@@ -1,0 +1,279 @@
+/* Shared UI components (prefix: ui-). Module styles use their own prefixes. */
+
+.ui-btn {
+  --btn-bg: var(--teal);
+  --btn-fg: var(--ink);
+  --btn-line: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: var(--tap);
+  padding: 0.7em 1.25em;
+  border-radius: 999px;
+  border: 2px solid var(--btn-line);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.1;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    transform var(--dur) var(--ease-out),
+    background var(--dur),
+    box-shadow var(--dur);
+  -webkit-tap-highlight-color: transparent;
+}
+.ui-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.ui-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.ui-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.ui-btn--primary {
+  --btn-bg: var(--gold);
+  --btn-fg: var(--ink);
+}
+.ui-btn--secondary {
+  --btn-bg: transparent;
+  --btn-fg: var(--text);
+  --btn-line: var(--line-strong);
+}
+.ui-btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--text-2);
+}
+.ui-btn--paper {
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+}
+.ui-btn--danger {
+  --btn-bg: var(--risk);
+  --btn-fg: var(--ink);
+}
+.ui-btn--sm {
+  min-height: 2.5rem;
+  padding: 0.45em 0.95em;
+  font-size: 0.92rem;
+}
+.ui-btn--lg {
+  min-height: 3.5rem;
+  padding: 0.85em 1.6em;
+  font-size: 1.15rem;
+}
+.ui-btn--block {
+  width: 100%;
+}
+
+.ui-iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  backdrop-filter: blur(8px);
+  touch-action: manipulation;
+}
+.ui-iconbtn:hover {
+  border-color: var(--line-strong);
+}
+
+.ui-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.ui-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.ui-logo__word b {
+  color: var(--teal);
+  font-weight: 650;
+}
+
+/* Sheet / dialog: bottom sheet on phones, centred card on wider screens. */
+.ui-sheet {
+  border: 0;
+  padding: 0;
+  margin: auto auto 0;
+  width: 100%;
+  max-width: 34rem;
+  max-height: 88dvh;
+  background: transparent;
+  color: var(--ink);
+}
+.ui-sheet--wide {
+  max-width: 48rem;
+}
+.ui-sheet::backdrop {
+  background: rgba(10, 16, 32, 0.6);
+  backdrop-filter: blur(3px);
+}
+.ui-sheet__inner {
+  background: var(--paper);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 0.75rem 1.25rem calc(1.25rem + var(--safe-bottom));
+  max-height: 88dvh;
+  overflow: auto;
+  box-shadow: var(--shadow);
+}
+@media (min-width: 40rem) {
+  .ui-sheet {
+    margin: auto;
+  }
+  .ui-sheet__inner {
+    border-radius: var(--radius-lg);
+  }
+}
+.ui-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: sticky;
+  top: -0.75rem;
+  background: var(--paper);
+  padding: 0.5rem 0;
+}
+.ui-sheet__head h2 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+.ui-sheet .ui-iconbtn {
+  background: var(--paper-2);
+  color: var(--ink);
+  border-color: transparent;
+}
+.ui-sheet a {
+  color: var(--teal-deep, #0f766e);
+}
+
+.ui-helplist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.ui-helplist li {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1px solid rgba(29, 36, 64, 0.12);
+}
+.ui-helplist__contact {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+.ui-helplist__when {
+  color: var(--ink-2);
+  font-size: 0.92rem;
+}
+.ui-details summary {
+  cursor: pointer;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+.ui-fineprint {
+  font-size: 0.8rem;
+  color: var(--ink-2);
+}
+
+.ui-helpbtn {
+  color: var(--rose);
+}
+
+.ui-settings {
+  display: grid;
+  gap: 1rem;
+}
+.ui-settings fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.ui-settings legend {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.ui-settings select {
+  min-height: var(--tap);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(29, 36, 64, 0.25);
+  background: #fff;
+  color: var(--ink);
+  padding: 0 0.75rem;
+}
+.ui-settings .ui-btn--secondary {
+  --btn-fg: var(--ink);
+  --btn-line: rgba(29, 36, 64, 0.3);
+}
+.ui-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.ui-row output {
+  min-width: 3.5rem;
+  text-align: center;
+  font-weight: 700;
+}
+.ui-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: var(--tap);
+  cursor: pointer;
+}
+.ui-toggle input {
+  width: 1.4rem;
+  height: 1.4rem;
+  accent-color: var(--teal-deep, #0f766e);
+}
+.ui-toggle span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ui-card {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-disclaimer {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  padding: 0.75rem var(--gutter) calc(0.75rem + var(--safe-bottom));
+}

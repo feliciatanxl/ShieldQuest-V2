@@ -1,0 +1,134 @@
+/* 3D kit chrome: the canvas frame, its DOM overlay layer, the context-loss card and hotspot buttons. */
+
+.w-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint;
+}
+
+.w-canvas__stage {
+  position: absolute;
+  inset: 0;
+}
+
+.w-canvas__stage > div,
+.w-canvas__stage canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Hosts focusable controls positioned over the 3D view; transparent to drags everywhere else. */
+.w-canvas__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.w-canvas__overlay > * {
+  pointer-events: none;
+}
+
+.w-canvas__lost {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  color: var(--text);
+}
+
+.w-canvas__lost--static {
+  position: relative;
+  min-height: 100%;
+}
+
+.w-canvas__lost-text {
+  margin: 0;
+  max-width: 28ch;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--text-2);
+}
+
+.w-canvas__restore {
+  min-height: var(--tap, 3rem);
+  min-width: var(--tap, 3rem);
+  padding: 0.75rem 1.25rem;
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.w-canvas__restore:hover {
+  background: var(--surface-2);
+}
+
+.w-canvas__restore:focus-visible,
+.w-hotspot-btn:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--bg) 70%, transparent);
+}
+
+/* Hotspot: an invisible 48px target sitting exactly over the 3D marker (the marker is the visual). */
+.w-hotspot-btn {
+  pointer-events: auto;
+  display: block;
+  width: var(--tap, 3rem);
+  height: var(--tap, 3rem);
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.w-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Guardian figure card. */
+.w-guardian {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.w-guardian__flat {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}

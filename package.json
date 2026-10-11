@@ -1,0 +1,28 @@
+{
+  "name": "shieldquest-v2",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ShieldQuest V2 - Project SHIELD youth crime- and scam-prevention web game (Team SecurePi)",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "npm run dev -w @shieldquest/web",
+    "dev:server": "npm run dev -w @shieldquest/server",
+    "build": "npm run build -w @shieldquest/web",
+    "start": "npm run start -w @shieldquest/server",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

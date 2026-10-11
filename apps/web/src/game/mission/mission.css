@@ -1,0 +1,148 @@
+/* Mission routes (/play/m/:id, /play/nightfall): page frame, not-found and Nightfall. Prefix: msn-. */
+
+.msn-page {
+  min-height: 100dvh;
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+.msn-saving {
+  margin: 2rem 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Not found */
+.msn-notfound {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: calc(2rem + var(--safe-top)) var(--gutter) calc(2rem + var(--safe-bottom));
+  background: radial-gradient(90% 70% at 50% 0%, var(--bg-3), var(--bg) 70%);
+}
+.msn-notfound__card {
+  max-width: 32rem;
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+.msn-notfound__card h1 {
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+
+/* Nightfall */
+.msn-nightfall {
+  gap: 1.25rem;
+}
+.msn-stillpoint {
+  justify-self: center;
+  width: 7.5rem;
+  height: 7.5rem;
+  filter: drop-shadow(0 0 1.5rem rgba(242, 193, 78, 0.35));
+}
+.msn-stillpoint__minute {
+  transform-origin: 60px 60px;
+  transform: rotate(-6deg);
+  animation: msn-tick-over 1.2s 600ms cubic-bezier(0.5, 1.8, 0.5, 1) forwards;
+}
+.msn-stillpoint[data-reduced] .msn-stillpoint__minute {
+  animation: none;
+  transform: none;
+}
+@keyframes msn-tick-over {
+  to {
+    transform: rotate(0deg);
+  }
+}
+.msn-nightfall__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.5rem;
+}
+.msn-stat {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.msn-stat[data-held] {
+  border-color: rgba(60, 200, 184, 0.6);
+}
+.msn-stat__num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.msn-stat__word {
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+.msn-nightfall__ratio {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  color: var(--frost);
+  font-weight: 600;
+}
+.msn-nightfall__districts,
+.msn-nightfall__guardians,
+.msn-nightfall__cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.msn-nightfall__districts li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border-left: 0.3rem solid var(--msn-district, var(--teal));
+}
+.msn-nightfall__district {
+  font-weight: 700;
+}
+.msn-nightfall__guardians {
+  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+}
+.msn-nightfall__guardians li {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.msn-nightfall__cards li p {
+  margin: 0;
+}
+.msn-nightfall__card-from {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.msn-nightfall__closing {
+  margin: 0.5rem 0;
+  padding: 1.25rem 1rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, var(--bg-3), var(--bg-2));
+  border: 1px solid rgba(242, 193, 78, 0.35);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4.5vw, 1.9rem);
+  font-weight: 650;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--text);
+}
