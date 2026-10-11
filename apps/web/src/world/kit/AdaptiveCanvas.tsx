@@ -86,7 +86,8 @@ interface KitRootProps {
   tier: QualityTier;
   uniforms: KitUniforms;
   reducedMotion: boolean;
-  overlay: RefObject<HTMLDivElement | null>;
+  /** Null until the overlay element is mounted (so consumers' effects re-run once it exists). */
+  overlay: RefObject<HTMLDivElement | null> | null;
   continuous: boolean;
   hidden: boolean;
   onPerformance?: (report: PerformanceReport) => void;
@@ -238,6 +239,13 @@ export function AdaptiveCanvas({
   const reducedMotion = useReducedMotion();
   const hidden = useDocumentHidden();
   const overlay = useRef<HTMLDivElement | null>(null);
+  // The r3f tree can mount before the sibling overlay div's ref is attached: publish the ref through context
+  // only once it is set, so hotspot buttons (and other overlay users) mount into it reliably.
+  const [overlayReady, setOverlayReady] = useState(false);
+  const setOverlay = useCallback((el: HTMLDivElement | null) => {
+    overlay.current = el;
+    setOverlayReady(el !== null);
+  }, []);
   const ownUniforms = useMemo(() => createKitUniforms(), []);
   const uniforms = uniformsProp ?? ownUniforms;
   const [canvasKey, setCanvasKey] = useState(0);
@@ -329,7 +337,7 @@ export function AdaptiveCanvas({
               tier={quality}
               uniforms={uniforms}
               reducedMotion={reducedMotion}
-              overlay={overlay}
+              overlay={overlayReady ? overlay : null}
               continuous={frameloop === 'always'}
               hidden={hidden}
               onPerformance={onPerformance}
@@ -339,7 +347,7 @@ export function AdaptiveCanvas({
           </Canvas>
         )}
       </div>
-      <div ref={overlay} className="w-canvas__overlay" />
+      <div ref={setOverlay} className="w-canvas__overlay" />
       {lost && (
         <div className="w-canvas__lost" role="status">
           <p className="w-canvas__lost-text">The 3D view paused to protect your device.</p>

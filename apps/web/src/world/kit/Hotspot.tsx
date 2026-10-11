@@ -132,7 +132,6 @@ export function Hotspot({
   // The accessible twin of the marker: a real <button> in the overlay layer (outside the role="img" stage).
   useEffect(() => {
     const host = overlay?.current;
-    console.log('[hotspot-debug]', label, Boolean(overlay), Boolean(host), wantsButton);
     if (!host || !wantsButton) return;
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -209,7 +208,9 @@ export function Hotspot({
     if (btn) {
       // Follow the marker: project its centre into the overlay (same box as the canvas).
       _ndc.copy(g.getWorldPosition(_v)).project(camera);
-      const behind = _ndc.z > 1 || _ndc.z < -1;
+      // Behind the camera or outside the view: hidden, so keyboard focus never lands on an invisible target
+      // (the screen's clue list still offers every clue).
+      const behind = _ndc.z > 1 || _ndc.z < -1 || Math.abs(_ndc.x) > 1.02 || Math.abs(_ndc.y) > 1.02;
       const px = Math.max(minPixels, size * fit * a.scale * pxPerUnit);
       btn.style.visibility = behind ? 'hidden' : 'visible';
       btn.style.width = `${px}px`;
