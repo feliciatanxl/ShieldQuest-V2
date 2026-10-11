@@ -88,9 +88,14 @@
   box-shadow: 0 0 0 6px color-mix(in srgb, var(--bg) 70%, transparent);
 }
 
-/* Hotspot: an invisible 48px target sitting exactly over the 3D marker (the marker is the visual). */
+/* Hotspot: an invisible target (>= 48px) sitting exactly over the 3D marker (the marker is the visual).
+   Hotspot positions it with an inline transform on every rendered frame. */
+.w-canvas__overlay > .w-hotspot-btn,
 .w-hotspot-btn {
   pointer-events: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
   display: block;
   width: var(--tap, 3rem);
   height: var(--tap, 3rem);

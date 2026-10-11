@@ -18,6 +18,8 @@
  *   when the server moves everyone on; IntroPhase takes the seat's role and lens; FreezePhase's Done is the
  *   seat's "Done" tap; ExplainPhase's Echo Council can be replaced by the squad's anonymous dots.
  * - Focus: each phase renders a focusable h2 (data-msn-focus); call focusPhaseHeading() after a phase change.
+ * - Bands: pass the player's band (junior gets Mood instead of dots, no surge, simpler rule wording in BondPhase).
+ * - Guardian colours come from the shared GUARDIANS data as --msn-g-<id> (GUARDIAN_COLOR_VARS on phase roots).
  */
 
 // Phases

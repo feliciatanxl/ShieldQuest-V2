@@ -423,8 +423,8 @@ export function tree(options: TreeOptions = {}): BufferGeometry {
     }
   } else if (kind === 'rain') {
     const s = h / 4;
-    b.addPainted(jitter(new IcosahedronGeometry(1, 0).toNonIndexed(), 0.18), shadeLeaf, { at: [0, trunkH + 0.9 * s, 0], scale: [2.4 * s, 0.75 * s, 2.2 * s] });
-    b.addPainted(jitter(new IcosahedronGeometry(1, 0).toNonIndexed(), 0.18), shadeLeaf, { at: [0.9 * s, trunkH + 1.3 * s, -0.3 * s], scale: [1.3 * s, 0.6 * s, 1.2 * s] });
+    b.addPainted(jitter(new IcosahedronGeometry(1, 0), 0.18), shadeLeaf, { at: [0, trunkH + 0.9 * s, 0], scale: [2.4 * s, 0.75 * s, 2.2 * s] });
+    b.addPainted(jitter(new IcosahedronGeometry(1, 0), 0.18), shadeLeaf, { at: [0.9 * s, trunkH + 1.3 * s, -0.3 * s], scale: [1.3 * s, 0.6 * s, 1.2 * s] });
   } else {
     const s = h / 4;
     const blobs: [Vec3, number][] = [
@@ -433,7 +433,7 @@ export function tree(options: TreeOptions = {}): BufferGeometry {
       [[-0.5 * s, trunkH + 0.8 * s, -0.2 * s], 0.72],
     ];
     for (const [at, r] of blobs) {
-      b.addPainted(jitter(new IcosahedronGeometry(r * s, 0).toNonIndexed(), 0.14 * s), shadeLeaf, { at, rotY: rand() * Math.PI });
+      b.addPainted(jitter(new IcosahedronGeometry(r * s, 0), 0.14 * s), shadeLeaf, { at, rotY: rand() * Math.PI });
     }
   }
   return bakeAO(b.build(), { ground: 0.7, underside: 0.3 });

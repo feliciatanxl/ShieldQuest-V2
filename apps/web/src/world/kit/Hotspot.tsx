@@ -2,9 +2,10 @@
 // (dotted ring + magnifier / jagged hatched burst / rounded shield), a pulsing ring while available, and a real
 // focusable <button> in the canvas's DOM overlay, so keyboard and screen-reader players can use it. The marker
 // never shrinks below a tappable size on screen. Reduced motion: no pulse, no pop.
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+// The button is a plain DOM element owned by this component (no extra React root per marker), positioned over
+// the marker on every rendered frame.
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
 import {
   MeshBasicMaterial,
   RingGeometry,
@@ -31,7 +32,7 @@ export interface HotspotProps {
   onSelect?: () => void;
   /** World size of the marker (m). Default 0.5. */
   size?: number;
-  /** Minimum on-screen size in CSS pixels (tap target). Default 44. */
+  /** Minimum on-screen size in CSS pixels (tap target). Default 48. */
   minPixels?: number;
   /** Accepts taps (true while time is held). Default true. */
   interactive?: boolean;
@@ -48,6 +49,7 @@ const ringResource = sharedResource(
 
 const PULSE_S = 1.4;
 const _v = new Vector3();
+const _ndc = new Vector3();
 
 function stateLabel(state: HotspotState, label: string): string {
   if (state === 'found-flag') return `${label}: flagged as a warning sign`;
@@ -62,7 +64,7 @@ export function Hotspot({
   label,
   onSelect,
   size = 0.5,
-  minPixels = 44,
+  minPixels = 48,
   interactive = true,
   domButton = true,
   alwaysOnTop = true,
@@ -76,6 +78,11 @@ export function Hotspot({
   const pulse = useRef<Mesh>(null);
   const [hot, setHot] = useState(false);
   const anim = useRef({ scale: 1, pop: 1, last: state });
+  const button = useRef<HTMLButtonElement | null>(null);
+  const select = interactive && onSelect ? onSelect : undefined;
+  const selectRef = useRef(select);
+  selectRef.current = select;
+  const wantsButton = domButton && Boolean(select) && state !== 'hidden';
 
   const iconMaterial = useMemo(
     () =>
@@ -122,6 +129,45 @@ export function Hotspot({
     requestFrame();
   }, [hot, position, requestFrame]);
 
+  // The accessible twin of the marker: a real <button> in the overlay layer (outside the role="img" stage).
+  useEffect(() => {
+    const host = overlay?.current;
+    console.log('[hotspot-debug]', label, Boolean(overlay), Boolean(host), wantsButton);
+    if (!host || !wantsButton) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'w-hotspot-btn';
+    btn.style.visibility = 'hidden';
+    const onClick = (e: MouseEvent) => {
+      e.stopPropagation();
+      selectRef.current?.();
+    };
+    const on = () => setHot(true);
+    const off = () => setHot(false);
+    btn.addEventListener('click', onClick);
+    btn.addEventListener('focus', on);
+    btn.addEventListener('blur', off);
+    btn.addEventListener('pointerenter', on);
+    btn.addEventListener('pointerleave', off);
+    host.appendChild(btn);
+    button.current = btn;
+    requestFrame();
+    return () => {
+      btn.removeEventListener('click', onClick);
+      btn.removeEventListener('focus', on);
+      btn.removeEventListener('blur', off);
+      btn.removeEventListener('pointerenter', on);
+      btn.removeEventListener('pointerleave', off);
+      btn.remove();
+      button.current = null;
+      setHot(false);
+    };
+  }, [overlay, wantsButton, requestFrame]);
+
+  useEffect(() => {
+    button.current?.setAttribute('aria-label', stateLabel(state, label));
+  }, [state, label, wantsButton]);
+
   useFrame((frame, delta) => {
     const g = group.current;
     if (!g) return;
@@ -159,11 +205,21 @@ export function Hotspot({
         busy = true;
       }
     }
+    const btn = button.current;
+    if (btn) {
+      // Follow the marker: project its centre into the overlay (same box as the canvas).
+      _ndc.copy(g.getWorldPosition(_v)).project(camera);
+      const behind = _ndc.z > 1 || _ndc.z < -1;
+      const px = Math.max(minPixels, size * fit * a.scale * pxPerUnit);
+      btn.style.visibility = behind ? 'hidden' : 'visible';
+      btn.style.width = `${px}px`;
+      btn.style.height = `${px}px`;
+      btn.style.transform = `translate(${((_ndc.x + 1) / 2) * viewport.width}px, ${((1 - _ndc.y) / 2) * viewport.height}px) translate(-50%, -50%)`;
+    }
     if (busy) requestFrame();
   });
 
   if (state === 'hidden') return null;
-  const select = interactive && onSelect ? onSelect : undefined;
   const handleClick = select
     ? (e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
@@ -186,28 +242,6 @@ export function Hotspot({
           <mesh ref={pulse} geometry={ring} material={ringMaterial} renderOrder={alwaysOnTop ? 19 : 0} raycast={() => null} />
         )}
       </group>
-      {domButton && select && (
-        <Html
-          portal={(overlay ?? undefined) as RefObject<HTMLElement> | undefined}
-          center
-          zIndexRange={[40, 0]}
-          pointerEvents="auto"
-        >
-          <button
-            type="button"
-            className="w-hotspot-btn"
-            aria-label={stateLabel(state, label)}
-            onClick={(e) => {
-              e.stopPropagation();
-              select();
-            }}
-            onFocus={() => setHot(true)}
-            onBlur={() => setHot(false)}
-            onPointerEnter={() => setHot(true)}
-            onPointerLeave={() => setHot(false)}
-          />
-        </Html>
-      )}
     </group>
   );
 }

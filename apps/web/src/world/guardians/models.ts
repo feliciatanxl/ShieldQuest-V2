@@ -180,7 +180,7 @@ function verifox({ o, t, a }: BuildContext): void {
     ringY([0, 0.4, 0.03], 0.17, 0.17, 6, PH6),
     ringY([0, 0.56, 0.07], 0.115, 0.11, 6, PH6),
   ];
-  for (let i = 0; i < body.length - 1; i++) band(o, body[i]!, body[i + 1]!, (seg) => (seg === 5 && i >= 1 ? t.paper : undefined));
+  for (let i = 0; i < body.length - 1; i++) band(o, body[i]!, body[i + 1]!, (seg) => (seg === 5 && i === 2 ? t.paper : undefined));
   o.cone(body[0]!, [0, 0, -0.05]);
   o.cone(body[3]!, [0, 0.6, 0.06]);
 
@@ -244,6 +244,7 @@ function verifox({ o, t, a }: BuildContext): void {
 
 /** Echo: an otter standing up, holding a pebble, long flat tail behind. */
 function echo({ o, t, a, level }: BuildContext): void {
+  const belly = mixc(t.paper, t.light, 0.45);
   const rings = [
     ringY([0, 0.03, 0], 0.15, 0.14, 6, PH6),
     ringY([0, 0.2, 0], 0.21, 0.19, 6, PH6),
@@ -255,7 +256,7 @@ function echo({ o, t, a, level }: BuildContext): void {
   ];
   for (let i = 0; i < rings.length - 1; i++) {
     o.centre = i < 4 ? [0, 0.4, 0] : [0, 0.82, 0.03];
-    band(o, rings[i]!, rings[i + 1]!, (seg) => (seg === 5 && i >= 1 && i <= 2 ? t.paper : undefined));
+    band(o, rings[i]!, rings[i + 1]!, (seg) => (seg === 5 && i >= 1 && i <= 2 ? belly : undefined));
   }
   o.centre = [0, 0.4, 0];
   o.cone(rings[0]!, [0, 0, 0]);
@@ -395,7 +396,9 @@ function shieldfin({ o, t, a, level }: BuildContext): void {
   const rotX = (p: Vec3): Vec3 => {
     const y = p[1] - pivot[1];
     const z = p[2] - pivot[2];
-    return [p[0], pivot[1] + y * Math.cos(tilt) - z * Math.sin(tilt), pivot[2] + y * Math.sin(tilt) + z * Math.cos(tilt)];
+    // Tilt, and scale to 86% so the wingspan fits the same frame as the other Guardians.
+    const k = 0.86;
+    return [p[0] * k, pivot[1] + k * (y * Math.cos(tilt) - z * Math.sin(tilt)), pivot[2] + k * (y * Math.sin(tilt) + z * Math.cos(tilt))];
   };
   o.transformed(rotX, () => {
     o.symmetric((m) => {
@@ -451,7 +454,7 @@ function cluepaw({ o, t, a, level }: BuildContext): void {
     ringY([0, 0.4, 0.02], 0.19, 0.18, 6, PH6),
     ringY([0, 0.53, 0.04], 0.13, 0.12, 6, PH6),
   ];
-  for (let i = 0; i < body.length - 1; i++) band(o, body[i]!, body[i + 1]!, (seg) => (seg === 5 && i >= 1 ? t.paper : undefined));
+  for (let i = 0; i < body.length - 1; i++) band(o, body[i]!, body[i + 1]!, (seg) => (seg === 5 && i === 2 ? t.paper : undefined));
   o.cone(body[0]!, [0, 0, -0.03]);
   o.cone(body[3]!, [0, 0.57, 0.04]);
 
@@ -487,10 +490,10 @@ function cluepaw({ o, t, a, level }: BuildContext): void {
     [[0, 0.08, -0.22], [0.22, 0.06, -0.22], [0.3, 0.05, 0.0], [0.2, 0.045, 0.2], [0.04, 0.045, 0.26]],
     [0.05, 0.05, 0.045, 0.04, 0.03],
     5,
-    (seg, side) => (seg === 3 ? INK : side % 2 ? t.base : t.dark),
+    (seg, side) => (seg === 3 ? t.deep : side % 2 ? t.base : t.dark),
   );
   // Ink paw prints leading off towards a clue (they glow in the second colour from bond mark III).
-  const printColor = level >= 3 && a ? a.base : INK;
+  const printColor = level >= 3 && a ? a.base : t.deep;
   const printGlow = level >= 3 && a ? 0.6 : 0;
   pawPrint(o, [0.4, 0.004, 0.3], -2.4, 0.035, printColor, printGlow);
   pawPrint(o, [0.52, 0.004, 0.08], -2.6, 0.035, printColor, printGlow);
@@ -604,7 +607,7 @@ export function guardianFacets(id: GuardianId, level: number): Facet[] {
 /** The sheet shown at level 0: a creased square, one corner folded to the centre (showing the coloured side). */
 export const SHEET = {
   /** Side length (m). */
-  size: 1.05,
+  size: 0.94,
   /** Lean back from vertical (radians), so the sheet faces a camera slightly above. */
   lean: 0.32,
   /** Height of the sheet's centre. */
@@ -614,7 +617,7 @@ export const SHEET = {
 } as const;
 
 /** Uniform values the guardian material expects (uLift: arc height of flying facets). */
-export const UNFOLD_LIFT = 0.35;
+export const UNFOLD_LIFT = 0.2;
 
 interface SheetTri {
   uv: [[number, number], [number, number], [number, number]];
@@ -660,8 +663,11 @@ export function buildGuardianGeometry(id: GuardianId, level: number): BufferGeom
     for (let j = 0; j < k; j++) {
       const u0 = -0.5 + j * h;
       const u1 = u0 + h;
-      // Split along the "\" diagonal so the corner fold (u + v = c) runs along triangle edges.
-      cells.push({ uv: [[u0, v1], [u0, v0], [u1, v0]] }, { uv: [[u0, v1], [u1, v0], [u1, v1]] });
+      // Split so every crease runs along triangle edges: "/" in the bottom-left quadrant (the u = v crease),
+      // "\" elsewhere (the u = -v crease, and the corner fold u + v = c in the top-right).
+      const slash = u1 <= 1e-9 && v1 <= 1e-9;
+      if (slash) cells.push({ uv: [[u0, v1], [u0, v0], [u1, v1]] }, { uv: [[u0, v0], [u1, v0], [u1, v1]] });
+      else cells.push({ uv: [[u0, v1], [u0, v0], [u1, v0]] }, { uv: [[u0, v1], [u1, v0], [u1, v1]] });
     }
   }
   // The top-right corner is folded to the centre along u + v = c (c on a grid diagonal).
@@ -669,8 +675,8 @@ export function buildGuardianGeometry(id: GuardianId, level: number): BufferGeom
   const relief = (u: number, v: number) => SHEET.relief * (Math.abs(u) + Math.abs(v));
   const paperA = t.paper;
   const paperB = mixc(t.paper, INK, 0.07);
-  const flapA = t.base;
-  const flapB = t.light;
+  // The coloured back of the paper shows on the folded flap (a hint of who is waiting inside).
+  const flap = t.base;
 
   const n = total * 3;
   const position = new Float32Array(n * 3);
@@ -697,7 +703,7 @@ export function buildGuardianGeometry(id: GuardianId, level: number): BufferGeom
     }) as [Vec3, Vec3, Vec3];
     const sc = centroid(sheet);
     const sector = Math.floor((Math.atan2(cv, cu) + Math.PI) / (Math.PI / 4)) % 8;
-    sheetCol.set(folded ? (idx % 2 ? flapA : flapB) : sector % 2 ? paperA : paperB);
+    sheetCol.set(folded ? flap : sector % 2 ? paperA : paperB);
     col.set(f.color);
     // Fold axis: across the direction of travel (a page turning over), with a little per-facet variety.
     const travel = v3.sub(fc, sc);

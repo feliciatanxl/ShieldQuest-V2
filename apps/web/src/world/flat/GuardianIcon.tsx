@@ -98,7 +98,7 @@ const Beacon: Draw = (t) => (
     <circle cx="26.2" cy="13.6" r="1.8" fill={PAPER} />
     <circle cx="22.1" cy="14" r="0.95" fill={INK} />
     <circle cx="26.5" cy="14" r="0.95" fill={INK} />
-    <path d="M22 9.5 Q19.5 5.5 16.5 4.5 M26 9.5 Q28.5 5.5 31.5 4.5" stroke={INK} strokeWidth="1" fill="none" strokeLinecap="round" />
+    <path d="M22 9.5 Q19.5 5.5 16.5 4.5 M26 9.5 Q28.5 5.5 31.5 4.5" stroke={t.deep} strokeWidth="1.1" fill="none" strokeLinecap="round" />
     <circle cx="16.5" cy="4.5" r="1.7" fill={t.lighter} />
     <circle cx="31.5" cy="4.5" r="1.7" fill={t.lighter} />
   </>
@@ -124,8 +124,8 @@ const Shieldfin: Draw = (t) => (
 
 const Cluepaw: Draw = (t) => (
   <>
-    {/* Ink paw prints leading off to the left. */}
-    <g fill={INK}>
+    {/* Ink paw prints leading off to the left (deep amber so they show on dark surfaces too). */}
+    <g fill={t.deep}>
       <ellipse cx="6.5" cy="43" rx="2" ry="1.6" />
       <circle cx="4.6" cy="40.7" r="0.8" />
       <circle cx="6.5" cy="40" r="0.8" />
@@ -162,7 +162,7 @@ const Cluepaw: Draw = (t) => (
 
 const ByteBuddy: Draw = (t) => (
   <>
-    <path d="M24 8.5 V3.8" stroke={INK} strokeWidth="1.3" strokeLinecap="round" />
+    <path d="M24 8.5 V3.8" stroke={t.deep} strokeWidth="1.4" strokeLinecap="round" />
     <circle cx="24" cy="3.5" r="2" fill="#fff3c4" />
     <circle cx="10.8" cy="18" r="2.1" fill={t.deep} />
     <circle cx="37.2" cy="18" r="2.1" fill={t.deep} />

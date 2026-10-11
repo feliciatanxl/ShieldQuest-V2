@@ -81,7 +81,8 @@ function FigureRig({ guardian, level, celebrate }: RigProps) {
 
   useFrame((state, delta) => {
     const a = anim.current;
-    const dt = Math.min(delta, 0.1);
+    // Real time (slow frames must not stretch the Unfold), capped so a hidden tab does not skip it.
+    const dt = Math.min(delta, 0.25);
     const gu = material.userData.guardian;
     let unfold = earned ? 1 : 0;
     let opacity = 1;
@@ -149,7 +150,7 @@ export default function GuardianFigure({ guardian, level, celebrate = false, qua
       <AdaptiveCanvas
         quality={quality}
         ariaLabel={describe(guardian, lv)}
-        camera={{ position: [0, 0.95, 3.1], fov: 30, near: 0.1, far: 30 }}
+        camera={{ position: [0, 0.92, 2.75], fov: 30, near: 0.1, far: 30 }}
         fallback={flat}
       >
         <Lighting grade="blue-hour" timeOfDay="afternoon" fog={false} target={[0, 0.5, 0]} shadowExtent={2} />
