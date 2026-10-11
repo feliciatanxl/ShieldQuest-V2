@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import type { Mission } from '@shieldquest/shared';
 import { Button } from '../../../ui/Button';
 import { Icon } from '../../../ui/Icon';
@@ -21,6 +21,13 @@ export interface TracePhaseProps {
 }
 
 const PULL_AT = 0.78;
+
+/** Chat handles like "LegendVault" or "ProGamer_Zed" get soft break points so they wrap at word joins. */
+function softBreaks(name: string): ReactNode[] {
+  return name
+    .split(/(?<=[a-z])(?=[A-Z])|(?<=_)/)
+    .flatMap((part, i) => (i === 0 ? [part] : [<wbr key={i} />, part]));
+}
 
 /** Identify the Influence: Pull the String from the pusher to the edge, read the Gain Tag, then answer. */
 export function TracePhase({ mission, pulled, answers, onPull, onAnswer, onContinue, seed, reduced }: TracePhaseProps) {
@@ -85,7 +92,7 @@ export function TracePhase({ mission, pulled, answers, onPull, onAnswer, onConti
       <div ref={trackRef} className="msn-thread" data-pulled={pulled ? '' : undefined} style={{ ['--msn-pull' as string]: String(level) }}>
         <span className="msn-thread__from">
           <span className="msn-avatar">{initials(pusher)}</span>
-          <span className="msn-thread__name">{pusher}</span>
+          <span className="msn-thread__name">{softBreaks(pusher)}</span>
         </span>
         <svg className="msn-thread__svg" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
           <path

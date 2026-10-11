@@ -863,7 +863,8 @@
   font-weight: 700;
   max-width: 4.5rem;
   text-align: center;
-  overflow-wrap: anywhere;
+  line-height: 1.15;
+  overflow-wrap: break-word;
 }
 .msn-thread__svg {
   width: 100%;
