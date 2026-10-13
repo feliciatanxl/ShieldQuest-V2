@@ -8,5 +8,6 @@ export { SafetyPage } from './pages/SafetyPage';
 export { AboutPage } from './pages/AboutPage';
 export { HelpPage } from './pages/HelpPage';
 export { NotFoundPage } from './pages/NotFoundPage';
+export { ErrorPage } from './pages/ErrorPage';
 export { SiteLayout } from './SiteLayout';
 export { CONTACT } from './data';

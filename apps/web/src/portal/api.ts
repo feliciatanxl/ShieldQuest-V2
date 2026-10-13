@@ -3,7 +3,7 @@
 // be blocked. Nothing here sends cookies, and the token never goes into a URL.
 
 import { useSyncExternalStore } from 'react';
-import type { LintIssue } from '@shieldquest/shared';
+import { httpStatus, type LintIssue } from '@shieldquest/shared';
 import type { LoginResponse, PitchProblem } from './model';
 
 export interface EducatorSession {
@@ -130,8 +130,9 @@ async function request<T>(path: string, method: 'GET' | 'POST' | 'PUT', opts: Ap
   if (!res.ok) {
     const d = (data ?? {}) as { error?: string; message?: string; issues?: LintIssue[]; problems?: PitchProblem[] };
     if (res.status === 401 && opts.auth) setSession(null);
+    const info = httpStatus(res.status);
     const fallback =
-      res.status === 429 ? 'Too many tries in a short time. Wait a minute and try again.' : `Something went wrong (${res.status}).`;
+      res.status === 429 ? 'Too many tries in a short time. Wait a minute and try again.' : `${info.title} (error ${info.code}). ${info.message}`;
     throw new PortalError(res.status, d.error ?? 'error', d.message ?? fallback, d.issues ?? [], d.problems ?? []);
   }
   return data as T;
@@ -164,7 +165,7 @@ export async function downloadWithAuth(path: string, fallbackName: string): Prom
   }
   if (!res.ok) {
     if (res.status === 401) setSession(null);
-    throw new PortalError(res.status, 'error', 'The download did not work. Try again.');
+    throw new PortalError(res.status, 'error', `The download did not work (error ${res.status}). ${httpStatus(res.status).message}`);
   }
   const name = /filename="([^"]+)"/.exec(res.headers.get('content-disposition') ?? '')?.[1] ?? fallbackName;
   const url = URL.createObjectURL(await res.blob());

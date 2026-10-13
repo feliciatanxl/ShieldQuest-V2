@@ -9,6 +9,7 @@ import fastifyStatic from '@fastify/static';
 import Fastify from 'fastify';
 import { GAME, MISSIONS } from '@shieldquest/shared';
 import { purgeAssessmentResponses, registerAssessmentRoutes } from './assess/routes';
+import { registerErrorHandling } from './errors';
 import { registerPortalRoutes } from './portal/routes';
 import { purgeStaleSaveCards, registerSaveRoutes } from './save/routes';
 import { registerSquad } from './squad/server';
@@ -38,6 +39,11 @@ const app = Fastify({
 
 await app.register(cors, { origin: process.env.CORS_ORIGIN?.split(',') ?? true });
 
+// Before any route: Fastify routes keep the error handler that was set when they were added.
+// API errors always answer { error, statusCode, message }; failed page requests get a fallback HTML page.
+const SPA = existsSync(WEB_DIST);
+registerErrorHandling(app, { spa: SPA });
+
 app.get('/api/health', async () => ({ ok: true, game: GAME.name, missions: MISSIONS.length }));
 
 await registerPortalRoutes(app);
@@ -47,15 +53,7 @@ await registerSaveRoutes(app);
 await registerSquad(app);
 
 // Production: serve the built PWA with SPA fallback (dev uses Vite on :5173 instead).
-if (existsSync(WEB_DIST)) {
-  await app.register(fastifyStatic, { root: WEB_DIST, wildcard: false });
-  app.setNotFoundHandler((req, reply) => {
-    if (req.url.startsWith('/api') || req.url.startsWith('/socket.io')) {
-      return reply.code(404).send({ error: 'Not found' });
-    }
-    return reply.sendFile('index.html');
-  });
-}
+if (SPA) await app.register(fastifyStatic, { root: WEB_DIST, wildcard: false });
 
 // Retention (GDD §11.15): assessment responses are deleted 90 days after the final report. That date is set by
 // the team as ASSESSMENT_PURGE_DATE (YYYY-MM-DD); from then on every stored response is removed.

@@ -10,3 +10,4 @@ export * from './rewards';
 export * from './saveWords';
 export * from './content/chance';
 export * from './content/minigames';
+export * from './httpStatus';

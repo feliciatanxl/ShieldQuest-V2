@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
 import { Route, Switch, useLocation } from 'wouter';
 import { applySettingsToDocument, useSettings } from './state/settings';
+import { AppErrorBoundary } from './ui/AppErrorBoundary';
 
 // Every section is code-split so the public site and the join flow stay small on school Wi-Fi,
 // and the 3D chunk (three + R3F) only downloads when a 3D view is actually shown.
@@ -15,6 +16,7 @@ const SafetyPage = page(site, 'SafetyPage');
 const AboutPage = page(site, 'AboutPage');
 const HelpPage = page(site, 'HelpPage');
 const NotFoundPage = page(site, 'NotFoundPage');
+const ErrorPage = page(site, 'ErrorPage');
 
 const HubPage = lazy(() => import('./game/hub/HubPage'));
 const MissionPage = lazy(() => import('./game/mission/MissionPage'));
@@ -97,42 +99,45 @@ export function App() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <Suspense fallback={<div className="route-loading">Loading…</div>}>
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/how-it-works" component={HowItWorksPage} />
-          <Route path="/educators" component={EducatorsPage} />
-          <Route path="/safety" component={SafetyPage} />
-          <Route path="/about" component={AboutPage} />
-          <Route path="/help" component={HelpPage} />
+      <AppErrorBoundary resetKey={location}>
+        <Suspense fallback={<div className="route-loading">Loading…</div>}>
+          <Switch>
+            <Route path="/" component={HomePage} />
+            <Route path="/how-it-works" component={HowItWorksPage} />
+            <Route path="/educators" component={EducatorsPage} />
+            <Route path="/safety" component={SafetyPage} />
+            <Route path="/about" component={AboutPage} />
+            <Route path="/help" component={HelpPage} />
 
-          <Route path="/play" component={HubPage} />
-          <Route path="/play/m/:id" component={MissionPage} />
-          <Route path="/play/guardians" component={GuardiansPage} />
-          <Route path="/play/nightfall" component={NightfallPage} />
-          <Route path="/play/restore" component={RestorePage} />
-          <Route path="/play/board" component={BoardPage} />
-          <Route path="/play/locker" component={LockerPage} />
-          <Route path="/play/arcade" component={ArcadePage} />
-          <Route path="/play/arcade/:game" component={MiniGamePage} />
-          <Route path="/play/explore" component={ExplorePage} />
+            <Route path="/play" component={HubPage} />
+            <Route path="/play/m/:id" component={MissionPage} />
+            <Route path="/play/guardians" component={GuardiansPage} />
+            <Route path="/play/nightfall" component={NightfallPage} />
+            <Route path="/play/restore" component={RestorePage} />
+            <Route path="/play/board" component={BoardPage} />
+            <Route path="/play/locker" component={LockerPage} />
+            <Route path="/play/arcade" component={ArcadePage} />
+            <Route path="/play/arcade/:game" component={MiniGamePage} />
+            <Route path="/play/explore" component={ExplorePage} />
 
-          <Route path="/join" component={JoinPage} />
-          <Route path="/j/:code" component={JoinPage} />
-          {/* Tent-card QR codes carry the table's totem: /j/CODE/hornbill */}
-          <Route path="/j/:code/:totem" component={JoinPage} />
-          <Route path="/host" component={HostPage} />
-          <Route path="/host/:code" component={HostPage} />
-          <Route path="/screen/:code" component={ScreenPage} />
+            <Route path="/join" component={JoinPage} />
+            <Route path="/j/:code" component={JoinPage} />
+            {/* Tent-card QR codes carry the table's totem: /j/CODE/hornbill */}
+            <Route path="/j/:code/:totem" component={JoinPage} />
+            <Route path="/host" component={HostPage} />
+            <Route path="/host/:code" component={HostPage} />
+            <Route path="/screen/:code" component={ScreenPage} />
 
-          <Route path="/assess" component={AssessPage} />
-          <Route path="/assess/:kind" component={AssessPage} />
-          <Route path="/portal" component={PortalPage} />
-          <Route path="/portal/analytics" component={AnalyticsPage} />
+            <Route path="/assess" component={AssessPage} />
+            <Route path="/assess/:kind" component={AssessPage} />
+            <Route path="/portal" component={PortalPage} />
+            <Route path="/portal/analytics" component={AnalyticsPage} />
 
-          <Route component={NotFoundPage} />
-        </Switch>
-      </Suspense>
+            <Route path="/error/:code" component={ErrorPage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </Suspense>
+      </AppErrorBoundary>
       {hasSaveCard && inGame && location !== '/play/restore' && (
         <Suspense fallback={null}>
           <SaveConflict />

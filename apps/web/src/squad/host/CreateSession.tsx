@@ -11,6 +11,7 @@ import {
   type CreateSessionResponse,
 } from '@shieldquest/shared';
 import { Button } from '../../ui/Button';
+import { errorHref } from '../../ui/errorLink';
 import { Icon } from '../../ui/Icon';
 import { useDocumentTitle } from '../hooks';
 import { missionsForSession, playlistMinutes, timingSummary } from '../logic';
@@ -41,6 +42,8 @@ export function CreateSession({ invalidCode }: { invalidCode?: string } = {}) {
   const [opts, setOpts] = useState(() => defaultSessionOptions('teen'));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** HTTP status of the last failed request, for the "what does this mean?" link. */
+  const [errorStatus, setErrorStatus] = useState<number | null>(null);
   useDocumentTitle('Conductor · New session');
 
   const missions = useMemo(() => missionsForSession(band), [band]);
@@ -71,6 +74,7 @@ export function CreateSession({ invalidCode }: { invalidCode?: string } = {}) {
     if (missionIds.length === 0 || busy) return;
     setBusy(true);
     setError(null);
+    setErrorStatus(null);
     const body: CreateSessionRequest = { band, missionIds, ...opts, ...(squadCount ? { squadCount } : {}) };
     try {
       const res = await fetch('/api/sessions', {
@@ -79,6 +83,7 @@ export function CreateSession({ invalidCode }: { invalidCode?: string } = {}) {
         body: JSON.stringify(body),
         cache: 'no-store',
       });
+      if (!res.ok) setErrorStatus(res.status);
       if (res.status === 429) throw new Error('Too many new sessions from this network. Wait a minute and try again.');
       if (!res.ok) {
         const err = (await res.json().catch(() => null)) as ApiError | null;
@@ -222,6 +227,12 @@ export function CreateSession({ invalidCode }: { invalidCode?: string } = {}) {
           {error && (
             <p className="sq-error" role="alert">
               {error}
+              {errorStatus && (
+                <>
+                  {' '}
+                  <a href={errorHref(errorStatus, '/host')}>What does error {errorStatus} mean?</a>
+                </>
+              )}
             </p>
           )}
           <Button type="submit" size="lg" icon="play" disabled={missionIds.length === 0 || busy}>

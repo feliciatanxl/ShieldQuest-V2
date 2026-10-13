@@ -1513,6 +1513,21 @@
   color: var(--muted);
   font-size: 0.88rem;
 }
+.site-404__details {
+  margin-top: 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.site-404__details summary {
+  cursor: pointer;
+  min-height: var(--tap, 44px);
+  display: inline-flex;
+  align-items: center;
+}
+.site-404__details p {
+  margin: 0.25rem 0 0;
+  max-width: 60ch;
+}
 .site-404__chev {
   flex: none;
   color: var(--muted);
