@@ -851,7 +851,6 @@
    pushing columns off screen (200% text on a 360 px phone must never scroll sideways). */
 .site-main :is(
     .site-hero__inner,
-    .site-purpose__inner,
     .site-stats,
     .site-stat--pair,
     .site-stat__split,
@@ -859,14 +858,11 @@
     .site-loop,
     .site-holdsec__grid,
     .site-why,
-    .site-kpis,
-    .site-measure,
     .site-shield,
     .site-guardians,
     .site-split,
     .site-session__list,
     .site-privacy,
-    .site-safe,
     .site-bands,
     .site-partner,
     .site-roadmap,

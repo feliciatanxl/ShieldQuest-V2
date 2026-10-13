@@ -163,7 +163,7 @@ export function MissionCentre({
             <span />
             <span />
           </div>
-          <p className="sq-scr-lead">Choices from earlier are still rippling through Lumen.</p>
+          <p className="sq-scr-lead">Choices from earlier are still rippling through the city.</p>
           <p className="sq-scr-sub">Watch your phones. Telling someone is always a good late move.</p>
         </section>
       );

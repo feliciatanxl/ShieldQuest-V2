@@ -1,4 +1,4 @@
-/* Lumen (3D City Hub): the frame round the canvas. The bay fills the view; this gradient matches it so the
+/* ShieldQuest City (3D City Hub): the frame round the canvas. The bay fills the view; this gradient matches it so the
    first paint (before WebGL draws) and any letterboxing read as the same blue-hour water. */
 
 .w-city {

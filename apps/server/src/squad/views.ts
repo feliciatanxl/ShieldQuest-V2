@@ -10,6 +10,7 @@ import {
   ROOM_MIN_SQUADS,
   SQUAD_PHASE_LETTERS,
   SQUAD_TOTEMS,
+  chanceById,
   emptyHoldBuckets,
   evaluateShield,
   hostPath,
@@ -19,7 +20,17 @@ import {
   shieldSlotsFor,
   shieldSlotsForBand,
   surgesEnabled,
+  tallyVotes,
+  totalVotes,
   totemById,
+  type ChanceQuestion,
+  type ChoiceCount,
+  type DashBase,
+  type DashScore,
+  type HostDashView,
+  type ScreenDashView,
+  type SeatDashView,
+  type SquadTotemId,
   type EvidenceBoard,
   type EvidencePin,
   type HostSnapshot,
@@ -40,7 +51,7 @@ import {
   type SquadRoleId,
   type SquadView,
 } from '@shieldquest/shared';
-import type { PinEntry, Seat, SessionState, Squad, SquadMission } from './state';
+import type { DashRound, DashState, PinEntry, Seat, SessionState, Squad, SquadMission } from './state';
 
 // ---------------------------------------------------------------------------------------------
 // Small helpers shared with the session state machine
@@ -164,6 +175,162 @@ export function shieldOwners(s: SessionState, sq: Squad): Partial<Record<ShieldS
 export function squadSurgeAt(s: SessionState, sq: Squad): number | null {
   if (!s.timeline || sq.gentle || !surgesEnabled(s.config.band, s.config.gentle)) return null;
   return s.timeline.surgeAt;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Squad Dash helpers (shared with the session state machine)
+
+/** Key for one player's tap on the current Dash question. */
+export const dashAnswerKey = (seatId: string, player: number): string => `${seatId}#${player}`;
+
+export function dashQuestion(d: DashState): ChanceQuestion | null {
+  const id = d.stage === 'results' ? undefined : d.questionIds[d.index];
+  return id ? (chanceById(id) ?? null) : null;
+}
+
+/** Squads that take part in a Dash question: every squad with at least one seat. */
+export const dashSquads = (s: SessionState): Squad[] => squadsInOrder(s).filter((sq) => sq.seatIds.length > 0);
+
+/** Players who could tap right now (connected seats not on a break, every player on a shared phone). */
+export function activePlayers(s: SessionState, sq: Squad): number {
+  return squadSeats(s, sq)
+    .filter(isActive)
+    .reduce((n, seat) => n + seat.players, 0);
+}
+
+/** A squad's live taps on the current question: counts per option only, never who. */
+export function dashTally(s: SessionState, sq: Squad, q: ChanceQuestion): { counts: ChoiceCount[]; answered: number; total: number } {
+  const picks: string[] = [];
+  const answers = s.dash?.answers;
+  for (const seat of squadSeats(s, sq)) {
+    for (let p = 0; p < seat.players; p++) {
+      const a = answers?.get(dashAnswerKey(seat.id, p));
+      if (a) picks.push(a);
+    }
+  }
+  const counts = tallyVotes(
+    q.options.map((o) => o.id),
+    picks,
+  );
+  const answered = totalVotes(counts);
+  return { counts, answered, total: Math.max(answered, activePlayers(s, sq)) };
+}
+
+export function dashScore(d: DashState, squadId: SquadTotemId): DashScore {
+  let correct = 0;
+  let played = 0;
+  for (const r of d.rounds) {
+    const e = r.squads.find((x) => x.squadId === squadId);
+    if (!e) continue;
+    played += 1;
+    if (e.result.correct) correct += 1;
+  }
+  return { correct, played };
+}
+
+/** The round being revealed right now (the last scored one), or null. */
+const revealedRound = (d: DashState): DashRound | null =>
+  d.stage === 'reveal' ? (d.rounds.findLast((r) => !r.skipped && r.questionId === d.questionIds[d.index]) ?? null) : null;
+
+function dashBase(s: SessionState, d: DashState): DashBase {
+  const round = revealedRound(d);
+  let correct = 0;
+  let played = 0;
+  for (const r of d.rounds) {
+    for (const e of r.squads) {
+      played += 1;
+      if (e.result.correct) correct += 1;
+    }
+  }
+  return {
+    id: d.id,
+    length: d.questionIds.length,
+    index: d.index,
+    stage: d.stage,
+    questionId: dashQuestion(d)?.id ?? null,
+    stageStartedAt: d.stageStartedAt,
+    endsAt: d.stage === 'question' ? d.endsAt : null,
+    quiet: s.config.calm || s.config.gentle,
+    room: round ? { correct: round.squads.filter((e) => e.result.correct).length, squads: round.squads.length } : null,
+    totals: { correct, played },
+  };
+}
+
+/** A phone sees only its own squad's taps (counts) and result, and its own taps. */
+function seatDash(s: SessionState, sq: Squad, seat: Seat): SeatDashView | null {
+  const d = s.dash;
+  if (!d) return null;
+  const q = dashQuestion(d);
+  const round = revealedRound(d);
+  const entry = round?.squads.find((e) => e.squadId === sq.id) ?? null;
+  const shared = seat.players > 1;
+  let tally: SeatDashView['tally'] = null;
+  if (d.stage === 'question' && q) tally = dashTally(s, sq, q);
+  else if (entry) tally = { counts: entry.counts.map((c) => ({ ...c })), answered: entry.result.answered, total: entry.result.answered };
+  return {
+    ...dashBase(s, d),
+    tally,
+    mine: Array.from({ length: seat.players }, (_, player) => {
+      const optionId = d.stage === 'question' ? d.answers.get(dashAnswerKey(seat.id, player)) : undefined;
+      return optionId && !shared ? { player, optionId } : { player };
+    }),
+    result: entry ? { ...entry.result } : null,
+    score: dashScore(d, sq.id),
+  };
+}
+
+/** The Conductor sees progress (how many tapped, never what) and, after the reveal, each squad's pick. */
+function hostDash(s: SessionState): HostDashView | null {
+  const d = s.dash;
+  if (!d) return null;
+  const q = dashQuestion(d);
+  const round = revealedRound(d);
+  return {
+    ...dashBase(s, d),
+    squads: dashSquads(s).map((sq) => {
+      const totem = totemById(sq.id);
+      const entry = round?.squads.find((e) => e.squadId === sq.id) ?? null;
+      const live = d.stage === 'question' && q ? dashTally(s, sq, q) : null;
+      const answered = live?.answered ?? entry?.result.answered ?? 0;
+      return {
+        squadId: sq.id,
+        name: totem.name,
+        shape: totem.shape,
+        answered,
+        total: live?.total ?? Math.max(answered, activePlayers(s, sq)),
+        result: entry ? { ...entry.result } : null,
+        score: dashScore(d, sq.id),
+      };
+    }),
+    rounds: d.rounds.map((r) => ({
+      questionId: r.questionId,
+      skipped: r.skipped,
+      correct: r.squads.filter((e) => e.result.correct).length,
+      squads: r.squads.length,
+    })),
+  };
+}
+
+/** The projector: progress counts and squad totals only; never a squad's pick or a split. */
+function screenDash(s: SessionState): ScreenDashView | null {
+  const d = s.dash;
+  if (!d) return null;
+  const q = dashQuestion(d);
+  return {
+    ...dashBase(s, d),
+    squads: dashSquads(s).map((sq) => {
+      const totem = totemById(sq.id);
+      const live = d.stage === 'question' && q ? dashTally(s, sq, q) : null;
+      return {
+        squadId: sq.id,
+        name: totem.name,
+        shape: totem.shape,
+        answered: live?.answered ?? 0,
+        total: live?.total ?? activePlayers(s, sq),
+        score: dashScore(d, sq.id),
+      };
+    }),
+  };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -323,6 +490,7 @@ export function seatSnapshot(s: SessionState, seat: Seat, now: number): SeatSnap
     squad: squadView(s, sq),
     me: seatPrivate(s, sq, seat),
     debrief: s.debrief,
+    dash: seatDash(s, sq, seat),
   };
 }
 
@@ -410,6 +578,7 @@ export function hostSnapshot(s: SessionState, now: number): HostSnapshot {
     },
     spotlight: s.spotlight,
     debrief: s.debrief,
+    dash: hostDash(s),
   };
 }
 
@@ -456,5 +625,6 @@ export function screenSnapshot(s: SessionState, now: number): ScreenSnapshot {
           }
         : null,
     debrief: s.debrief,
+    dash: screenDash(s),
   };
 }

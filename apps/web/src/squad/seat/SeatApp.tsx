@@ -15,6 +15,7 @@ import { useSquad } from '../socket';
 import { act } from './actions';
 import { SquadAftershock } from './AftershockPanels';
 import { SeatMission } from './SeatMission';
+import { SeatDash } from '../dash/SeatDash';
 import './seat.css';
 
 /** The phone in a live squad session: one screen per session phase, plus Pause, Need help and reconnecting. */
@@ -26,7 +27,9 @@ export function SeatApp({ snap, onLeave }: { snap: SeatSnapshot; onLeave: () => 
   const [leaving, setLeaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const flash = useCallback((text: string) => setToast(text), []);
-  const active = session.phase === 'room-freeze' || (session.phase === 'mission' && !squad.mission?.complete);
+  // A Squad Dash runs only in the lobby or at Look Up (the server enforces it); it takes over the phone.
+  const dash = snap.dash && (session.phase === 'lobby' || session.phase === 'mission') ? snap.dash : null;
+  const active = session.phase === 'room-freeze' || (session.phase === 'mission' && !squad.mission?.complete) || dash !== null;
   useWakeLock(active && !me.onBreak);
   useAudioProfile('squad-phone');
 
@@ -46,7 +49,9 @@ export function SeatApp({ snap, onLeave }: { snap: SeatSnapshot; onLeave: () => 
   const setBreak = (on: boolean) => void act({ flash }, 'takeBreak', { on });
 
   let body;
-  switch (session.phase) {
+  if (dash) {
+    body = <SeatDash snap={snap} dash={dash} flash={flash} header={<SeatHeader title={`${squad.name} · Squad Dash`} onLeave={() => setLeaving(true)} />} />;
+  } else switch (session.phase) {
     case 'lobby':
       body = <SeatLobby snap={snap} onLeave={() => setLeaving(true)} />;
       break;
@@ -470,7 +475,7 @@ function SeatEnded({ code }: { code: string }) {
           Last step: the check-out
         </LinkButton>
         <LinkButton href="/play" variant="secondary" icon="map">
-          Keep exploring Lumen on your own
+          Keep exploring the city on your own
         </LinkButton>
       </section>
       <section className="sq-helpcard" aria-labelledby="sq-ended-help">

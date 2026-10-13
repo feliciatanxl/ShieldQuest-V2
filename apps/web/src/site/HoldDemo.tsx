@@ -74,7 +74,7 @@ export function HoldDemo() {
         setT(DECISION_AT);
         setPhase('late');
         setTension(0);
-        setStatus('Time ran out, so Lumen froze for you. You can always pause. Scams count on you forgetting that.');
+        setStatus('Time ran out, so the city froze for you. You can always pause. Scams count on you forgetting that.');
         setCaption('[the ticking stops]');
       } else {
         tRef.current = now;
@@ -331,7 +331,7 @@ export function HoldDemo() {
       {frozen && (
         <section className="site-demo__result" aria-labelledby="site-demo-result-title">
           <h3 id="site-demo-result-title">
-            {phase === 'held' ? `You held with ${fmt(DECISION_AT - t)} left on the clock.` : 'Lumen froze for you at the decision second.'}
+            {phase === 'held' ? `You held with ${fmt(DECISION_AT - t)} left on the clock.` : 'The city froze for you at the decision second.'}
           </h3>
           <p className="site-demo__counts">
             <span>

@@ -27,7 +27,7 @@ export const lendMeYourLogin: Mission = {
     { id: 'ms-devi', name: 'Ms Devi', role: 'trusted', anchor: 'gate', pose: 'walk', look: { body: '#facc15', accent: '#713f12', hair: 'bun' } },
   ],
   intro:
-    'Lumen Poly main gate, 4.15pm. Priya, 20, is between classes, scrolling job apps for weekend work. Her friend Jaden is waiting at the bus stop when a message comes in.',
+    'Metro Poly main gate, 4.15pm. Priya, 20, is between classes, scrolling job apps for weekend work. Her friend Jaden is waiting at the bus stop when a message comes in.',
   live: {
     durationSec: 56,
     decisionPrompt: 'The CityPass request is waiting on Priya\'s screen. What should Priya do?',
@@ -39,7 +39,7 @@ export const lendMeYourLogin: Mission = {
       { id: 'b5', at: 19, from: 'narrator', channel: 'notification', text: 'CityPass: Approve this login? Device: unknown. Location: not available. For: business registration.', attachment: { kind: 'code', label: 'CityPass login request', detail: 'Approve / Deny' } },
       { id: 'b6', at: 24, from: 'priya', channel: 'chat', text: 'Why does your boss need my CityPass to register his own company?' },
       { id: 'b7', at: 29, from: 'kel', channel: 'chat', text: "It's standard. We're an official CityPass partner, all above board 👍", tactic: 'authority', attachment: { kind: 'image', label: 'partner_badge.png', detail: 'A "CityPass Approved Partner" badge that looks a lot like the real CityPass logo' } },
-      { id: 'b8', at: 34, from: 'narrator', channel: 'notification', text: 'QuikGig, new job near you: Library Assistant at Lumen Poly. Send your CV, short interview on campus, S$9.50 an hour.', attachment: { kind: 'job', label: 'Library Assistant (part-time)', detail: 'CV + interview · S$9.50 an hour' } },
+      { id: 'b8', at: 34, from: 'narrator', channel: 'notification', text: 'QuikGig, new job near you: Library Assistant at Metro Poly. Send your CV, short interview on campus, S$9.50 an hour.', attachment: { kind: 'job', label: 'Library Assistant (part-time)', detail: 'CV + interview · S$9.50 an hour' } },
       { id: 'b9', at: 39, from: 'kel', channel: 'chat', text: 'Keep this between us ok? Competition is crazy, other agencies will steal our client.', tactic: 'secrecy' },
       { id: 'b10', at: 45, from: 'kel', channel: 'chat', text: 'The request expires in 3 mins. Tap Approve now pls 🙏', tactic: 'urgency' },
       { id: 'b11', at: 51, from: 'jaden', channel: 'speech', text: "Just tap lah. I already told Kel you're in. Don't make me look bad.", tactic: 'loyalty' },
@@ -88,7 +88,7 @@ export const lendMeYourLogin: Mission = {
       safety: 'risky',
       outcome: {
         title: '+S$80',
-        text: 'Priya taps Approve. A minute later, S$80 lands in her LumenPay wallet. Kel sends a thumbs-up and Jaden grins. Two minutes, just like he said.',
+        text: 'Priya taps Approve. A minute later, S$80 lands in her MetroPay wallet. Kel sends a thumbs-up and Jaden grins. Two minutes, just like he said.',
         mood: 'shiny',
         effects: { wallet: 80 },
       },
@@ -157,7 +157,7 @@ export const lendMeYourLogin: Mission = {
         afterMissions: 1,
         timeLabel: '1 WEEK LATER',
         title: "Afterglow: Priya's report flags Kel",
-        text: "QuikGig removes Kel's profile after several reports, Priya's among them. A warning goes out to Lumen Poly students, and two of her classmates who got the same offer block him straight away.",
+        text: "QuikGig removes Kel's profile after several reports, Priya's among them. A warning goes out to Metro Poly students, and two of her classmates who got the same offer block him straight away.",
         effects: { trust: 1 },
         fact: {
           text: 'Tip: passkey logins resist phishing. But even a strong login can be misused if you approve a request that someone else started.',

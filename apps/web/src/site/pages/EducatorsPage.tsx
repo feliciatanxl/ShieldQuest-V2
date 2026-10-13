@@ -57,7 +57,7 @@ const NEEDS: { icon: IconName; title: string; body: string }[] = [
   {
     icon: 'phone',
     title: 'Students’ phones, or shared devices',
-    body: 'One phone per player is best. If devices are short, Shared Seat passes one phone around with a cover screen for private votes.',
+    body: 'One phone per player is best. Older phones work too: graphics adjust automatically, and a full 2D mode runs on any device. If devices are short, Shared Seat passes one phone around with a cover screen for private votes.',
   },
   {
     icon: 'spark',

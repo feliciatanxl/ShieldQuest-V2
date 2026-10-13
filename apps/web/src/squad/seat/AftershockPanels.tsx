@@ -79,7 +79,7 @@ export function SquadAftershock({
   );
 }
 
-/** "Meanwhile, in another Lumen…": the risky branch a safer squad avoided, so every forecast can be checked. */
+/** "Meanwhile, in another timeline…": the risky branch a safer squad avoided, so every forecast can be checked. */
 function ShadowCard({ ctx, onDone }: { ctx: SeatCtx; onDone: () => void }) {
   const shadow = ctx.view.shadow!;
   const found = findAftershock(MISSIONS, {
@@ -94,9 +94,9 @@ function ShadowCard({ ctx, onDone }: { ctx: SeatCtx; onDone: () => void }) {
   const who = residentName(found.mission);
   return (
     <div className="msn-phase sq-shadow">
-      <PhaseHeading kicker="E · Evaluate the Consequences" title="Meanwhile, in another Lumen…">
+      <PhaseHeading kicker="E · Evaluate the Consequences" title="Meanwhile, in another timeline…">
         <p className="sq-lead">
-          In a Lumen where {who} chose “{found.choice.label}”, this is what came next. Your squad’s choice kept it from happening.
+          In a timeline where {who} chose “{found.choice.label}”, this is what came next. Your squad’s choice kept it from happening.
         </p>
       </PhaseHeading>
       <TimelineRibbon tone="risk" label={found.spec.timeLabel} play={!ctx.reduced} />
@@ -105,7 +105,7 @@ function ShadowCard({ ctx, onDone }: { ctx: SeatCtx; onDone: () => void }) {
         <p>{found.spec.text}</p>
       </article>
       <Button size="lg" block iconRight="arrowRight" onClick={onDone}>
-        Back to our Lumen
+        Back to our timeline
       </Button>
     </div>
   );
@@ -116,7 +116,7 @@ export function AftershockSlot({ ctx }: { ctx: SeatCtx }) {
   const todo = view.aftershocks.filter((d) => !local.shocksDone.includes(d.key));
   const current = todo[0];
   const position = view.aftershocks.length > 1 && current ? `${view.aftershocks.indexOf(current) + 1} of ${view.aftershocks.length}` : undefined;
-  // An Afterglow already shows its own "another Lumen" view for the same mission.
+  // An Afterglow already shows its own "another timeline" view for the same mission.
   const shadowCovered = Boolean(
     view.shadow &&
       view.aftershocks.some((d) => {

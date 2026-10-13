@@ -24,7 +24,7 @@ export interface TopBarProps {
 }
 
 /** Always-on-screen bar: back to the city, district chip, S.H.I.E.L.D. rail, Aa, Need to talk, Pause. */
-export function TopBar({ district, title, rail, help, onPause, backHref = '/play', onBack, backLabel = 'Back to Lumen' }: TopBarProps) {
+export function TopBar({ district, title, rail, help, onPause, backHref = '/play', onBack, backLabel = 'Back to the city' }: TopBarProps) {
   const d = district ? districtById(district) : null;
   const [settingsOpen, setSettingsOpen] = useState(false);
   return (
@@ -46,7 +46,7 @@ export function TopBar({ district, title, rail, help, onPause, backHref = '/play
           </span>
         ) : (
           <span className="msn-top__district msn-top__district--title">
-            <span className="msn-top__district-name">{title ?? 'Lumen'}</span>
+            <span className="msn-top__district-name">{title ?? 'ShieldQuest City'}</span>
           </span>
         )}
         {rail && <div className="msn-top__rail">{rail}</div>}

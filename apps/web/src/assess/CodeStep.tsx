@@ -174,7 +174,7 @@ function TypeCode({ kind, initial, headingRef, onDone, onLost, onBack }: TypeCod
   const title = kind === 'pre' ? 'Type your code' : initial ? 'Check your code' : 'Type your code';
   const lead =
     kind === 'return'
-      ? 'Welcome back to Lumen. Type the code you got at your workshop, so this visit can be matched with your earlier answers.'
+      ? 'Welcome back to ShieldQuest City. Type the code you got at your workshop, so this visit can be matched with your earlier answers.'
       : kind === 'post'
         ? 'Use the same code as your before check, so we can see what changed for the group.'
         : 'Type the code on your paper slip.';

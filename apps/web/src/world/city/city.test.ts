@@ -66,7 +66,7 @@ function finite(geo: BufferGeometry): boolean {
 
 const LAUNCH: DistrictId[] = ['school-street', 'retail-district', 'digi-district'];
 
-describe('Lumen layout (GAME_DESIGN.md §4.1)', () => {
+describe('City layout (GAME_DESIGN.md §4.1)', () => {
   it('places every district on the ring with its local +z facing outwards', () => {
     expect(DISTRICT_SPOTS).toHaveLength(DISTRICTS.length);
     for (const s of DISTRICT_SPOTS) {

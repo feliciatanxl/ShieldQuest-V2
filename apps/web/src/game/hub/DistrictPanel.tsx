@@ -80,7 +80,7 @@ export function DistrictPanel({ district, band, progress, highlight, side, reduc
           <div className="hub-panel__fog">
             <Icon name="fog" size="2rem" />
             <p>
-              <strong>Fogged for now.</strong> This part of Lumen opens when new missions have been checked by
+              <strong>Fogged for now.</strong> This part of the city opens when new missions have been checked by
               educators and safeguarding reviewers.
             </p>
           </div>

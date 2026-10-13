@@ -1,5 +1,5 @@
 // City Hub camera rig and pointer controls (GAME_DESIGN.md §4.5): an orthographic, isometric-style turntable whose
-// zoom is fitted to the canvas every frame (so Lumen fits a 360x800 phone and a 1920x1080 projector alike). Drag
+// zoom is fitted to the canvas every frame (so the city fits a 360x800 phone and a 1920x1080 projector alike). Drag
 // spins the turntable with inertia and tilts within a clamped range; focusing a district plays a 900 ms ease-out
 // zoom (a cut under reduced motion); `showcase` adds a slow cinematic orbit. Taps are picked analytically (pins in
 // screen space, districts as vertical cylinders) so no per-move raycast walks the city's triangles.

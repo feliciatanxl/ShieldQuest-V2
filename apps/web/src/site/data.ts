@@ -1,6 +1,6 @@
 // Copy and facts for the public website. Everything here is plain data so pages stay readable
 // and figures can be re-verified in one place before each pilot phase.
-import type { HelpChannelId, SkillId } from '@shieldquest/shared';
+import type { HelpChannelId } from '@shieldquest/shared';
 
 export interface SiteSource {
   publisher: string;
@@ -47,16 +47,6 @@ export const STATS = {
   },
 } as const;
 
-/** S.H.I.E.L.D. letters practised at each stage of the six-stage loop (GAME_DESIGN.md §5.1). */
-export const LOOP_DETAIL: readonly { tag?: string; letters: SkillId[] }[] = [
-  { letters: ['S'] },
-  { tag: 'HOLD', letters: ['H', 'S', 'I'] },
-  { letters: ['E', 'L'] },
-  { letters: ['L'] },
-  { tag: 'Aftershock', letters: ['E'] },
-  { tag: 'Peer Shield', letters: ['D'] },
-];
-
 /** The four blocks of a facilitated session (GAME_DESIGN.md §7.2). */
 export const SESSION_BLOCKS = [
   { id: 'onboarding', label: 'Onboarding', minutes: 15, detail: 'Ground rules, QR join, the before-check and the Room Freeze.' },
@@ -76,7 +66,7 @@ export const RUN_SHEET: readonly RunSheetRow[] = [
   {
     clock: '00:00–03:00',
     segment: 'Onboarding · 15 min',
-    what: 'Welcome scene over Lumen at 11:59. Ground rules: respect, nobody has to share anything personal, Pause and Pass are always OK. Read the disclaimer aloud.',
+    what: 'Welcome scene over ShieldQuest City at 11:59. Ground rules: respect, nobody has to share anything personal, Pause and Pass are always OK. Read the disclaimer aloud.',
   },
   { clock: '03:00–06:00', what: 'Students scan the QR code, set Comfort Settings, note their session code and tap their table’s totem.' },
   { clock: '06:00–11:00', what: 'Before-check (Calibration, Form A or B). The 3D world quietly preloads in the background.' },
@@ -172,7 +162,8 @@ export interface FaqItem {
   a: string;
 }
 
-export const HOME_FAQ: readonly FaqItem[] = [
+/** Player and parent questions, answered on the Get help page. */
+export const PLAYER_FAQ: readonly FaqItem[] = [
   {
     q: 'Do students need to download an app?',
     a: 'No. ShieldQuest runs in the web browser. Students scan a QR code and play in about 10 to 20 seconds. Adding it to the home screen is offered, never required.',

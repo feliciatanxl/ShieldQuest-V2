@@ -33,7 +33,7 @@ ShieldQuest is a 3D crime- and scam-prevention game that runs in the browser. It
 
 Most crime-prevention education is passive: a talk, a poster, a video. Scams don't win because people have never heard of them. They win because they **rush** people: a countdown, a friend saying "just try once", money on the table. The Singapore Police Force reported that 81.8% of scams in 2025 involved victims being manipulated into making the transfers themselves (SPF Annual Scam and Cybercrime Brief 2025).
 
-ShieldQuest trains the opposite of rushing. In the city of **Lumen**, the player is a *Holder*: someone who can freeze time one second before a risky choice, look around, and decide calmly. Every mission walks through the **S.H.I.E.L.D. Behavioural Framework**:
+ShieldQuest trains the opposite of rushing. In **ShieldQuest City**, the player is a *Holder*: someone who can freeze time one second before a risky choice, look around, and decide calmly. Every mission walks through the **S.H.I.E.L.D. Behavioural Framework**:
 
 | Letter | Skill | Guardian |
 |---|---|---|
@@ -52,7 +52,7 @@ Guardians are origami companions **earned by demonstrating skills**. There are n
 2. **HOLD:** press and hold to freeze time. Rain hangs in the air and nothing rushes you.
 3. **Investigate:** inspect messages, people and places. Pin the warning signs, and mark ordinary details as "Seems fine".
 4. **Pull the String:** follow the thread from the person pushing to whoever really gains.
-5. **Sealed forecast:** predict what happens later. Lumen checks it later.
+5. **Sealed forecast:** predict what happens later. The city checks it later.
 6. **Think, Vote, Explain:** seal a private vote with how sure you are, hear other views, then re-seal.
 7. **Release:** live with the result now. The *Delayed Consequence Engine* brings an **Aftershock** (or a positive **Afterglow**) one or two missions later, always with a recovery path.
 8. **Peer Shield:** a friend faces the same pressure. Build a message that helps without blaming them.
@@ -139,7 +139,7 @@ ShieldQuest-V2/
 | Route | Purpose |
 |---|---|
 | `/` | Public website (also `/how-it-works`, `/educators`, `/safety`, `/about`, `/help`) |
-| `/play` | Game hub: the city of Lumen |
+| `/play` | Game hub: ShieldQuest City |
 | `/play/m/:id` | Play a mission (start with `/play/m/first-hold`) |
 | `/play/guardians` | Bond Book: Guardians, tactics codex and If-Then cards |
 | `/play/nightfall` | Land any pending Aftershocks at the end of a solo session |
@@ -209,7 +209,7 @@ This is an active student project heading towards a pilot.
 | Solo mission player (full loop, playable end to end) | Done |
 | 19 missions across School Street, Retail District and Digi-District | Done (drafts awaiting two human sign-offs) |
 | Public website (home, how it works, educators, safety, about, help) | Done |
-| 3D city of Lumen, 7 mission sets, origami Guardians, 2D mode | Done |
+| 3D ShieldQuest City, 7 mission sets, origami Guardians, 2D mode | Done |
 | Squad sessions (facilitator console, phones, Big Screen) | Done |
 | Before/after assessment, Scenario Portal, analytics | Done |
 | Synthesised sound and haptics | Done |

@@ -25,13 +25,13 @@ export const prankForTheFeed: Mission = {
     { id: 'rahim', name: 'Uncle Rahim', role: 'bystander', anchor: 'tray-return', pose: 'walk', look: { body: '#94a3b8', accent: '#1e293b', hair: 'short' } },
     { id: 'daredash', name: 'DareDash', role: 'stranger', faceless: true, look: { body: '#334155', accent: '#0f172a', hair: 'none' } },
   ],
-  intro: 'Lumen Food Court, Friday, 6.20pm. Nadia, 16, is at a table with Bryan and Farah. Uncle Rahim, the cleaner, is clearing trays nearby.',
+  intro: 'Metro Food Court, Friday, 6.20pm. Nadia, 16, is at a table with Bryan and Farah. Uncle Rahim, the cleaner, is clearing trays nearby.',
   live: {
     durationSec: 55,
     decisionPrompt: "Uncle Rahim is walking past with a stack of trays. Bryan nudges Nadia's phone. What should Nadia do?",
     beats: [
       { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: "Bryan's phone lights up. DareDash has posted this week's Views Challenge." },
-      { id: 'b2', at: 4, from: 'daredash', channel: 'chat', text: 'VIEWS CHALLENGE 🔥 Prank a random uncle or auntie. Most views by 8pm wins S$100 LumenPay credit!', tactic: 'too-good', attachment: { kind: 'link', label: 'daredash.test/challenge', detail: 'Top 10 clips get reposted to 80k followers' } },
+      { id: 'b2', at: 4, from: 'daredash', channel: 'chat', text: 'VIEWS CHALLENGE 🔥 Prank a random uncle or auntie. Most views by 8pm wins S$100 MetroPay credit!', tactic: 'too-good', attachment: { kind: 'link', label: 'daredash.test/challenge', detail: 'Top 10 clips get reposted to 80k followers' } },
       { id: 'b3', at: 9, from: 'bryan', channel: 'speech', text: 'Nadia, film Uncle Rahim. Caption it something savage. Easy views.' },
       { id: 'b4', at: 15, from: 'bryan', channel: 'speech', text: 'Get his face in properly. His reaction is the funny part.' },
       { id: 'b5', at: 21, from: 'narrator', channel: 'scene', text: 'At the next table, a student films her bowl of laksa for her food page.' },

@@ -6,7 +6,7 @@ export interface SealEnvelopeProps {
   sealed: boolean;
   /** What is inside (shown on the card before it folds). */
   children?: ReactNode;
-  /** Line shown once sealed, e.g. "Sealed. Lumen will check it later." */
+  /** Line shown once sealed, e.g. "Sealed. The city will check it later." */
   sealedLabel: string;
 }
 

@@ -31,7 +31,7 @@ export const likeForCash: Mission = {
     decisionPrompt: 'The Premium slot is closing. What should Wei Ling do?',
     beats: [
       { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'The TaskLah group chat glows above the QuikGig tower. The app looks slick and professional.' },
-      { id: 'b2', at: 4, from: 'amy', channel: 'chat', text: 'Task 3 done! S$15 sent to your LumenPay 🎉', tactic: 'too-good', attachment: { kind: 'payment', label: 'LumenPay: +S$15.00', detail: 'From: TaskLah Rewards' } },
+      { id: 'b2', at: 4, from: 'amy', channel: 'chat', text: 'Task 3 done! S$15 sent to your MetroPay 🎉', tactic: 'too-good', attachment: { kind: 'payment', label: 'MetroPay: +S$15.00', detail: 'From: TaskLah Rewards' } },
       { id: 'b3', at: 9, from: 'jasmine', channel: 'chat', text: 'Wah just got S$300 commission today! Thank you Mentor Amy 🙏', tactic: 'fake-proof', attachment: { kind: 'screenshot', label: 'payout.png', detail: 'Commission received: S$300' } },
       { id: 'b4', at: 14, from: 'amy', channel: 'chat', text: 'Wei Ling, you are selected for a Premium task! Top up S$100 to unlock S$300 commission.', tactic: 'small-ask', attachment: { kind: 'job', label: 'Premium task', detail: 'Top up S$100 · earn S$300' } },
       { id: 'b5', at: 20, from: 'ben', channel: 'chat', text: 'Premium done, withdrew S$480 😍 so easy', tactic: 'everyone-does-it' },

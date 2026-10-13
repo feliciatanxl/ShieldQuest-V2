@@ -77,7 +77,7 @@ export function DistrictPicker({ focus, band, progress, onSelect, registerButton
   };
 
   return (
-    <nav className="hub-picker" aria-label="Districts of Lumen">
+    <nav className="hub-picker" aria-label="Districts of ShieldQuest City">
       <ul className="hub-picker__list" ref={listRef} onKeyDown={onKeyDown}>
         {DISTRICTS.map((d) => {
           const s = districtSummary(d.id, band, progress);

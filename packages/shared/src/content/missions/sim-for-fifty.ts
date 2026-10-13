@@ -29,7 +29,7 @@ export const simForFifty: Mission = {
     { id: 'ray', name: "Ray (Irfan's friend)", role: 'pressurer', faceless: true, look: { body: '#334155', accent: '#0f172a', hair: 'none' } },
   ],
   intro:
-    'Lumen Mall, Thursday, 7.10pm. Hafiz, 18, is at the phone accessory shop buying a prepaid SIM for his new phone. His friend Irfan waits outside MiniMart 24 with a drink. Irfan gave Hafiz\'s number to someone called Ray.',
+    'Metro Mall, Thursday, 7.10pm. Hafiz, 18, is at the phone accessory shop buying a prepaid SIM for his new phone. His friend Irfan waits outside MiniMart 24 with a drink. Irfan gave Hafiz\'s number to someone called Ray.',
   live: {
     durationSec: 55,
     decisionPrompt: 'The assistant rings up Hafiz\'s own SIM and asks, "Anything else?" What should Hafiz do?',

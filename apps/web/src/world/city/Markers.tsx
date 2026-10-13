@@ -1,4 +1,4 @@
-// Mission markers over Lumen's districts (GAME_DESIGN.md §4.2, §4.5): ripple rings round each district plate and
+// Mission markers over the city's districts (GAME_DESIGN.md §4.2, §4.5): ripple rings round each district plate and
 // billboarded mission pins above it. Each layer is ONE draw call whatever the number of markers, and both keep a
 // constant on-screen size (pins never shrink below the 48 px tap target). State is shape + icon, never colour
 // alone: new = expanding gold circles + spark pin; done = calm still hexagon + shield pin; Aftershock = jagged

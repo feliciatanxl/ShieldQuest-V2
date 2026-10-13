@@ -1,4 +1,4 @@
-// Lumen's layout (GAME_DESIGN.md §4.1): one source of truth for the 3D city and its SVG twin.
+// The city's layout (GAME_DESIGN.md §4.1): one source of truth for the 3D city and its SVG twin.
 // Pure data and maths (no three.js), so the 2D map can import it without pulling the 3D chunk.
 // Units are metres; y = 0 is the top of the district plates; +z faces the default camera.
 import { DISTRICTS, missionById, type DistrictId } from '@shieldquest/shared';
@@ -273,7 +273,7 @@ export function districtLabel(id: DistrictId, trust: Record<string, number>, mar
 }
 
 export function describeCity(props: Pick<CitySceneProps, 'focus' | 'districtTrust' | 'markers' | 'freezeAmount' | 'lanterns'>): string {
-  const parts: string[] = ['The city of Lumen at blue hour. The Stillpoint clock tower at the centre reads 11:59.'];
+  const parts: string[] = ['ShieldQuest City at blue hour. The Stillpoint clock tower at the centre reads 11:59.'];
   const launch = DISTRICT_SPOTS.filter((s) => !s.fogged);
   for (const s of launch) {
     const t = trustOf(props.districtTrust, s.id);

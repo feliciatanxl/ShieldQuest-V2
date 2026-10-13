@@ -1,5 +1,5 @@
 // City Hub camera maths (GAME_DESIGN.md §4.5): an orthographic, isometric-style turntable whose zoom is
-// computed from the canvas size, so Lumen always fits a 360x800 phone and a 1920x1080 projector alike.
+// computed from the canvas size, so the city always fits a 360x800 phone and a 1920x1080 projector alike.
 // Pure functions (no three.js) so they are unit-tested in Node.
 import type { DistrictId } from '@shieldquest/shared';
 import { CITY, DISTRICT_SPOTS, spotById, type V3 } from './layout';

@@ -21,6 +21,7 @@ import {
 } from '@shieldquest/shared';
 import { exitOrder, hashString, residentName, type ExitView } from '../game/mission/runLogic';
 import type { IconName } from '../ui/Icon';
+import { dashNextAction } from './dash/dashLogic';
 
 // ---------------------------------------------------------------------------------------------
 // Roles and lenses
@@ -124,7 +125,7 @@ export const SCREEN_CAPTION: Record<SquadMissionPhase, string> = {
   reveal: 'Your squad’s seals are in. Split decisions are normal.',
   explain: 'Eyes up. Talk it out with your squad.',
   reseal: 'Keep your exit, or change it. Changing your mind is thinking.',
-  release: 'Time starts again. Lumen will remember this.',
+  release: 'Time starts again. The city will remember this.',
   shield: 'A friend needs help. Build the message together.',
   bond: 'Phones down. See what your squad unlocked.',
 };
@@ -177,6 +178,8 @@ export interface NextAction {
 /** What the Conductor's Next button will do right now (mirrors the server's `next` command). */
 export function nextAction(h: HostSnapshot): NextAction {
   const { session } = h;
+  // An open Squad Dash takes the big button (the server routes `next` to the Dash too).
+  if (h.dash && session.phase !== 'ended') return dashNextAction(h.dash, session.phase);
   const ids = session.missionIds;
   const upcoming = session.missionIndex === null ? 0 : session.missionIndex + 1;
   const nextMission = upcoming < ids.length ? missionById(ids[upcoming] ?? '') : undefined;

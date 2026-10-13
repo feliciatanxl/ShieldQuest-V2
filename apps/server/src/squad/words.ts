@@ -12,7 +12,7 @@ const ADJECTIVES = [
 ] as const;
 
 /**
- * Lumen's animals (Singapore wildlife and friendly creatures). The six squad totems (Hornbill, Pangolin,
+ * The city's animals (Singapore wildlife and friendly creatures). The six squad totems (Hornbill, Pangolin,
  * Kingfisher, Heron, Civet, Macaque) are left out so a pseudonym never looks like a squad name.
  */
 const ANIMALS = [
@@ -33,7 +33,7 @@ export function makePseudonym(used: ReadonlySet<string>): string {
       if (!used.has(name)) return name;
     }
   }
-  return `Lumen Guest ${used.size + 1}`;
+  return `City Guest ${used.size + 1}`;
 }
 
 /** Letter runs we never want to project on a classroom wall. */

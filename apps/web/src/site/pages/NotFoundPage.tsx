@@ -15,7 +15,7 @@ const WAYS: { href: string; icon: IconName; label: string; hint: string }[] = [
 
 export function NotFoundPage() {
   return (
-    <SiteLayout title="Page not found" description="This page isn’t on the map of Lumen. Find your way back to ShieldQuest.">
+    <SiteLayout title="Page not found" description="This page isn’t on the map of ShieldQuest City. Find your way back to ShieldQuest.">
       <section className="site-404" aria-labelledby="site-404-title">
         <div className="container site-404__inner">
           <Entrance className="site-404__art">
@@ -25,7 +25,7 @@ export function NotFoundPage() {
             <p className="site-kicker">Error 404</p>
             <h1 id="site-404-title">This street isn’t on the map yet.</h1>
             <p className="site-pagehero__lead">
-              The fog hasn’t lifted over this part of Lumen. The link may be old, or there may be a typo in the address.
+              The fog hasn’t lifted over this part of the city. The link may be old, or there may be a typo in the address.
             </p>
             <div className="site-actions">
               <LinkButton href="/" size="lg" icon="arrowLeft">

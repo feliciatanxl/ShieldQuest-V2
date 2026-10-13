@@ -1,0 +1,662 @@
+/* Explore mode (prefix: ex-). Full-bleed 3D walk-around (or the 2D board) with a DOM HUD on top. */
+
+.ex {
+  position: relative;
+  height: 100dvh;
+  overflow: clip;
+  background:
+    radial-gradient(60rem 36rem at 50% 20%, rgba(42, 47, 107, 0.9), transparent 70%),
+    var(--bg);
+  color: var(--text);
+  isolation: isolate;
+}
+
+/* Readability scrim at the top so the HUD stays legible over a bright sky. */
+.ex[data-mode='3d']::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--safe-top) + 7rem);
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(rgba(20, 32, 51, 0.8), rgba(20, 32, 51, 0));
+}
+
+.ex-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: grab;
+}
+.ex-stage:active {
+  cursor: grabbing;
+}
+.ex-stage > *,
+.ex-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.ex-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+.ex-loading p {
+  margin: 0;
+}
+
+/* ---- HUD ---- */
+.ex-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  padding-top: calc(var(--safe-top) + 0.5rem);
+  padding-bottom: calc(var(--safe-bottom) + 0.75rem);
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+.ex-hud > * {
+  pointer-events: auto;
+}
+.ex-hud > .ex-pop,
+.ex-hud > .ex-miss {
+  pointer-events: none;
+}
+
+.ex-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ex-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: var(--tap);
+  padding: 0 0.95rem 0 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+.ex-back:hover {
+  border-color: var(--line-strong);
+}
+.ex-back:focus-visible {
+  border-radius: 999px;
+}
+.ex-title {
+  margin: 0 auto 0 0.25rem;
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+.ex-tools {
+  display: flex;
+  gap: 0.35rem;
+}
+.ex-tools .ui-iconbtn[aria-pressed='false'] {
+  opacity: 0.7;
+}
+/* Phones: the title steps aside (still announced) so the tools fit in one row at 360 px. */
+@media (max-width: 29.99rem) {
+  .ex-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .ex-back {
+    margin-right: auto;
+    padding: 0 0.7rem 0 0.55rem;
+  }
+  .ex-tools {
+    gap: 0.25rem;
+  }
+}
+
+.ex-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-self: flex-start;
+  pointer-events: none !important;
+}
+.ex-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.25rem;
+  margin: 0;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.ex-chip > svg:first-child {
+  color: var(--gold);
+}
+.ex-chip__word {
+  color: var(--muted);
+  font-weight: 500;
+}
+.ex-chip[data-done='true'] {
+  border-color: var(--gold);
+}
+.ex-chip--area {
+  color: var(--muted);
+  font-weight: 500;
+}
+.ex-glyph {
+  flex: none;
+}
+
+/* ---- Mini-map ---- */
+.ex-map {
+  position: relative;
+  aspect-ratio: 1;
+}
+.ex-map__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ex-map__rim {
+  fill: none;
+  stroke: rgba(159, 214, 255, 0.35);
+  stroke-width: 3;
+}
+.ex-map__plate {
+  fill: color-mix(in srgb, var(--plate, #9aa6c4) 30%, #2b3466);
+  stroke: var(--plate, #9aa6c4);
+  stroke-width: 0.8;
+}
+.ex-map__plate--hub {
+  fill: #4a4f86;
+  stroke: var(--gold);
+}
+.ex-map__plate--fog {
+  fill: #2c3358;
+  stroke: #6b7396;
+  stroke-dasharray: 2 2;
+}
+.ex-map__bridge {
+  fill: #8f93bd;
+}
+.ex-map__bridge--fog {
+  fill: #4a5078;
+}
+.ex-map__building {
+  fill: #c9c2dc;
+  stroke: #1d2440;
+  stroke-width: 0.3;
+}
+.ex-map__tower {
+  fill: #efe6d6;
+  stroke: var(--gold);
+  stroke-width: 0.5;
+}
+.ex-map__beacon {
+  fill: var(--gold);
+}
+.ex-map__kiosk {
+  fill: #ff6f9f;
+  stroke: #fff;
+  stroke-width: 0.4;
+}
+.ex-map__townie {
+  fill: #fff;
+}
+.ex-map__shard {
+  fill: #5cc4f2;
+  stroke: #e6f7ff;
+  stroke-width: 0.5;
+}
+.ex-map__player {
+  stroke: #fff;
+  stroke-width: 0.8;
+}
+.ex-map__heading {
+  fill: #fff;
+}
+
+.ex-mini {
+  align-self: flex-end;
+  width: clamp(7rem, 30vw, 11rem);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--line-strong);
+  background: rgba(15, 22, 48, 0.82);
+  pointer-events: none !important;
+  box-shadow: var(--shadow-sm);
+}
+/* Landscape phones: keep the mini-map small so it never covers the player. */
+@media (orientation: landscape) and (max-height: 30rem) {
+  .ex-mini {
+    width: 6.5rem;
+    position: absolute;
+    top: calc(var(--safe-top) + 3.6rem);
+    right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  }
+}
+
+/* ---- Bottom: joystick, keys hint, prompt ---- */
+.ex-bottom {
+  margin-top: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  pointer-events: none !important;
+}
+.ex-bottom > * {
+  pointer-events: auto;
+}
+
+.ex-stick {
+  position: relative;
+  flex: none;
+  width: 8.25rem;
+  height: 8.25rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 239, 230, 0.16), rgba(244, 239, 230, 0.06) 70%);
+  border: 2px solid rgba(244, 239, 230, 0.35);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ex-stick[data-active='true'] {
+  border-color: var(--gold);
+}
+.ex-stick__knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin: -1.7rem 0 0 -1.7rem;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+  pointer-events: none;
+}
+
+.ex-keys {
+  margin: 0;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.85rem;
+  pointer-events: none !important;
+}
+.ex kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  border-radius: 0.3em;
+  border: 1px solid currentColor;
+  font: 600 0.8em/1.5 var(--font-body);
+  text-align: center;
+}
+
+.ex-prompt {
+  position: relative;
+  flex: 1 1 auto;
+  max-width: 26rem;
+  margin-left: auto;
+  padding: 0.85rem 1rem 0.9rem;
+  border-radius: var(--radius-lg);
+  background: var(--paper);
+  color: var(--ink);
+  border-top: 0.4rem solid var(--accent, var(--gold));
+  box-shadow: var(--shadow);
+  animation: ex-rise 220ms var(--ease-out);
+}
+.ex-prompt__close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  background: transparent;
+  color: var(--ink);
+  border-color: transparent;
+}
+.ex-prompt__kicker {
+  margin: 0 2.75rem 0.1rem 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #4a5170;
+}
+.ex-prompt__title {
+  margin: 0 2.75rem 0.25rem 0;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+.ex-prompt__body {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+}
+.ex-prompt__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.ex-prompt .ui-btn--secondary {
+  --btn-fg: var(--ink);
+  --btn-line: rgba(29, 36, 64, 0.35);
+}
+.ex-prompt__hint {
+  margin: 0.45rem 0 0;
+  font-size: 0.75rem;
+  color: #4a5170;
+}
+@media (any-pointer: coarse) {
+  .ex-prompt__hint {
+    display: none;
+  }
+}
+/* Narrow portrait phones: the prompt sits above the joystick, full width. */
+@media (max-width: 34rem) and (orientation: portrait) {
+  .ex-bottom {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .ex-bottom > .ex-stick {
+    align-self: flex-start;
+  }
+  .ex-prompt {
+    max-width: none;
+    margin-left: 0;
+  }
+}
+
+/* Shard pop and "can't walk there". */
+.ex-pop,
+.ex-miss {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  margin: 0;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ex-pop {
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 1.25rem;
+  box-shadow: var(--shadow);
+  animation: ex-pop 1.6s var(--ease-out) forwards;
+}
+.ex-miss {
+  top: 42%;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+@keyframes ex-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0.75rem) scale(0.85);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.05);
+  }
+  25% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -1.25rem);
+  }
+}
+@keyframes ex-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+.ex[data-anim='off'] .ex-pop {
+  animation: none;
+  transform: translateX(-50%);
+}
+.ex[data-anim='off'] .ex-prompt {
+  animation: none;
+}
+
+/* ---- 2D board ---- */
+.ex[data-mode='2d'] .ex-hud {
+  position: relative;
+  min-height: 100%;
+  overflow-y: auto;
+}
+.ex-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 0;
+}
+.ex-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem;
+}
+.ex-tab {
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  font: 600 0.9rem var(--font-display);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ex-tab[aria-pressed='true'] {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.ex-board__map {
+  width: min(100%, 34rem, calc(100dvh - 15rem));
+  min-width: min(100%, 18rem);
+  border-radius: var(--radius-lg);
+  background: rgba(15, 22, 48, 0.7);
+  border: 1px solid var(--line);
+}
+.ex-board__hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.ex-area,
+.ex-spot,
+.ex-me {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+.ex-area {
+  display: grid;
+  justify-items: center;
+  min-height: var(--tap);
+  max-width: 7.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-solid);
+  color: var(--text);
+  cursor: pointer;
+  touch-action: manipulation;
+  line-height: 1.15;
+}
+.ex-area__name {
+  font: 600 0.9rem var(--font-display);
+}
+.ex-area__meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.ex-spot {
+  display: grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: var(--surface-solid);
+  color: #fff;
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: var(--shadow-sm);
+}
+.ex-spot--kiosk {
+  background: #c2457a;
+}
+.ex-spot--beacon {
+  background: #8a6a12;
+}
+.ex-spot--townie {
+  background: #2f6f86;
+}
+.ex-spot--shard {
+  background: #163e64;
+  border-color: #bfe9ff;
+}
+.ex-spot[data-selected='true'] {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+.ex-me {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px rgba(15, 22, 48, 0.6);
+  pointer-events: none;
+  transition:
+    left 420ms var(--ease-out),
+    top 420ms var(--ease-out);
+}
+.ex[data-anim='off'] .ex-me {
+  transition: none;
+}
+.ex[data-mode='2d'] .ex-bottom {
+  margin-top: 0.25rem;
+}
+.ex[data-mode='2d'] .ex-prompt {
+  margin: 0 auto;
+}
+
+/* ---- Sheets ---- */
+.ex-sheet__lead {
+  margin: 0 0 0.75rem;
+}
+.ex-nearby {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.ex-nearby__row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1px solid rgba(29, 36, 64, 0.12);
+}
+.ex-nearby__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: #2f6f86;
+  color: #fff;
+}
+.ex-nearby__icon--kiosk {
+  background: #c2457a;
+}
+.ex-nearby__icon--beacon {
+  background: #8a6a12;
+}
+.ex-nearby__icon--shard {
+  background: #163e64;
+}
+.ex-nearby__text {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.25;
+}
+.ex-nearby__text span {
+  color: #4a5170;
+  font-size: 0.88rem;
+}
+.ex-go {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--paper);
+  flex: none;
+}
+.ex-help {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+.ex-help kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0 0.3em;
+  border-radius: 0.3em;
+  border: 1px solid currentColor;
+  font: 600 0.85em/1.5 var(--font-body);
+  text-align: center;
+}
+.ex-loading--text {
+  margin: 0;
+  pointer-events: none;
+}

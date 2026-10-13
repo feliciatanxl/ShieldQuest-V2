@@ -312,7 +312,7 @@ export function BondPhase({
           </LinkButton>
         )}
         <LinkButton href={backHref} variant={nextHref ? 'secondary' : 'primary'} size="lg" block icon="map">
-          Back to Lumen
+          Back to the city
         </LinkButton>
         <Button variant="ghost" block icon="rewind" onClick={onReplay}>
           Replay this moment

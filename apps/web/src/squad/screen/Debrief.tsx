@@ -242,7 +242,7 @@ export function ClosingView({ snap, reduced }: { snap: ScreenSnapshot; reduced: 
         <div className="sq-scr-closing__solo">
           <QrCode text={solo.full} size={qr} label="QR code to keep playing ShieldQuest on your own" />
           <p>
-            <LogoMark size={28} /> Keep exploring Lumen on your own: {solo.short}
+            <LogoMark size={28} /> Keep exploring the city on your own: {solo.short}
           </p>
         </div>
       </div>

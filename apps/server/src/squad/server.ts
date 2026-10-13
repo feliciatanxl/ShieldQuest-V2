@@ -453,6 +453,7 @@ export async function registerSquad(app: FastifyInstance, opts: SquadServerOptio
     listen('roomHold', SeatSchemas.roomHold, 'seat', (p, s, t) => s.roomHold(seatId(), p.on, t));
     listen('lateHold', SeatSchemas.lateHold, 'seat', (p, s, t) => s.lateHold(seatId(), p, t));
     listen('signal', SeatSchemas.signal, 'seat', (_p, s, t) => s.signal(seatId(), t));
+    listen('dashAnswer', SeatSchemas.dashAnswer, 'seat', (p, s, t) => s.dashAnswer(seatId(), p, t));
     listen('command', HostCommandSchema, 'host', (cmd, s, t) => s.command(cmd, t));
   });
 

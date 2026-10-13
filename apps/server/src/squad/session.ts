@@ -4,6 +4,7 @@
 // hooks.changed(); phase boundaries also call hooks.boundary() so a crash snapshot is written.
 
 import {
+  DASH_ALL_IN_SEC,
   RECLAIM_AFTER_MS,
   ROOM_SYNCED_PHASES,
   SKILLS,
@@ -11,15 +12,21 @@ import {
   SQUAD_TOTEMS,
   activeRoles,
   chipBoard,
+  dashQuestionSec,
+  dashSquadPick,
+  emptyDashAggregate,
   evaluateShield,
   guardianForSkill,
+  hashSeed,
   holdBucket,
   isEarlyHold,
   majorityOf,
   missionById,
   moodFor,
+  mulberry32,
   phaseIndex,
   phaseTiming,
+  pickChanceSet,
   pickSteelmanSeat,
   roleAssignment,
   roleForSeat,
@@ -35,6 +42,7 @@ import {
   type AftershockDelivery,
   type BecauseTileId,
   type BondView,
+  type DashLength,
   type DecisionView,
   type ErrorCode,
   type GuardianId,
@@ -54,10 +62,15 @@ import {
   type SquadTotemId,
 } from '@shieldquest/shared';
 import { addCount, addShieldLine, cloneAggregate, debriefFrom, newSessionAggregate, openMissionAggregate } from './aggregate';
-import { emptyPlayer, type PlayerState, type Seat, type SessionState, type Squad, type SquadMission } from './state';
+import { emptyPlayer, type DashState, type PlayerState, type Seat, type SessionState, type Squad, type SquadMission } from './state';
 import {
   boardView,
   canSendShield,
+  activePlayers,
+  dashAnswerKey,
+  dashQuestion,
+  dashSquads,
+  dashTally,
   isActive,
   isConnected,
   missionOf,
@@ -232,6 +245,9 @@ export class SquadSession {
       missionAgg: null,
       debrief: null,
       endedAt: null,
+      dash: null,
+      dashRuns: 0,
+      dashUsed: [],
     };
     const session = new SquadSession(s, hooks);
     for (let i = 0; i < (config.squadCount ?? 0); i++) session.createSquad();
@@ -486,6 +502,9 @@ export class SquadSession {
     seat.steelman = null;
     seat.role = null;
     seat.ready = false;
+    // A Squad Dash tap belongs to the squad the seat was in: drop it rather than carry it across.
+    const dash = s.dash;
+    if (dash) for (const key of [...dash.answers.keys()]) if (key.startsWith(`${seat.id}#`)) dash.answers.delete(key);
     if (m) {
       if (m.chips) m.chips = chipBoard(this.reasonPicks(from));
       if (m.tie && !m.tieBreakerSeat) m.tieBreakerSeat = this.safetyLeadSeat(from)?.id ?? null;
@@ -543,7 +562,7 @@ export class SquadSession {
       finale: false,
       forecast: { ...p.forecast },
     }));
-    // Shadow check: after a non-risky decision, "Meanwhile, in another Lumen…" shows the risky branch.
+    // Shadow check: after a non-risky decision, "Meanwhile, in another timeline…" shows the risky branch.
     let shadow: ShadowCheck | null = null;
     const last = sq.decisions[sq.decisions.length - 1];
     const prevId = prevIndex === null ? null : this.s.config.missionIds[prevIndex];
@@ -572,6 +591,7 @@ export class SquadSession {
     if (s.phase === 'debrief') return fail('wrong-phase');
     if (index < 0 || index >= s.config.missionIds.length) return fail('bad-request');
     if (s.played.includes(index)) return fail('used');
+    if (s.dash) this.closeDash(now);
     if (this.missionRunning) this.closeMission(now, true);
     if (s.phase === 'room-freeze') this.stopRoomFreeze();
     this.autoBalance(now);
@@ -1033,6 +1053,8 @@ export class SquadSession {
   tick(now: number): void {
     const s = this.s;
     const tl = s.timeline;
+    const dash = s.dash;
+    if (dash && !s.paused && dash.stage === 'question' && dash.endsAt !== null && now >= dash.endsAt) this.dashReveal(now);
     if (s.phase !== 'mission' || s.paused || !tl || s.missionComplete) return;
     for (const sq of squadsInOrder(s)) {
       const m = openMission(s, sq);
@@ -1168,6 +1190,11 @@ export class SquadSession {
       if (m.tie && m.tie.endsAt > from) m.tie.endsAt += d;
       if (m.shield?.sendOpenAt != null && m.shield.sendOpenAt > from) m.shield.sendOpenAt += d;
     }
+    const dash = s.dash;
+    if (dash) {
+      dash.stageStartedAt += d;
+      if (dash.endsAt !== null && dash.endsAt > from) dash.endsAt += d;
+    }
   }
 
   // -------------------------------------------------------------------------------------------
@@ -1180,6 +1207,7 @@ export class SquadSession {
     switch (cmd.type) {
       case 'startRoomFreeze': {
         if (s.phase !== 'lobby') return fail('wrong-phase');
+        if (s.dash) this.closeDash(now);
         this.autoBalance(now);
         s.phase = 'room-freeze';
         s.roomFreeze.active = true;
@@ -1225,6 +1253,8 @@ export class SquadSession {
       }
       case 'setOption': {
         s.config[cmd.key] = cmd.value;
+        // Calm Mode takes the Dash clock away (the Conductor reveals); turning it off starts a fresh one.
+        if (cmd.key === 'calm' && s.dash?.stage === 'question') s.dash.endsAt = cmd.value ? null : now + this.dashSec() * SEC;
         this.touch(true);
         if (cmd.key === 'autoAdvance' && cmd.value) for (const sq of squadsInOrder(s)) this.checkQuorum(sq, now);
         return OK;
@@ -1304,6 +1334,14 @@ export class SquadSession {
       }
       case 'endSession':
         return this.endSession(now);
+      case 'dashStart':
+        return this.dashStart(cmd.questions, now);
+      case 'dashNext':
+        return this.dashNext(now);
+      case 'dashSkip':
+        return this.dashSkip(now);
+      case 'dashEnd':
+        return this.dashEnd(now);
     }
   }
 
@@ -1315,6 +1353,7 @@ export class SquadSession {
   /** The one big button: always does the right thing for where the room is. */
   private next(squadId: SquadTotemId | undefined, now: number): AckResult {
     const s = this.s;
+    if (s.dash) return this.dashNext(now);
     switch (s.phase) {
       case 'lobby': {
         if (!s.roomFreeze.done) return this.command({ type: 'startRoomFreeze' }, now);
@@ -1368,6 +1407,13 @@ export class SquadSession {
   private extend(squadId: SquadTotemId | undefined, ms: number, now: number): AckResult {
     const s = this.s;
     const tl = s.timeline;
+    if (s.dash) {
+      // +30 s during a Squad Dash question: more talking time (there is no clock in Calm Mode).
+      if (s.dash.stage !== 'question' || s.dash.endsAt === null) return fail('wrong-phase');
+      s.dash.endsAt += ms;
+      this.touch(true);
+      return OK;
+    }
     if (!this.missionRunning || !tl) return fail('wrong-phase');
     if (this.inSyncedPhase()) {
       if (now >= tl.liveAt && now < tl.liveEndsAt) {
@@ -1393,7 +1439,7 @@ export class SquadSession {
 
   private dropEmptySquads(): void {
     const s = this.s;
-    // Only before the first mission and in auto mode: later, an empty squad still owns its Lumen state.
+    // Only before the first mission and in auto mode: later, an empty squad still owns its city state.
     if (s.config.squadCount !== null || s.played.length > 0) return;
     for (const sq of [...s.squads.values()]) if (sq.seatIds.length === 0 && s.squads.size > 1) s.squads.delete(sq.id);
   }
@@ -1472,6 +1518,7 @@ export class SquadSession {
       this.hooks.ended();
       return OK;
     }
+    if (s.dash) this.closeDash(now);
     if (this.missionRunning) this.closeMission(now, true);
     if (s.phase === 'room-freeze') this.stopRoomFreeze();
     for (const sq of squadsInOrder(s)) {
@@ -1505,6 +1552,193 @@ export class SquadSession {
   expire(): SessionAggregate {
     this.s.aggregate.complete = false;
     return cloneAggregate(this.s.aggregate);
+  }
+
+  // -------------------------------------------------------------------------------------------
+  // Squad Dash: a short team quiz between missions. Every player taps, the squad's majority is its pick,
+  // and only squads are scored. Taps stay in memory and are dropped the moment a question is revealed.
+
+  /** A Dash may open only when no mission is running: in the lobby, or at Look Up between missions. */
+  private get dashAllowed(): boolean {
+    const s = this.s;
+    return s.phase === 'lobby' || (s.phase === 'mission' && s.missionComplete);
+  }
+
+  private dashSec(): number {
+    return dashQuestionSec({ band: this.s.config.band, relaxed: this.s.config.relaxed });
+  }
+
+  private openDashQuestion(d: DashState, index: number, now: number): void {
+    d.index = index;
+    d.stage = 'question';
+    d.stageStartedAt = now;
+    d.answers.clear();
+    // Calm Mode: no clock, no countdown pressure. The Conductor reveals when the room is ready.
+    d.endsAt = this.s.config.calm ? null : now + this.dashSec() * SEC;
+  }
+
+  private dashStart(questions: DashLength, now: number): AckResult {
+    const s = this.s;
+    if (s.dash || !this.dashAllowed) return fail('wrong-phase');
+    // Seeded by the session seed and the round number: a restart deals the same round again.
+    const rng = mulberry32(hashSeed(s.seed, 'dash', s.dashRuns));
+    const picked = pickChanceSet(s.config.band, questions, rng, { kinds: ['scam-or-safe'], avoid: s.dashUsed });
+    if (picked.length === 0) return fail('bad-request');
+    const ids = picked.map((q) => q.id);
+    s.dashRuns += 1;
+    s.dashUsed = [...new Set([...s.dashUsed, ...ids])];
+    const d: DashState = {
+      id: newId(),
+      questionIds: ids,
+      index: 0,
+      stage: 'question',
+      stageStartedAt: now,
+      endsAt: null,
+      answers: new Map(),
+      rounds: [],
+    };
+    this.openDashQuestion(d, 0, now);
+    s.dash = d;
+    s.spotlight = null;
+    (s.aggregate.dash ??= emptyDashAggregate()).rounds += 1;
+    this.activity(now);
+    this.touch(true);
+    return OK;
+  }
+
+  /** Scores the current question for every squad, folds the counts into the aggregate and drops the taps. */
+  private dashReveal(now: number): void {
+    const s = this.s;
+    const d = s.dash;
+    const q = d ? dashQuestion(d) : null;
+    if (!d || !q || d.stage !== 'question') return;
+    const squads = [];
+    for (const sq of dashSquads(s)) {
+      const t = dashTally(s, sq, q);
+      // A squad with nobody here and no taps sits this question out rather than scoring a miss.
+      if (t.answered === 0 && activePlayers(s, sq) === 0) continue;
+      const pick = dashSquadPick(t.counts);
+      squads.push({
+        squadId: sq.id,
+        counts: t.counts,
+        result: { pick, correct: pick === q.answer, split: pick === null && t.answered > 0, answered: t.answered },
+      });
+    }
+    d.rounds.push({ questionId: q.id, skipped: false, squads });
+    d.answers.clear();
+    d.stage = 'reveal';
+    d.stageStartedAt = now;
+    d.endsAt = null;
+    const agg = (s.aggregate.dash ??= emptyDashAggregate());
+    agg.questions += 1;
+    const byQ = (agg.byQuestion[q.id] ??= { squads: 0, correct: 0 });
+    for (const e of squads) {
+      agg.squadAnswers += 1;
+      byQ.squads += 1;
+      if (e.result.correct) {
+        agg.squadCorrect += 1;
+        byQ.correct += 1;
+      } else if (e.result.split) agg.splits += 1;
+      else if (e.result.pick === null) agg.none += 1;
+    }
+    this.touch(true);
+  }
+
+  /** After a question (revealed or skipped): the next question, or the results card after the last one. */
+  private dashAfter(d: DashState, now: number): void {
+    if (d.index + 1 < d.questionIds.length) this.openDashQuestion(d, d.index + 1, now);
+    else this.dashResults(d, now);
+    this.touch(true);
+  }
+
+  private dashResults(d: DashState, now: number): void {
+    d.answers.clear();
+    d.stage = 'results';
+    d.stageStartedAt = now;
+    d.endsAt = null;
+  }
+
+  private closeDash(now: number): void {
+    const s = this.s;
+    if (!s.dash) return;
+    s.dash = null;
+    this.hooks.aggregate(cloneAggregate(s.aggregate));
+    this.activity(now);
+    this.touch(true);
+  }
+
+  private dashNext(now: number): AckResult {
+    const d = this.s.dash;
+    if (!d) return fail('wrong-phase');
+    this.activity(now);
+    if (d.stage === 'question') this.dashReveal(now);
+    else if (d.stage === 'reveal') this.dashAfter(d, now);
+    else this.closeDash(now);
+    return OK;
+  }
+
+  private dashSkip(now: number): AckResult {
+    const d = this.s.dash;
+    if (!d || d.stage === 'results') return fail('wrong-phase');
+    this.activity(now);
+    if (d.stage === 'question') {
+      const q = dashQuestion(d);
+      if (q) d.rounds.push({ questionId: q.id, skipped: true, squads: [] });
+      d.answers.clear();
+    }
+    this.dashAfter(d, now);
+    return OK;
+  }
+
+  private dashEnd(now: number): AckResult {
+    const d = this.s.dash;
+    if (!d) return fail('wrong-phase');
+    this.activity(now);
+    // Nothing scored yet, or already on the results card: close. Otherwise show the totals so far.
+    if (d.stage === 'results' || !d.rounds.some((r) => !r.skipped)) {
+      this.closeDash(now);
+      return OK;
+    }
+    this.dashResults(d, now);
+    this.touch(true);
+    return OK;
+  }
+
+  /** Once every active player has tapped, the question reveals a few seconds later (never in Calm Mode). */
+  private dashAllIn(d: DashState, now: number): void {
+    const s = this.s;
+    if (!s.config.autoAdvance || s.config.calm || d.endsAt === null) return;
+    const q = dashQuestion(d);
+    if (!q) return;
+    let any = false;
+    for (const sq of dashSquads(s)) {
+      const t = dashTally(s, sq, q);
+      if (t.answered < activePlayers(s, sq)) return;
+      if (t.answered > 0) any = true;
+    }
+    if (any) d.endsAt = Math.min(d.endsAt, now + DASH_ALL_IN_SEC * SEC);
+  }
+
+  dashAnswer(seatId: string, p: { questionId: string; optionId: string; player?: number }, now: number): AckResult {
+    const s = this.s;
+    const seat = s.seats.get(seatId);
+    if (!seat) return fail('not-found');
+    if (s.phase === 'ended') return fail('ended');
+    if (s.paused) return fail('paused');
+    const d = s.dash;
+    const q = d ? dashQuestion(d) : null;
+    if (!d || !q || d.stage !== 'question' || p.questionId !== q.id) return fail('wrong-phase');
+    if (!q.options.some((o) => o.id === p.optionId)) return fail('unknown-choice');
+    const player = p.player ?? 0;
+    if (player >= seat.players) return fail('bad-request');
+    const key = dashAnswerKey(seat.id, player);
+    // Taps can change until the reveal: talking it over is the point.
+    if (d.answers.get(key) === p.optionId) return DUP;
+    d.answers.set(key, p.optionId);
+    this.dashAllIn(d, now);
+    this.activity(now);
+    this.touch();
+    return OK;
   }
 
   // -------------------------------------------------------------------------------------------

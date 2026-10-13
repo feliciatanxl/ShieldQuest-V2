@@ -151,7 +151,7 @@ export function Onboarding() {
                   {GAME.hook}
                 </h1>
                 <p className="hub-ob__lead">
-                  In Lumen, every risky moment is caught one second before it happens. Help the people who live here
+                  In ShieldQuest City, every risky moment is caught one second before it happens. Help the people who live here
                   spot the tricks, hold before acting, and choose the safer way out.
                 </p>
                 <ul className="hub-ob__promises">
@@ -266,7 +266,7 @@ export function Onboarding() {
                     </>
                   ) : (
                     <Button size="lg" iconRight="arrowRight" onClick={() => finish(false)}>
-                      Enter Lumen
+                      Enter the city
                     </Button>
                   )}
                 </div>

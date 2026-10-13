@@ -1,0 +1,58 @@
+/* Shared reward UI (prefix: rw-): the reward toast. */
+
+.rw-toast-region {
+  position: fixed;
+  z-index: 60;
+  top: calc(var(--safe-top) + 4.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  pointer-events: none;
+}
+.rw-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 1.1rem 0.55rem 0.8rem;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--gold);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.rw-toast svg {
+  flex: none;
+}
+.rw-toast[data-anim='on'] {
+  animation: rw-toast-in 320ms var(--ease-out) both;
+}
+.rw-toast__text {
+  display: grid;
+  gap: 0.05rem;
+  min-width: 0;
+}
+.rw-toast__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.15;
+}
+.rw-toast__line {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  line-height: 1.25;
+}
+
+@keyframes rw-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.6rem) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

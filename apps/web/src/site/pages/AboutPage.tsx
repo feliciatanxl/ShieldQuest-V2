@@ -3,10 +3,10 @@ import { Link } from 'wouter';
 import { LinkButton } from '../../ui/Button';
 import { Icon, type IconName } from '../../ui/Icon';
 import { StillpointClock } from '../art/Skyline';
-import { RESEARCH, ROADMAP, TEAM } from '../data';
+import { RESEARCH, ROADMAP, STATS, TEAM } from '../data';
 import { Reveal, Stagger, StaggerItem } from '../motion';
 import { SiteLayout } from '../SiteLayout';
-import { ContactBlock, DocSection, LetterChip, PageHero } from '../parts';
+import { ContactBlock, DocSection, LetterChip, PageHero, SourceNote } from '../parts';
 import '../home.css';
 import '../pages.css';
 
@@ -31,6 +31,167 @@ const CAMPAIGN_MAP: { campaign: string; letters: SkillId[]; body: string }[] = [
   { campaign: 'Add', letters: [], body: 'ByteBuddy’s tips cover the security features worth adding to your phone and accounts.' },
 ];
 
+const PARTNER_POINTS: { icon: IconName; title: string; body: string }[] = [
+  {
+    icon: 'check',
+    title: 'Outcomes you can report',
+    body: 'Six KPIs, measured before, after and on return, with an aggregate impact report at the end of each pilot.',
+  },
+  {
+    icon: 'phone',
+    title: 'Budget-light delivery',
+    body: 'Runs in any modern browser on phones students already have. No app-store fees, no devices to buy, nothing to install.',
+  },
+  {
+    icon: 'map',
+    title: 'Grows as scams evolve',
+    body: 'The Scenario Portal adds new missions after two reviews, so content keeps up with new tactics without a new app.',
+  },
+  {
+    icon: 'users',
+    title: 'Youth-led, youth-shaped',
+    body: 'Built by students and co-designed with young people. Approved youth-made Moment Cards can become missions.',
+  },
+];
+
+/** The problem, with verified figures only (see STATS in data.ts). */
+function SecondBefore() {
+  const { cases, lost, selfTransfer, youth2025, youthH1, shopTheft } = STATS;
+  return (
+    <DocSection
+      id="the-second-before"
+      kicker="The second before"
+      title="Most scams don’t break in. They talk people into opening the door."
+      lead="Scammers rarely need to hack anything. They manufacture a hurry, a reward or a secret, and wait for one rushed second."
+      tone="tint"
+    >
+      <Stagger as="div" className="site-stats">
+        <StaggerItem as="div" className="site-stat site-stat--pair">
+          <div>
+            <p className="site-stat__value">{cases.value}</p>
+            <p className="site-stat__label">{cases.label}</p>
+          </div>
+          <div>
+            <p className="site-stat__value">
+              <small>{lost.prefix} </small>
+              {lost.value}
+              <small> {lost.unit}</small>
+            </p>
+            <p className="site-stat__label">{lost.label}</p>
+          </div>
+          <SourceNote source={cases.source} />
+        </StaggerItem>
+
+        <StaggerItem as="div" className="site-stat site-stat--gold">
+          <p className="site-stat__value">{selfTransfer.value}</p>
+          <p className="site-stat__label">{selfTransfer.label}.</p>
+          <p className="site-stat__note">No hacking needed. Just pressure, and a second too short to think.</p>
+          <SourceNote source={selfTransfer.source} />
+        </StaggerItem>
+
+        <StaggerItem as="div" className="site-stat site-stat--wide">
+          <div className="site-stat__split">
+            <div>
+              <p className="site-stat__value">{youth2025.value}</p>
+              <p className="site-stat__label">{youth2025.label}.</p>
+            </div>
+            <div className="site-bars">
+              <p className="site-bars__title">{youth2025.breakdownLabel}:</p>
+              <ul>
+                {youth2025.breakdown.map((b) => (
+                  <li key={b.label}>
+                    <span className="site-bars__label">{b.label}</span>
+                    <span className="site-bars__track" aria-hidden="true">
+                      <span className="site-bars__fill" style={{ width: `${b.value}%` }} />
+                    </span>
+                    <span className="site-bars__value">{b.value}%</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <SourceNote source={youth2025.source} />
+        </StaggerItem>
+
+        <StaggerItem as="div" className="site-stat">
+          <p className="site-stat__value">{youthH1.value}</p>
+          <p className="site-stat__label">{youthH1.label}.</p>
+          <div className="site-meter">
+            <span className="site-meter__track" aria-hidden="true">
+              <span className="site-meter__fill" style={{ width: `${youthH1.share.value}%` }} />
+            </span>
+            <p>
+              <b>{youthH1.share.value}%</b> of those {youthH1.share.label}.
+            </p>
+          </div>
+          <SourceNote source={youthH1.source} />
+        </StaggerItem>
+
+        <StaggerItem as="div" className="site-stat">
+          <p className="site-stat__value">{shopTheft.value}</p>
+          <p className="site-stat__label">{shopTheft.label}.</p>
+          <p className="site-stat__note">Dares and “just once” pressure work offline too.</p>
+          <SourceNote source={shopTheft.source} />
+        </StaggerItem>
+      </Stagger>
+      <p className="site-fineprint site-stats__foot">
+        Figures as published by the Singapore Police Force. ShieldQuest is independent and is not endorsed by SPF.
+      </p>
+    </DocSection>
+  );
+}
+
+/** Why awareness alone isn't enough. */
+function TheGap() {
+  return (
+    <DocSection
+      id="the-gap"
+      kicker="The gap"
+      title="Everyone has heard the warnings. Nobody has practised the moment."
+      lead="Talks and posters tell young people what scams look like. But a real scam doesn’t feel like a poster. It feels like a friend, a deal or a deadline, and it arrives when you’re busy."
+    >
+      <Reveal className="site-gap">
+        <div className="site-gap__col site-gap__col--before">
+          <h3>
+            <Icon name="eye" /> What usually happens
+          </h3>
+          <ul>
+            <li>A talk in the hall, heard once.</li>
+            <li>A poster by the lift, nodded at and forgotten.</li>
+            <li>Rules to remember, but no chance to use them under pressure.</li>
+            <li>Nobody rehearses saying no to a friend.</li>
+          </ul>
+        </div>
+        <span className="site-gap__arrow" aria-hidden="true">
+          <Icon name="arrowRight" />
+        </span>
+        <div className="site-gap__col site-gap__col--after">
+          <h3>
+            <Icon name="pause" /> What ShieldQuest does
+          </h3>
+          <ul>
+            <li>
+              <b>Practise the pause</b> inside a realistic moment, with the clock running.
+            </li>
+            <li>
+              <b>Think it through together</b> before anyone decides.
+            </li>
+            <li>
+              <b>Live with the consequences</b>, which arrive later, the way real ones do.
+            </li>
+            <li>
+              <b>Rehearse the words</b> that pull a friend back.
+            </li>
+          </ul>
+        </div>
+      </Reveal>
+      <Reveal>
+        <p className="site-gap__line">Scams win by rushing people. So we train the pause.</p>
+      </Reveal>
+    </DocSection>
+  );
+}
+
 function TeamSection() {
   return (
     <DocSection
@@ -38,6 +199,7 @@ function TeamSection() {
       kicker="The team"
       title={`${GAME.team}: two students, one stubborn idea.`}
       lead="We are a youth-led team from Nanyang Polytechnic. We get the same rushed messages, too-good deals and “just this once” dares as everyone else our age, so we decided to build the practice we wished existed."
+      tone="tint"
     >
       <Stagger className="site-team site-team--about">
         {TEAM.map((t) => (
@@ -121,9 +283,12 @@ export function AboutPage() {
         </Reveal>
       </DocSection>
 
+      <SecondBefore />
+      <TheGap />
+
       <TeamSection />
 
-      <DocSection id="principles" kicker="What we stand for" title="Five promises we design by." tone="tint">
+      <DocSection id="principles" kicker="What we stand for" title="Five promises we design by.">
         <Stagger as="ol" className="site-principles">
           {PRINCIPLES.map((p, i) => (
             <StaggerItem key={p.title}>
@@ -135,6 +300,32 @@ export function AboutPage() {
             </StaggerItem>
           ))}
         </Stagger>
+      </DocSection>
+
+      <DocSection
+        id="partners"
+        kicker="For partners and funders"
+        title="A small team, a clear plan, and results you can measure."
+        lead="ShieldQuest is designed to be cheap to run, quick to set up and easy to grow, so a good session in one classroom can become a programme."
+        tone="tint"
+      >
+        <Stagger className="site-partner">
+          {PARTNER_POINTS.map((p) => (
+            <StaggerItem key={p.title}>
+              <span className="site-partner__icon" aria-hidden="true">
+                <Icon name={p.icon} />
+              </span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </StaggerItem>
+          ))}
+        </Stagger>
+        <Reveal className="site-center">
+          <a href="#partner" className="ui-btn ui-btn--secondary">
+            <Icon name="users" />
+            <span>Partner with us</span>
+          </a>
+        </Reveal>
       </DocSection>
 
       <DocSection
@@ -188,7 +379,7 @@ export function AboutPage() {
             <h3>“Stop and Check”</h3>
             <p>
               The advice to take a breath before responding to a suspicious message is exactly what HOLD trains. In
-              Lumen, the pause becomes a button you can press, and then a habit you keep.
+              ShieldQuest City, the pause becomes a button you can press, and then a habit you keep.
             </p>
             <p className="site-fineprint site-fineprint--ink">
               ShieldQuest is independent. It is not affiliated with or endorsed by the organisations behind these
@@ -216,12 +407,13 @@ export function AboutPage() {
             ))}
           </ul>
           <p className="site-lead">
-            See <Link href="/how-it-works">how a mission plays</Link> to find each of these ideas in action.
+            See <Link href="/how-it-works#why-it-works">why it works</Link> and{' '}
+            <Link href="/how-it-works">how a mission plays</Link> to find each of these ideas in action.
           </p>
         </Reveal>
       </DocSection>
 
-      <section className="site-section site-section--tight" aria-label="Disclaimer and contact">
+      <section className="site-section site-section--tight" id="disclaimer" aria-label="Disclaimer and contact">
         <div className="container">
           <Reveal className="site-disclaimer">
             <Icon name="info" />

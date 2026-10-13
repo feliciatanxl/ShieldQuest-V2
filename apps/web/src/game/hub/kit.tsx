@@ -142,7 +142,7 @@ export class ViewBoundary extends Component<{ fallback: ReactNode; children: Rea
 }
 
 /**
- * The Stillpoint: Lumen's clock tower, stuck at 11:59. Decorative (aria-hidden); the second hand
+ * The Stillpoint: the city's clock tower, stuck at 11:59. Decorative (aria-hidden); the second hand
  * trembles unless motion is reduced.
  */
 export function Stillpoint({ size = 160, frozen = false }: { size?: number; frozen?: boolean }) {

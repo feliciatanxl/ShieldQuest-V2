@@ -86,7 +86,7 @@ export const lendMeYourLoginTeen: Mission = {
       safety: 'risky',
       outcome: {
         title: '+S$30',
-        text: 'Nisha sends her EduPass details and the code. S$30 lands in her LumenPay wallet. Vee replies "You\'re a star ⭐" and Ethan grins. That was easy.',
+        text: 'Nisha sends her EduPass details and the code. S$30 lands in her MetroPay wallet. Vee replies "You\'re a star ⭐" and Ethan grins. That was easy.',
         mood: 'shiny',
         effects: { wallet: 30 },
       },
@@ -101,7 +101,7 @@ export const lendMeYourLoginTeen: Mission = {
         afterMissions: 1,
         timeLabel: '3 WEEKS LATER',
         title: "Nisha's EduPass is locked",
-        text: "Nisha can't log in to EduPass. A letter comes home: her EduPass was used to open a LumenPay wallet linked to scams. Her account is locked while police look into it, and her parents have been told. Nisha never opened that wallet. Someone used her login to do it.",
+        text: "Nisha can't log in to EduPass. A letter comes home: her EduPass was used to open a MetroPay wallet linked to scams. Her account is locked while police look into it, and her parents have been told. Nisha never opened that wallet. Someone used her login to do it.",
         effects: { trust: -2, risk: 2 },
         fact: {
           text: 'In Singapore, giving your digital ID login to someone so they can commit an offence can be a crime. The law is not meant to punish people who were genuinely tricked, so telling the truth early matters.',

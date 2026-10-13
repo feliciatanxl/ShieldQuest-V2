@@ -1,9 +1,12 @@
 // Crash snapshots (collection 'session-snapshots'): enough to restore a live session after a restart,
 // written at phase boundaries and deleted when the session closes. They deliberately leave out every
 // seat-to-vote link and who held or pinned what: votes, forecasts, traces, reasons, holds and Steelman
-// deals live in memory only. Pins are kept with their role icon alone.
+// deals live in memory only. Pins are kept with their role icon alone. A Squad Dash keeps its question list
+// and squad-level results; individual taps are never written (a restart mid-question asks it again).
 
 import {
+  chanceById,
+  dashQuestionSec,
   missionById,
   phaseTiming,
   type AftershockDelivery,
@@ -28,7 +31,17 @@ import {
   type SquadRoleId,
   type SquadTotemId,
 } from '@shieldquest/shared';
-import { emptyPlayer, type PendingShock, type PinEntry, type Seat, type SessionState, type Squad, type SquadMission } from './state';
+import {
+  emptyPlayer,
+  type DashRound,
+  type DashState,
+  type PendingShock,
+  type PinEntry,
+  type Seat,
+  type SessionState,
+  type Squad,
+  type SquadMission,
+} from './state';
 import { boardView, missionOf } from './views';
 
 export const SNAPSHOT_FORMAT = 1;
@@ -81,6 +94,17 @@ interface SquadDoc {
   mission: MissionDoc | null;
 }
 
+/** A Squad Dash without its taps (those never leave memory). */
+interface DashDoc {
+  id: string;
+  questionIds: string[];
+  index: number;
+  stage: DashState['stage'];
+  stageStartedAt: number;
+  endsAt: number | null;
+  rounds: DashRound[];
+}
+
 interface SeatDoc {
   id: string;
   tokenHash: string;
@@ -124,6 +148,40 @@ export interface SessionDoc {
   endedAt: number | null;
   seats: SeatDoc[];
   squads: SquadDoc[];
+  /** Added with Squad Dash: absent in older snapshots. */
+  dash?: DashDoc | null;
+  dashRuns?: number;
+  dashUsed?: string[];
+}
+
+function dashDoc(d: DashState): DashDoc {
+  return {
+    id: d.id,
+    questionIds: [...d.questionIds],
+    index: d.index,
+    stage: d.stage,
+    stageStartedAt: d.stageStartedAt,
+    endsAt: d.endsAt,
+    rounds: d.rounds.map((r) => ({
+      questionId: r.questionId,
+      skipped: r.skipped,
+      squads: r.squads.map((e) => ({ squadId: e.squadId, counts: e.counts.map((c) => ({ ...c })), result: { ...e.result } })),
+    })),
+  };
+}
+
+/** Restores a Dash. A question that was open when the server stopped starts again with a fresh clock. */
+function dashFrom(doc: SessionDoc, now: number): DashState | null {
+  const d = doc.dash;
+  if (!d || d.questionIds.length === 0 || !d.questionIds.every((id) => chanceById(id))) return null;
+  const index = Math.max(0, Math.min(d.index, d.questionIds.length - 1));
+  const dash: DashState = { ...d, index, rounds: d.rounds ?? [], answers: new Map() };
+  if (dash.stage === 'question') {
+    const resume = doc.paused && doc.pausedAt !== null ? doc.pausedAt : now;
+    dash.stageStartedAt = resume;
+    dash.endsAt = doc.config.calm ? null : resume + dashQuestionSec({ band: doc.config.band, relaxed: doc.config.relaxed }) * 1000;
+  }
+  return dash;
 }
 
 function missionDoc(m: SquadMission): MissionDoc {
@@ -216,6 +274,9 @@ export function toDoc(s: SessionState, now: number): SessionDoc {
       recovered: [...sq.recovered],
       mission: sq.mission ? missionDoc(sq.mission) : null,
     })),
+    dash: s.dash ? dashDoc(s.dash) : null,
+    dashRuns: s.dashRuns,
+    dashUsed: [...s.dashUsed],
   };
 }
 
@@ -325,5 +386,8 @@ export function fromDoc(doc: SessionDoc, now: number): SessionState | null {
     missionAgg,
     debrief: doc.debrief,
     endedAt: doc.endedAt,
+    dash: doc.phase === 'ended' ? null : dashFrom(doc, now),
+    dashRuns: doc.dashRuns ?? 0,
+    dashUsed: doc.dashUsed ?? [],
   };
 }

@@ -76,7 +76,7 @@ export const SCREEN_PHASE_TITLE: Record<SquadMissionPhase, string> = {
   reveal: 'Seals open',
   explain: 'Talk it out',
   reseal: 'Keep or change',
-  release: 'Lumen will remember this',
+  release: 'The city will remember this',
   shield: 'Peer Shield',
   bond: 'Phones down',
 };
@@ -245,7 +245,7 @@ export const DEBRIEF_FRAME_TITLE: Record<DebriefFrame, string> = {
 };
 
 export const DEBRIEF_FRAME_CAPTION: Record<DebriefFrame, string> = {
-  'fast-forward': 'Two weeks pass in Lumen. Every seed lands. Watch your phones, then phones down.',
+  'fast-forward': 'Two weeks pass in the city. Every seed lands. Watch your phones, then phones down.',
   rewind: 'Let’s rewind to the second before. Phones down, eyes up.',
   flip: 'Every pressure you felt was designed. It was never the resident’s fault.',
   minds: 'Changing your mind is thinking. Here is how the room moved towards safer.',

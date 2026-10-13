@@ -6,7 +6,7 @@ export const GAME = {
   name: 'ShieldQuest',
   project: 'Project SHIELD',
   team: 'Team SecurePi',
-  city: 'Lumen',
+  city: 'ShieldQuest City',
   tagline: 'Choose Right. Protect Together.',
   hook: 'Scams need you to hurry. You can Hold.',
   closing: "You can't freeze time out there. But you can Hold.",

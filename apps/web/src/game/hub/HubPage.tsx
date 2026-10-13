@@ -10,7 +10,7 @@ export default function HubPage() {
 
   useEffect(() => {
     const before = document.title;
-    document.title = onboarded ? 'Lumen · ShieldQuest' : 'Welcome · ShieldQuest';
+    document.title = onboarded ? 'ShieldQuest City · ShieldQuest' : 'Welcome · ShieldQuest';
     return () => {
       document.title = before;
     };

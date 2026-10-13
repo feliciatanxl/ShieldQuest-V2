@@ -67,7 +67,7 @@ export const TIME_LABEL: Record<Mission['timeOfDay'], string> = {
 
 /**
  * The "Continue" suggestion: the tutorial first, then unplayed missions for the band in scaffold order
- * (Guided before Light before Wildcard, so prompts fade across a Lumen day). Registry order breaks ties.
+ * (Guided before Light before Wildcard, so prompts fade across a day in the city). Registry order breaks ties.
  */
 export function nextMission(band: BandId | null, progress: Progress, missions: readonly Mission[] = MISSIONS): Mission | null {
   const tutorial = missions.find((m) => m.id === TUTORIAL_ID);

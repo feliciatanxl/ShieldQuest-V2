@@ -1,0 +1,315 @@
+/* Save Card (prefix: sv-). Lives on paper (the sheet, or the restore page card), so text is ink. */
+
+.sv {
+  display: grid;
+  gap: 1.25rem;
+  color: var(--ink);
+}
+.sv h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.6rem;
+}
+.sv h3:focus {
+  outline: none;
+}
+.sv p {
+  margin: 0 0 0.6rem;
+}
+
+.sv-handle {
+  font-size: 0.95rem;
+  color: var(--ink-2);
+}
+.sv-handle strong {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+/* Secondary/ghost buttons default to light-on-dark; on paper they need ink. */
+.sv .sv-btn-ink.ui-btn--secondary,
+.sv .sv-btn-ink.ui-btn--ghost {
+  --btn-fg: var(--ink);
+  --btn-line: rgba(29, 36, 64, 0.3);
+}
+.sv .sv-btn-ink.ui-btn--ghost {
+  --btn-line: transparent;
+}
+
+.sv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+/* The four words: big, chunky, numbered. Two columns so they fit at 320px. */
+.sv-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.sv-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 3.6rem;
+  padding: 0.5rem 0.4rem 0.5rem 1.4rem;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 2px solid rgba(29, 36, 64, 0.16);
+  box-shadow: 0 0.2rem 0 rgba(29, 36, 64, 0.12);
+  animation: sv-pop calc(var(--dur) * 1.6) var(--ease-out) both;
+}
+.sv-tile__n {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.sv-tile__w {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 5.4vw, 1.6rem);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+.sv-code__line {
+  margin: 0.5rem 0 0;
+  text-align: center;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+@keyframes sv-pop {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem) scale(0.96);
+  }
+}
+:root[data-motion='reduced'] .sv-tile {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .sv-tile {
+    animation: none;
+  }
+}
+
+.sv-qr {
+  margin: 0.9rem auto 0.6rem;
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(29, 36, 64, 0.14);
+}
+.sv-qr img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sv-qr__wait {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, #f1ece2 0 8px, #fff 8px 16px);
+}
+
+.sv-warn {
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-sm);
+  background: rgba(242, 193, 78, 0.22);
+  border-left: 4px solid var(--gold);
+  font-size: 0.95rem;
+}
+.sv-error {
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 77, 141, 0.12);
+  border-left: 4px solid var(--risk);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.sv-status {
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  min-height: 1.4em;
+}
+.sv-status[data-status='saved']::before {
+  content: '✓ ';
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.sv-link {
+  background: none;
+  border: 0;
+  padding: 0.25rem 0;
+  min-height: 2.75rem;
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+.sv-link--quiet {
+  color: var(--ink-2);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.sv-remove {
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+}
+
+.sv-load {
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(29, 36, 64, 0.25);
+}
+.sv-form {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: start;
+}
+.sv-form label {
+  font-weight: 700;
+}
+.sv-hint {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  margin: 0 !important;
+}
+.sv-input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid rgba(29, 36, 64, 0.25);
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sv-input[aria-invalid='true'] {
+  border-color: var(--risk);
+}
+.sv-input:focus-visible {
+  border-radius: var(--radius-sm);
+}
+.sv-form .ui-btn {
+  margin-top: 0.4rem;
+}
+
+.sv-confirm h3 {
+  font-size: 1.4rem;
+}
+.sv-found {
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.sv-found strong {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+/* /play/restore */
+.sv-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: calc(1rem + var(--safe-top)) var(--gutter) calc(1rem + var(--safe-bottom));
+  background: radial-gradient(120% 80% at 50% 0%, var(--bg-3), var(--bg) 70%);
+}
+.sv-page__card {
+  width: 100%;
+  max-width: 30rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+.sv-page__card h1 {
+  font-size: clamp(1.6rem, 7vw, 2.2rem);
+}
+.sv-page__card h1:focus {
+  outline: none;
+}
+.sv-page__lead {
+  color: var(--ink-2);
+}
+.sv-page__back {
+  margin: 1.25rem 0 0;
+}
+.sv-page__back a {
+  color: #0f766e;
+  font-weight: 700;
+}
+
+/* Two devices, one card: "Which progress do you want to keep?" */
+.sv-conflict {
+  padding: 0.9rem;
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  border: 2px solid rgba(29, 36, 64, 0.14);
+}
+.sv-conflict h3 {
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+.sv-sides {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.5rem;
+}
+.sv-side {
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  border: 2px solid rgba(29, 36, 64, 0.16);
+}
+.sv-side--accent {
+  border-color: #0f766e;
+}
+.sv-side h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+}
+.sv .sv-side__handle {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-display);
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.sv-side__facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.9rem;
+  color: var(--ink-2);
+}
+.sv-side__facts strong {
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+.sv-actions--stack {
+  display: grid;
+  gap: 0.5rem;
+}

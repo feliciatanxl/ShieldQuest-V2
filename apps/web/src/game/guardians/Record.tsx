@@ -73,7 +73,7 @@ export function RecordStats({ progress }: { progress: Progress }) {
         <Icon name="clock" size="1.6rem" />
         <p>Your record starts after your first mission. Only you can see it, and it never leaves this phone.</p>
         <LinkButton href="/play" variant="secondary" icon="map">
-          Back to Lumen
+          Back to the city
         </LinkButton>
       </div>
     );

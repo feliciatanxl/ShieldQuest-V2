@@ -63,7 +63,7 @@ const KIND_INFO: Record<AssessmentKind, { title: string; when: string; icon: Ico
     lead: 'The same kind of questions as before (but different ones), plus what you thought of ShieldQuest.',
   },
   return: {
-    title: 'Return to Lumen',
+    title: 'Return to ShieldQuest City',
     when: 'A few weeks later, when your school or centre sends the link.',
     icon: 'rewind',
     lead: 'A short check-in a few weeks later, to see what stayed with you. Bring your code.',

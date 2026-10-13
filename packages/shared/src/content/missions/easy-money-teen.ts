@@ -12,7 +12,7 @@ export const easyMoneyTeen: Mission = {
   scene: 'void-deck',
   bands: ['teen'],
   theme: 'Money mule recruitment',
-  premise: 'A stranger offers Arjun S$30 to receive money in his LumenPay e-wallet and send it on. His friend Ivan says he does it every week.',
+  premise: 'A stranger offers Arjun S$30 to receive money in his MetroPay e-wallet and send it on. His friend Ivan says he does it every week.',
   skillFocus: ['S', 'I', 'E'],
   timeOfDay: 'evening',
   scaffold: 'guided',
@@ -30,7 +30,7 @@ export const easyMoneyTeen: Mission = {
     beats: [
       { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'A new ChatLah message from someone called FastTopUp_Ace.' },
       { id: 'b2', at: 4, from: 'ace', channel: 'chat', text: 'Hi Arjun! Ivan says you are cool. Want S$30 for 5 mins? Easy one.', tactic: 'too-good', attachment: { kind: 'job', label: 'Top-up helper', detail: '5 mins · S$30 · no experience' } },
-      { id: 'b3', at: 9, from: 'ace', channel: 'chat', text: 'I send S$200 to your LumenPay. You keep S$30 and send S$170 to my friend. That is all.' },
+      { id: 'b3', at: 9, from: 'ace', channel: 'chat', text: 'I send S$200 to your MetroPay. You keep S$30 and send S$170 to my friend. That is all.' },
       { id: 'b4', at: 15, from: 'ivan', channel: 'speech', text: 'I do it every week. Free money, bro.', tactic: 'everyone-does-it' },
       { id: 'b5', at: 20, from: 'arjun', channel: 'chat', text: "Why can't you just send it to your friend yourself?" },
       { id: 'b6', at: 25, from: 'ace', channel: 'chat', text: 'My account got limit lah. Many people help me, all ok one. See.', tactic: 'fake-proof', attachment: { kind: 'screenshot', label: 'thank_you_msgs.png', detail: 'Ten "thanks bro, got my $30!" messages' } },
@@ -48,7 +48,7 @@ export const easyMoneyTeen: Mission = {
     { id: 'c-secret', label: '"Don\'t tell your parents"', target: { kind: 'beat', beatId: 'b8' }, redFlag: true, tactic: 'secrecy', explain: 'When someone says not to tell your parents, that is the moment to tell them.' },
     { id: 'c-referral', label: 'Ivan\'s phone: "Bring a friend +S$10"', target: { kind: 'anchor', anchor: 'stone-table' }, redFlag: true, explain: 'Ivan is paid for each friend he brings in. He is being used to recruit others too.' },
     { id: 'c-question', label: 'Arjun asks why Ace needs him', target: { kind: 'beat', beatId: 'b5' }, redFlag: false, explain: 'Asking "why me?" is a smart question, not a warning sign. Notice that Ace never really answers it.' },
-    { id: 'c-ad', label: 'A LumenPay ad by the lift: "Send money to friends in a tap"', target: { kind: 'anchor', anchor: 'lift-lobby' }, redFlag: false, explain: 'E-wallets are normal and useful. The problem is not LumenPay. It is a stranger wanting to use your account.' },
+    { id: 'c-ad', label: 'A MetroPay ad by the lift: "Send money to friends in a tap"', target: { kind: 'anchor', anchor: 'lift-lobby' }, redFlag: false, explain: 'E-wallets are normal and useful. The problem is not MetroPay. It is a stranger wanting to use your account.' },
   ],
   influence: {
     from: 'ivan',
@@ -65,7 +65,7 @@ export const easyMoneyTeen: Mission = {
     horizon: 'next-month',
     options: [
       { id: 'f-keep', text: 'Arjun keeps the S$30 and buys his earbuds.', likely: false },
-      { id: 'f-restricted', text: "Arjun's LumenPay gets restricted, and his parents find out why.", likely: true },
+      { id: 'f-restricted', text: "Arjun's MetroPay gets restricted, and his parents find out why.", likely: true },
       { id: 'f-more', text: 'Ace pays Arjun more next time.', likely: false },
     ],
     explain: 'Money that moves through a borrowed account is traced back. The account gets restricted while police look into it.',
@@ -84,15 +84,15 @@ export const easyMoneyTeen: Mission = {
       feedback: {
         tactic: 'too-good',
         saferMove: 'to say no to anyone who wants to send money through your account, and to tell a trusted adult',
-        ifItHappened: "stop, don't move any more money, and tell a parent. Together, contact LumenPay and the police. Coming forward early really helps.",
+        ifItHappened: "stop, don't move any more money, and tell a parent. Together, contact MetroPay and the police. Coming forward early really helps.",
       },
       aftershock: {
         id: 'wallet-restricted',
         polarity: 'risk',
         afterMissions: 1,
         timeLabel: '2 WEEKS LATER',
-        title: "Arjun's LumenPay is restricted",
-        text: "Arjun can't use LumenPay any more. The S$200 came from people who were scammed, and police are looking into the accounts it passed through. His parents have been told. Ace has gone quiet.",
+        title: "Arjun's MetroPay is restricted",
+        text: "Arjun can't use MetroPay any more. The S$200 came from people who were scammed, and police are looking into the accounts it passed through. His parents have been told. Ace has gone quiet.",
         effects: { wallet: -30, trust: -2, risk: 2 },
         fact: {
           text: 'In a February 2026 police operation, people as young as 14 were investigated as suspected scammers or money mules. Police have said they do not intend to charge people who were genuinely tricked, so telling the truth early matters.',
@@ -102,9 +102,9 @@ export const easyMoneyTeen: Mission = {
         recovery: {
           prompt: 'Arjun is scared. What should he do now?',
           options: [
-            { id: 'r-tell', text: 'Tell his mum everything, then contact LumenPay and the police together.', good: true, response: 'That is the bravest and best move. His mum helps him explain what happened, and coming forward shows he was tricked. Beacon lights up.', help: ['trusted-adult', 'bank', 'police-hotline'] },
+            { id: 'r-tell', text: 'Tell his mum everything, then contact MetroPay and the police together.', good: true, response: 'That is the bravest and best move. His mum helps him explain what happened, and coming forward shows he was tricked. Beacon lights up.', help: ['trusted-adult', 'bank', 'police-hotline'] },
             { id: 'r-delete', text: 'Delete the chats and say nothing.', good: false, response: 'Hiding feels safer, but the chats show Arjun was tricked. It is not too late. Telling his mum is still the next step.' },
-            { id: 'r-ace', text: 'Ask Ace to fix it.', good: false, response: 'Ace caused this and gains from Arjun staying quiet. The people who can help are his family, LumenPay and the police.' },
+            { id: 'r-ace', text: 'Ask Ace to fix it.', good: false, response: 'Ace caused this and gains from Arjun staying quiet. The people who can help are his family, MetroPay and the police.' },
           ],
         },
       },
@@ -138,7 +138,7 @@ export const easyMoneyTeen: Mission = {
       feedback: {
         tactic: 'too-good',
         saferMove: 'to refuse, keep the messages, and tell a trusted adult',
-        ifItHappened: "don't touch any money that a stranger sends you. Tell a parent and contact LumenPay together.",
+        ifItHappened: "don't touch any money that a stranger sends you. Tell a parent and contact MetroPay together.",
       },
       aftershock: {
         id: 'afterglow-class',
@@ -159,9 +159,9 @@ export const easyMoneyTeen: Mission = {
   peerShield: {
     friend: 'ivan',
     timeLabel: '11PM, THREE WEEKS LATER',
-    setup: "Late at night, Ivan messages Arjun. His LumenPay is locked, and Ace says he has to bring in two more friends. Ivan is lying on his bed, phone in hand. He's worried.",
+    setup: "Late at night, Ivan messages Arjun. His MetroPay is locked, and Ace says he has to bring in two more friends. Ivan is lying on his bed, phone in hand. He's worried.",
     messages: [
-      { from: 'ivan', text: 'bro my LumenPay kena locked' },
+      { from: 'ivan', text: 'bro my MetroPay kena locked' },
       { from: 'ivan', text: 'Ace says bring 2 more friends and he will unlock it' },
       { from: 'ivan', text: "don't tell anyone ok" },
     ],
@@ -173,7 +173,7 @@ export const easyMoneyTeen: Mission = {
         { id: 'o-told', text: 'Told you it was dodgy.', quality: 'harmful', why: 'Blame makes him defensive and more likely to hide the problem.', guard: 25, doubt: -5 },
       ],
       reason: [
-        { id: 'r-used', text: "Ace used you. That's on him. Ace can't unlock anything. Only LumenPay can.", quality: 'great', why: 'Blames the scheme, not Ivan, and shows why Ace is the wrong person to ask.', guard: -5, doubt: 25 },
+        { id: 'r-used', text: "Ace used you. That's on him. Ace can't unlock anything. Only MetroPay can.", quality: 'great', why: 'Blames the scheme, not Ivan, and shows why Ace is the wrong person to ask.', guard: -5, doubt: 25 },
         { id: 'r-weird', text: 'That sounds weird.', quality: 'ok', why: 'True, but vague. He needs a clear reason.', guard: 0, doubt: 10 },
         { id: 'r-two', text: 'Just bring 2 people, then stop.', quality: 'harmful', why: 'This pulls more friends into the same risk.', guard: -5, doubt: -20 },
       ],
@@ -183,9 +183,9 @@ export const easyMoneyTeen: Mission = {
         { id: 'f-secret', text: "Don't worry, I won't tell anyone.", quality: 'harmful', why: 'A secret is exactly what Ace needs.', guard: -5, doubt: -10 },
       ],
       channel: [
-        { id: 'c-parents', text: 'Tell your parents, then contact LumenPay through the app. We can call ScamShield 1799 first if you want.', quality: 'great', why: 'Points to a trusted adult and official channels.', guard: -5, doubt: 15 },
+        { id: 'c-parents', text: 'Tell your parents, then contact MetroPay through the app. We can call ScamShield 1799 first if you want.', quality: 'great', why: 'Points to a trusted adult and official channels.', guard: -5, doubt: 15 },
         { id: 'c-search', text: 'Search online what to do?', quality: 'ok', why: 'Searching can lead to more fake "helpers". Official channels are safer.', guard: 0, doubt: 0 },
-        { id: 'c-ace', text: 'Message Ace and beg him to unlock it.', quality: 'harmful', why: 'Ace gains from Ivan staying in. He cannot unlock a LumenPay account.', guard: 0, doubt: -15 },
+        { id: 'c-ace', text: 'Message Ace and beg him to unlock it.', quality: 'harmful', why: 'Ace gains from Ivan staying in. He cannot unlock a MetroPay account.', guard: 0, doubt: -15 },
       ],
     },
     outcomes: {

@@ -68,7 +68,7 @@ export const SCHOOL_GATE_STAGING: SetStaging = {
   seats: { bench: [4.7, 0, 0.1] },
   rain: { position: [0, 0, -1.5], area: [30, 12, 18] },
   labels: [
-    { position: [-1.9, 2.92, -4.2], text: 'Lumen Park School' },
+    { position: [-1.9, 2.92, -4.2], text: 'Metro Park School' },
     { position: [-8.05, 2.85, -1.95], text: 'Boba Boleh' },
     { position: [6.35, 2.55, 0.36], text: 'Bus stop', size: 'small' },
     { position: [7.45, 2.2, 0.32], text: 'P', size: 'small' },

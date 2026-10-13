@@ -1,5 +1,5 @@
-import { lazy, Suspense, useEffect, type ComponentType } from 'react';
-import { Route, Switch } from 'wouter';
+import { lazy, Suspense, useEffect, useState, type ComponentType } from 'react';
+import { Route, Switch, useLocation } from 'wouter';
 import { applySettingsToDocument, useSettings } from './state/settings';
 
 // Every section is code-split so the public site and the join flow stay small on school Wi-Fi,
@@ -20,6 +20,13 @@ const HubPage = lazy(() => import('./game/hub/HubPage'));
 const MissionPage = lazy(() => import('./game/mission/MissionPage'));
 const GuardiansPage = lazy(() => import('./game/guardians/GuardiansPage'));
 const NightfallPage = lazy(() => import('./game/mission/NightfallPage'));
+const RestorePage = lazy(() => import('./game/save/RestorePage'));
+const SaveConflict = lazy(() => import('./game/save/SaveConflict'));
+const BoardPage = lazy(() => import('./game/board/BoardPage'));
+const LockerPage = lazy(() => import('./game/board/LockerPage'));
+const ArcadePage = lazy(() => import('./game/arcade/ArcadePage'));
+const MiniGamePage = lazy(() => import('./game/arcade/MiniGamePage'));
+const ExplorePage = lazy(() => import('./game/explore/ExplorePage'));
 
 const JoinPage = lazy(() => import('./squad/JoinPage'));
 const HostPage = lazy(() => import('./squad/HostPage'));
@@ -49,6 +56,23 @@ function flushQueuedAssessments(): void {
     .catch(() => undefined);
 }
 
+// Save Card auto-sync (state/saveCard.ts) starts on game routes only, and only on a device that has made a card.
+// Like the queue check above, this reads storage directly so the sync code downloads only when it has work to do.
+const SAVE_CARD_KEY = 'sq.savecard.v1';
+
+/** Starts sync if this device has a Save Card. True when it does. */
+function startSaveCardSync(): boolean {
+  try {
+    if (!localStorage.getItem(SAVE_CARD_KEY)) return false;
+  } catch {
+    return false;
+  }
+  import('./state/saveCard')
+    .then((m) => m.startAutoSync())
+    .catch(() => undefined);
+  return true;
+}
+
 export function App() {
   const textScale = useSettings((s) => s.textScale);
   const motion = useSettings((s) => s.motion);
@@ -59,6 +83,14 @@ export function App() {
     window.addEventListener('online', flushQueuedAssessments);
     return () => window.removeEventListener('online', flushQueuedAssessments);
   }, []);
+
+  const [location] = useLocation();
+  const inGame = location === '/play' || location.startsWith('/play/');
+  // Set once sync has started, so the "newer progress from another device" prompt can show on game pages.
+  const [hasSaveCard, setHasSaveCard] = useState(false);
+  useEffect(() => {
+    if (inGame && startSaveCardSync()) setHasSaveCard(true);
+  }, [inGame]);
 
   return (
     <>
@@ -78,6 +110,12 @@ export function App() {
           <Route path="/play/m/:id" component={MissionPage} />
           <Route path="/play/guardians" component={GuardiansPage} />
           <Route path="/play/nightfall" component={NightfallPage} />
+          <Route path="/play/restore" component={RestorePage} />
+          <Route path="/play/board" component={BoardPage} />
+          <Route path="/play/locker" component={LockerPage} />
+          <Route path="/play/arcade" component={ArcadePage} />
+          <Route path="/play/arcade/:game" component={MiniGamePage} />
+          <Route path="/play/explore" component={ExplorePage} />
 
           <Route path="/join" component={JoinPage} />
           <Route path="/j/:code" component={JoinPage} />
@@ -95,6 +133,11 @@ export function App() {
           <Route component={NotFoundPage} />
         </Switch>
       </Suspense>
+      {hasSaveCard && inGame && location !== '/play/restore' && (
+        <Suspense fallback={null}>
+          <SaveConflict />
+        </Suspense>
+      )}
     </>
   );
 }

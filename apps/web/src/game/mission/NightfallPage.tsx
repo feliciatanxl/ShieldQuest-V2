@@ -58,7 +58,7 @@ function Stillpoint({ reduced }: { reduced: boolean }) {
   );
 }
 
-/** /play/nightfall — end of a solo session: every pending Aftershock lands, then Lumen rests. */
+/** /play/nightfall — end of a solo session: every pending Aftershock lands, then the city rests. */
 export default function NightfallPage() {
   const band = useSettings((s) => s.band);
   const motion = useSettings((s) => s.motion);
@@ -83,7 +83,7 @@ export default function NightfallPage() {
   }, []);
   useEffect(() => {
     const id = window.setTimeout(() => focusPhaseHeading(document.querySelector('.msn-layout__sheet') ?? document), 30);
-    if (!landing) announce('Nightfall. Lumen is resting.');
+    if (!landing) announce('Nightfall. The city is resting.');
     return () => window.clearTimeout(id);
   }, [index, landing, announce]);
 
@@ -137,7 +137,7 @@ export default function NightfallPage() {
         ) : (
           <div className="msn-phase msn-nightfall">
             <Stillpoint reduced={reduced} />
-            <PhaseHeading kicker="Nightfall" title="Lumen is resting">
+            <PhaseHeading kicker="Nightfall" title="The city is resting">
               <p className="msn-phase__sub">
                 {landings.length > 0
                   ? `Every choice still in motion has landed (${landings.length}). The city is quiet now.`
@@ -145,7 +145,7 @@ export default function NightfallPage() {
               </p>
             </PhaseHeading>
 
-            <section className="msn-nightfall__stats" aria-label="Today in Lumen">
+            <section className="msn-nightfall__stats" aria-label="Today in the city">
               <div className="msn-stat">
                 <span className="msn-stat__num">{totals.missions}</span>
                 <span className="msn-stat__word">moments played</span>
@@ -171,7 +171,7 @@ export default function NightfallPage() {
 
             <section aria-labelledby="msn-nf-lanterns">
               <h3 id="msn-nf-lanterns" className="msn-section-title">
-                Lanterns across Lumen
+                Lanterns across the city
               </h3>
               <ul className="msn-nightfall__districts">
                 {districts.map((d) => {
@@ -225,7 +225,7 @@ export default function NightfallPage() {
             <blockquote className="msn-nightfall__closing">{GAME.closing}</blockquote>
 
             <LinkButton href="/play" size="lg" block icon="map">
-              Back to Lumen
+              Back to the city
             </LinkButton>
           </div>
         )}

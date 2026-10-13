@@ -352,7 +352,7 @@ export function PitchForm({ onBack }: { onBack: () => void }) {
         <p className="kicker">Moment Cards</p>
         <h1 tabIndex={-1}>Pitch a mission idea</h1>
         <p className="portal-lead">
-          Imagine a moment where someone pushes a character in Lumen towards a scam or a risky dare. Build it from the chips
+          Imagine a moment where someone pushes a character in ShieldQuest City towards a scam or a risky dare. Build it from the chips
           below. The best ideas become real ShieldQuest missions.
         </p>
         <Note status="unknown">
@@ -375,7 +375,7 @@ export function PitchForm({ onBack }: { onBack: () => void }) {
           />
           <ChipGroup
             step={2}
-            legend="Where in Lumen?"
+            legend="Where in the city?"
             options={DISTRICTS.map((x) => ({ id: x.id, label: x.name, swatch: x.color, hint: x.comingSoon ? 'new district' : undefined }))}
             value={d.district}
             onChange={(v) => set('district', v)}

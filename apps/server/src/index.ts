@@ -10,6 +10,7 @@ import Fastify from 'fastify';
 import { GAME, MISSIONS } from '@shieldquest/shared';
 import { purgeAssessmentResponses, registerAssessmentRoutes } from './assess/routes';
 import { registerPortalRoutes } from './portal/routes';
+import { purgeStaleSaveCards, registerSaveRoutes } from './save/routes';
 import { registerSquad } from './squad/server';
 
 // Railway does not set NODE_ENV. Without this a deployed server would accept the portal's development passcode
@@ -41,6 +42,7 @@ app.get('/api/health', async () => ({ ok: true, game: GAME.name, missions: MISSI
 
 await registerPortalRoutes(app);
 await registerAssessmentRoutes(app);
+await registerSaveRoutes(app);
 // REST routes for sessions + Socket.IO attached to app.server (must happen before listen).
 await registerSquad(app);
 
@@ -68,6 +70,18 @@ if (Number.isFinite(purgeDate)) {
   timer.unref();
   app.addHook('onClose', async () => clearInterval(timer));
   void sweep().catch((err) => app.log.error(err, 'assessment purge failed'));
+}
+
+// Retention: Save Cards (encrypted progress blobs) not updated for 180 days are deleted.
+{
+  const sweep = async () => {
+    const removed = await purgeStaleSaveCards(new Date());
+    if (removed) app.log.info({ removed }, 'save card retention purge');
+  };
+  const timer = setInterval(() => void sweep().catch((err) => app.log.error(err, 'save card purge failed')), 6 * 3_600_000);
+  timer.unref();
+  app.addHook('onClose', async () => clearInterval(timer));
+  void sweep().catch((err) => app.log.error(err, 'save card purge failed'));
 }
 
 await app.listen({ port: PORT, host: HOST });

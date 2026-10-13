@@ -110,8 +110,8 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
 }
-/* On the narrowest phones the title steps aside (it stays in the accessibility tree). */
-@media (max-width: 24.99rem) {
+/* On phones the title steps aside for the Stars chip (it stays in the accessibility tree). */
+@media (max-width: 29.99rem) {
   .hub-top__title {
     position: absolute;
     width: 1px;
@@ -160,10 +160,94 @@
 .hub-top__linktext {
   display: none;
 }
+/* Stars + streak in the top bar on phones; on wider screens they are chips in the status strip. */
+.hub-top__purse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: var(--tap);
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  touch-action: manipulation;
+}
+.hub-top__purse > svg + span {
+  margin-right: 0.2rem;
+}
+.hub-top__purse:hover {
+  border-color: var(--line-strong);
+}
+.hub-top__purse:focus-visible {
+  border-radius: 999px;
+}
+@media (min-width: 48rem) {
+  .hub-top__purse {
+    display: none;
+  }
+}
+@media (max-width: 47.99rem) {
+  .hub-chip--wide {
+    display: none !important;
+  }
+}
+/* Rolls ready, as a small count on the City Board link (shape + number, never colour alone). */
+.hub-top__link {
+  position: relative;
+}
+.hub-top__count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  display: grid;
+  place-items: center;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  border: 2px solid var(--bg);
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Phones: the game links get their own row (icon-only, scrolls sideways if it must) so the top bar never
+   wraps into a tall block over the city. */
+@media (max-width: 47.99rem) {
+  .hub-top__nav {
+    order: 3;
+    flex: 1 0 100%;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* A scroller clips its edges: this inset keeps focus rings visible. */
+    margin: -0.3rem -0.3rem 0;
+    padding: 0.3rem;
+  }
+  .hub-top__nav::-webkit-scrollbar {
+    display: none;
+  }
+  .hub-top__link {
+    flex: none;
+  }
+}
 @media (min-width: 48rem) {
   .hub-top {
     gap: 0.6rem;
   }
+}
+/* Words next to the icons only where there is room for all six links. */
+@media (min-width: 80rem) {
   .hub-top__link {
     padding: 0 1rem 0 0.85rem;
   }
@@ -210,6 +294,26 @@
 /* Phones in portrait: an open district sheet gets the room; the chips come back when it closes. */
 .hub[data-panel='open'] .hub-strip {
   display: none;
+}
+/* The rolls chip is a link to the City Board. */
+.hub-chip--link {
+  min-height: 2.75rem;
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+  touch-action: manipulation;
+  transition:
+    border-color var(--dur),
+    transform var(--dur) var(--ease-out);
+}
+.hub-chip--link:hover {
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+.hub-chip--link:focus-visible {
+  border-radius: 999px;
+}
+.hub-strip .hub-chip {
+  font-variant-numeric: tabular-nums;
 }
 .hub-motion {
   display: flex;
@@ -528,6 +632,10 @@
 .hub-continue--done {
   display: block;
 }
+.hub-continue__actions--done {
+  justify-content: flex-start;
+  margin: 0.5rem 0 0;
+}
 
 .hub-picker {
   min-width: 0;
@@ -638,9 +746,22 @@
   .hub[data-panel='open'] .hub-strip {
     display: flex;
   }
+  /* With no district open the right column is empty, so the dock may use the full width. */
+  .hub[data-panel='closed'] .hub-dock {
+    grid-column: 1 / -1;
+  }
+  /* One row of plates (scrolls sideways if it ever overflows), so the dock stays short and the city shows. */
   .hub-picker__list {
-    flex-wrap: wrap;
-    overflow: visible;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .hub-pick {
+    gap: 0.5rem;
+    min-height: 3.1rem;
+    padding: 0.3rem 0.8rem 0.3rem 0.4rem;
+  }
+  .hub-continue {
+    padding: 0.6rem 0.8rem 0.6rem 0.95rem;
   }
 }
 

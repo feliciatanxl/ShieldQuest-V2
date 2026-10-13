@@ -109,7 +109,7 @@ function BondBook() {
           <Link href="/play" className="hub-bb-back">
             <Icon name="arrowLeft" />
             <span>
-              Lumen<span className="sr-only">: back to the city</span>
+              ShieldQuest City<span className="sr-only">: back to the city</span>
             </span>
           </Link>
           <h1 ref={titleRef} tabIndex={-1} className="hub-bb-top__title">

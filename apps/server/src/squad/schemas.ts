@@ -86,6 +86,7 @@ export const SeatSchemas = {
   roomHold: OnSchema,
   lateHold: z.object({ key: contentId, optionId: contentId, player }),
   signal: z.object({ kind: z.literal('see-differently') }),
+  dashAnswer: z.object({ questionId: contentId, optionId: contentId, player }),
 } as const;
 
 export type SeatEventName = keyof typeof SeatSchemas;
@@ -111,6 +112,10 @@ export const HostCommandSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('clearHelp'), squadId: squadId.optional() }),
   z.object({ type: z.literal('spotlight'), squadId: squadId.nullable() }),
   z.object({ type: z.literal('endSession') }),
+  z.object({ type: z.literal('dashStart'), questions: z.union([z.literal(4), z.literal(6), z.literal(8)]) }),
+  z.object({ type: z.literal('dashNext') }),
+  z.object({ type: z.literal('dashSkip') }),
+  z.object({ type: z.literal('dashEnd') }),
 ]);
 
 export const ClockPingSchema = z.object({ c: z.number().finite() });

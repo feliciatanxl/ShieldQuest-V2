@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { useParams } from 'wouter';
+import { useParams, useSearch } from 'wouter';
 import {
   MISSIONS,
   SCENES,
@@ -96,11 +96,11 @@ function MissionNotFound() {
   return (
     <main id="main" className="msn-notfound">
       <div className="msn-notfound__card">
-        <p className="kicker">Lumen</p>
+        <p className="kicker">ShieldQuest City</p>
         <h1>This moment isn't here</h1>
         <p>It may have moved, or the link is not quite right. Every open moment is on the city map.</p>
         <LinkButton href="/play" icon="map" size="lg">
-          Back to Lumen
+          Back to the city
         </LinkButton>
       </div>
     </main>
@@ -119,6 +119,9 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
   const { cue } = cues;
   const { message, announce } = useAnnouncer();
   const ifThenCards = useProgress((s) => s.progress.ifThenCards);
+  // Missions started from a City Board tile (?from=board) return to the board.
+  const fromBoard = new URLSearchParams(useSearch()).get('from') === 'board';
+  const backHref = fromBoard ? '/play/board' : '/play';
 
   // Aftershocks due before this mission, snapshotted so landing one doesn't reshuffle the queue.
   const [shocks] = useState(() =>
@@ -294,6 +297,8 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
       rail={inShocks ? undefined : <ShieldRail current={rail.current} done={rail.done} scaffold={mission.scaffold} />}
       help={mission.help}
       onPause={() => setPaused(true)}
+      backHref={backHref}
+      backLabel={fromBoard ? 'Back to the City Board' : undefined}
     />
   );
   const prompt = !inShocks && mission.scaffold === 'guided' ? (PHASE_PROMPT[phase] ?? null) : null;
@@ -504,6 +509,7 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
             savedIfThen={ifThenCards.find((c) => c.missionId === mission.id)?.text ?? null}
             onSaveIfThen={(text) => useProgress.getState().saveIfThen(mission.id, text)}
             nextHref={nextId ? `/play/m/${nextId}` : null}
+            backHref={backHref}
             onReplay={onReplay}
             onMotif={(litLetters) => {
               safeMotif(litLetters);

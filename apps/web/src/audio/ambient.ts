@@ -39,7 +39,7 @@ interface Preset {
 }
 
 const PRESETS: Record<AmbientPlace, Preset> = {
-  // Lumen at blue hour: D Lydian warmth, I-vi-IV-V with open voicings.
+  // The city at blue hour: D Lydian warmth, I-vi-IV-V with open voicings.
   city: {
     wave: 'sawtooth',
     chords: [

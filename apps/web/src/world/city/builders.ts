@@ -1,4 +1,4 @@
-// Code-built geometry for Lumen (GAME_DESIGN.md §4.1-4.2, §10.2). Every builder returns ONE kit geometry so the
+// Code-built geometry for the city (GAME_DESIGN.md §4.1-4.2, §10.2). Every builder returns ONE kit geometry so the
 // whole city overview stays inside the 40-draw-call budget: one merged mesh per district plate, one "frame"
 // (Stillpoint plaza, tower, viaduct bridges, rim), one train, and instanced trees, lamps and towers.
 // Pure three.js (no React): unit-tested in Node for triangle budgets.

@@ -1,4 +1,4 @@
-// Lumen, the 3D City Hub (GAME_DESIGN.md §4.1-4.5, §7.3, §10.2, §14): a floating island city at blue hour round
+// ShieldQuest City, the 3D City Hub (GAME_DESIGN.md §4.1-4.5, §7.3, §10.2, §14): a floating island city at blue hour round
 // the Stillpoint clock tower (stuck at 11:59). District hex plates light up with trust (warm windows, rising
 // lanterns) or frost over when dimmed; the Digi-District carries its glowing wireframe sky layer; two fogged
 // expansion plates wait for new content; an MRT glides round the rim every 40 s over a softly lit bay.
@@ -119,23 +119,23 @@ function useInView(ref: RefObject<HTMLElement | null>): boolean {
 // Static scenery
 // ---------------------------------------------------------------------------------------------------------
 
-function Sea({ tier }: { tier: QualityTier }) {
+export function Sea({ tier }: { tier: QualityTier }) {
   const geometry = useKitGeometry(() => buildSea(tier === 'low' ? 40 : 64), [tier]);
   return <KitMesh geometry={geometry} {...NO_SHADOW} />;
 }
 
 /** Stillpoint plaza and clock tower, viaduct bridges and the rim viaduct: one draw call. */
-function Frame({ tier }: { tier: QualityTier }) {
+export function Frame({ tier }: { tier: QualityTier }) {
   const geometry = useKitGeometry(() => buildFrame(tier), [tier]);
   return <KitMesh geometry={geometry} {...NO_SHADOW} />;
 }
 
-function DistrictPlate({ spot, trust, highlight }: { spot: DistrictSpot; trust: number; highlight: number }) {
+export function DistrictPlate({ spot, trust, highlight }: { spot: DistrictSpot; trust: number; highlight: number }) {
   const geometry = useKitGeometry(() => buildDistrict(spot.id, trust), [spot.id, trust]);
   return <KitMesh geometry={geometry} position={[spot.x, 0, spot.z]} rotation={[0, spot.rotY, 0]} highlight={highlight} {...NO_SHADOW} />;
 }
 
-function Greenery({ tier }: { tier: QualityTier }) {
+export function Greenery({ tier }: { tier: QualityTier }) {
   const spots = useMemo(() => scatter(tier), [tier]);
   const round = useKitGeometry(treeRound, []);
   const cone = useKitGeometry(treeCone, []);
@@ -150,7 +150,7 @@ function Greenery({ tier }: { tier: QualityTier }) {
 }
 
 /** Translucent fog banks drifting over a "coming soon" plate. */
-function FogShroud({ spot, tier, still, onAnimate }: { spot: DistrictSpot; tier: QualityTier; still: boolean; onAnimate: () => void }) {
+export function FogShroud({ spot, tier, still, onAnimate }: { spot: DistrictSpot; tier: QualityTier; still: boolean; onAnimate: () => void }) {
   const geometry = useKitGeometry(() => buildFog(spot.id, tier), [spot.id, tier]);
   const ref = useRef<Group>(null);
   const drift = !still && tier !== 'low';
@@ -172,7 +172,7 @@ function FogShroud({ spot, tier, still, onAnimate }: { spot: DistrictSpot; tier:
 }
 
 /** The Digi Sky layer (§4.1): glowing wireframe blocks, chat bubbles and booth lanterns floating over Digi-District. */
-function DigiSky({ tier, still, onAnimate }: { tier: QualityTier; still: boolean; onAnimate: () => void }) {
+export function DigiSky({ tier, still, onAnimate }: { tier: QualityTier; still: boolean; onAnimate: () => void }) {
   const spot = spotById('digi-district');
   const sky = useMemo(() => {
     const built = buildDigiSky(tier);
@@ -209,7 +209,7 @@ function DigiSky({ tier, still, onAnimate }: { tier: QualityTier; still: boolean
 }
 
 /** The MRT gliding round the rim, one lap per 40 s (parked under reduced motion). */
-function Train({ still, onAnimate }: { still: boolean; onAnimate: () => void }) {
+export function Train({ still, onAnimate }: { still: boolean; onAnimate: () => void }) {
   const geometry = useKitGeometry(buildTrain, []);
   const ref = useRef<Group>(null);
   useFrame((state) => {
@@ -444,7 +444,7 @@ export default function CityScene(props: CitySceneProps) {
       </AdaptiveCanvas>
       {interactive && !ready && (
         <p className="w-city__loading" role="status">
-          Drawing Lumen…
+          Drawing the city…
         </p>
       )}
     </div>

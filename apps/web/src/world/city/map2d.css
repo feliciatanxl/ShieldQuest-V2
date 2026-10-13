@@ -1,4 +1,4 @@
-/* CityMap2D: the SVG twin of Lumen (Flat View). Text uses rem so the Text size setting applies; every status
+/* CityMap2D: the SVG twin of the city (Flat View). Text uses rem so the Text size setting applies; every status
    pairs colour with shape (ripple outline, pin icon) and the DOM carries the words. */
 
 .w-map {

@@ -16,7 +16,7 @@ export const luckyDrawBooth: Mission = {
   bands: ['junior', 'teen'],
   theme: 'Online safety and data requests',
   premise:
-    'A booth offers free bubble tea and a chance to win a Lumen Tab. Mei just has to scan a QR code and fill in her name, birth date, address, her mum\'s phone number and a selfie.',
+    'A booth offers free bubble tea and a chance to win a Metro Tab. Mei just has to scan a QR code and fill in her name, birth date, address, her mum\'s phone number and a selfie.',
   skillFocus: ['S', 'E'],
   timeOfDay: 'afternoon',
   scaffold: 'guided',
@@ -28,14 +28,14 @@ export const luckyDrawBooth: Mission = {
     { id: 'mum', name: 'Mum', role: 'trusted', faceless: true, look: { body: '#a3e635', accent: '#365314', hair: 'short' } },
   ],
   intro:
-    'Lumen Mall, Saturday, 4.40pm. Mei, 12, and her friend Priya are waiting for Mei\'s mum, who is at the bank. A bright booth in the middle of the mall catches Mei\'s eye.',
+    'Metro Mall, Saturday, 4.40pm. Mei, 12, and her friend Priya are waiting for Mei\'s mum, who is at the bank. A bright booth in the middle of the mall catches Mei\'s eye.',
   live: {
     durationSec: 45,
     decisionPrompt: 'The selfie camera is open on Mei\'s phone. What should Mei do?',
     beats: [
-      { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'A big sign on the booth says: "WIN A LUMEN TAB! Free bubble tea for every entry!"', tactic: 'too-good' },
-      { id: 'b2', at: 4, from: 'promoter', channel: 'speech', text: 'Hi girls! Want free bubble tea? Just scan the QR code to enter.', attachment: { kind: 'code', label: 'QR code on the booth', detail: 'Opens lumen-luckydraw.test' } },
-      { id: 'b3', at: 9, from: 'narrator', channel: 'scene', text: 'The entry form opens on Mei\'s phone. It has five boxes.', attachment: { kind: 'link', label: 'lumen-luckydraw.test/enter', detail: "Full name · Birth date · Home address · Parent's phone number · Selfie" } },
+      { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'A big sign on the booth says: "WIN A METRO TAB! Free bubble tea for every entry!"', tactic: 'too-good' },
+      { id: 'b2', at: 4, from: 'promoter', channel: 'speech', text: 'Hi girls! Want free bubble tea? Just scan the QR code to enter.', attachment: { kind: 'code', label: 'QR code on the booth', detail: 'Opens metro-luckydraw.test' } },
+      { id: 'b3', at: 9, from: 'narrator', channel: 'scene', text: 'The entry form opens on Mei\'s phone. It has five boxes.', attachment: { kind: 'link', label: 'metro-luckydraw.test/enter', detail: "Full name · Birth date · Home address · Parent's phone number · Selfie" } },
       { id: 'b4', at: 14, from: 'priya', channel: 'speech', text: 'I already did mine! It only took one minute.', tactic: 'everyone-does-it' },
       { id: 'b5', at: 18, from: 'mei', channel: 'speech', text: 'Why do you need my address?' },
       { id: 'b6', at: 22, from: 'promoter', channel: 'speech', text: 'To send you the prize, of course! Your details are safe with us.', tactic: 'fake-proof' },
@@ -46,8 +46,8 @@ export const luckyDrawBooth: Mission = {
     ],
   },
   clues: [
-    { id: 'c-prize', label: 'A Lumen Tab and free bubble tea, just for filling in a form', target: { kind: 'beat', beatId: 'b1' }, redFlag: true, tactic: 'too-good', explain: 'Big prizes for a few taps are bait. The real price is your details.' },
-    { id: 'c-link', label: "The QR code opens lumen-luckydraw.test, not the mall's own site", target: { kind: 'beat', beatId: 'b2' }, redFlag: true, explain: 'Anyone can print a QR code. This one goes to a site that has nothing to do with the mall. Check where a link goes before you fill anything in.' },
+    { id: 'c-prize', label: 'A Metro Tab and free bubble tea, just for filling in a form', target: { kind: 'beat', beatId: 'b1' }, redFlag: true, tactic: 'too-good', explain: 'Big prizes for a few taps are bait. The real price is your details.' },
+    { id: 'c-link', label: "The QR code opens metro-luckydraw.test, not the mall's own site", target: { kind: 'beat', beatId: 'b2' }, redFlag: true, explain: 'Anyone can print a QR code. This one goes to a site that has nothing to do with the mall. Check where a link goes before you fill anything in.' },
     { id: 'c-fields', label: "Name, birth date, home address, Mum's phone number and a selfie", target: { kind: 'beat', beatId: 'b3' }, redFlag: true, explain: 'A lucky draw only needs one way to contact the winner. All of this together tells a stranger who Mei is, where she lives and what she looks like.' },
     { id: 'c-friend', label: 'Priya: "I already did mine!"', target: { kind: 'beat', beatId: 'b4' }, redFlag: true, tactic: 'everyone-does-it', explain: 'A friend doing it does not make it safe. It just means her details are out there too.' },
     { id: 'c-promise', label: '"Your details are safe with us"', target: { kind: 'beat', beatId: 'b6' }, redFlag: true, tactic: 'fake-proof', explain: 'Only the booth says so, and the booth will not say who runs it. A promise you cannot check is not proof.' },
@@ -59,13 +59,13 @@ export const luckyDrawBooth: Mission = {
   influence: {
     from: 'promoter',
     hidden: {
-      label: 'Whoever runs lumen-luckydraw.test',
+      label: 'Whoever runs metro-luckydraw.test',
       description: "The booth never says who runs it. Every entry goes to a website that is not the mall's. Details collected like this can be used to make scam messages that sound real.",
     },
     question: 'Pull the thread from the promoter. Who really gets something if Mei fills in the form?',
     options: [
       { id: 'i-mall', text: 'The mall. It wants to know its shoppers.', correct: false, explain: "The mall's own screen only asks for stars. This form sends Mei's details somewhere else." },
-      { id: 'i-site', text: "Whoever runs lumen-luckydraw.test. They get all of Mei's details.", correct: true, explain: "Yes. The bubble tea costs them a little. Mei's name, address, birthday and face are worth much more to them." },
+      { id: 'i-site', text: "Whoever runs metro-luckydraw.test. They get all of Mei's details.", correct: true, explain: "Yes. The bubble tea costs them a little. Mei's name, address, birthday and face are worth much more to them." },
       { id: 'i-promoter', text: 'Only the promoter. They just want to give away bubble tea.', correct: false, explain: "The promoter may be paid for each form. But the details go to the website's owners, and they keep them." },
     ],
   },
@@ -73,7 +73,7 @@ export const luckyDrawBooth: Mission = {
     question: 'If Mei fills in everything, what could happen in the next few weeks?',
     horizon: 'next-month',
     options: [
-      { id: 'f-win', text: 'Mei wins the Lumen Tab.', likely: false },
+      { id: 'f-win', text: 'Mei wins the Metro Tab.', likely: false },
       { id: 'f-messages', text: "Mei and her mum get scam messages that use Mei's real name.", likely: true },
       { id: 'f-nothing', text: 'Nothing. It was just a form.', likely: false },
     ],
@@ -101,7 +101,7 @@ export const luckyDrawBooth: Mission = {
         afterMissions: 2,
         timeLabel: '3 WEEKS LATER',
         title: 'A message that knows Mei',
-        text: 'A ChatLah message arrives: "Hi Mei! You won the Lumen Tab 🎉 Pay S$5 for delivery at lumen-prize.test." It knows her name, her birthday and even her school: her selfie showed her school badge. Mum\'s phone has been getting strange messages about Mei too. There never was a Lumen Tab.',
+        text: 'A ChatLah message arrives: "Hi Mei! You won the Metro Tab 🎉 Pay S$5 for delivery at metro-prize.test." It knows her name, her birthday and even her school: her selfie showed her school badge. Mum\'s phone has been getting strange messages about Mei too. There never was a Metro Tab.',
         effects: { trust: -1, risk: 1 },
         fact: {
           text: 'ScamShield\'s advice: "Check for scam signs and with official sources."',
@@ -155,7 +155,7 @@ export const luckyDrawBooth: Mission = {
         afterMissions: 1,
         timeLabel: '2 WEEKS LATER',
         title: 'Afterglow: Mei spots the next one',
-        text: 'A pop-up in Mei\'s game says: "Win Lumen Legends cards! Just enter your address." Mei knows this trick now. She shows Mum straight away, and they report the ad together. Priya asks Mei to check the next one with her.',
+        text: 'A pop-up in Mei\'s game says: "Win Metro Legends cards! Just enter your address." Mei knows this trick now. She shows Mum straight away, and they report the ad together. Priya asks Mei to check the next one with her.',
         effects: { trust: 1 },
       },
     },
@@ -170,7 +170,7 @@ export const luckyDrawBooth: Mission = {
     timeLabel: 'TWO WEEKS LATER',
     setup: 'After dinner, Priya messages Mei. She has found another lucky draw, this time on ChatLah.',
     messages: [
-      { from: 'priya', text: 'omg there is a lucky draw for Lumen Legends cards!!' },
+      { from: 'priya', text: 'omg there is a lucky draw for Metro Legends cards!!' },
       { from: 'priya', text: "it just wants my address, my school and my mum's number" },
       { from: 'priya', text: "ends tonight. I'm doing it ok? don't tell my mum, she will say no 😅" },
     ],

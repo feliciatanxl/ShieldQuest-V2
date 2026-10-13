@@ -77,7 +77,7 @@ Every change must keep these promises. Reviewers will check them.
 
 ### Content safety
 
-- **Fictional brands only:** ChatLah, Barang Market, QuikGig, TaskLah, Harbour Bank, LumenPay, CityPass, EduPass, MiniMart 24, Boba Boleh, LumenPost, Lumen Legends.
+- **Fictional brands only:** ChatLah, Barang Market, QuikGig, TaskLah, Harbour Bank, MetroPay, CityPass, EduPass, MiniMart 24, Boba Boleh, MetroPost, Metro Legends.
 - **No real links or phone numbers** in fictional content. Use `.test` / `.example` domains and `8XXX XXXX`.
 - **Offender-focused feedback.** Blame the tactic, never the target. Every risky choice needs a recovery path.
 - **Manipulators are never shown with a face or body.** They appear only as a chat handle or a faceless silhouette.

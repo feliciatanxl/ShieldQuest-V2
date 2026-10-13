@@ -1,4 +1,4 @@
-// Lumen at blue hour: HDB-style slab blocks, an MRT viaduct, hanging rain and the Stillpoint
+// ShieldQuest City at blue hour: HDB-style slab blocks, an MRT viaduct, hanging rain and the Stillpoint
 // clock tower stuck at 11:59. Drawn in code (no images, no network) and fully decorative.
 import { useId } from 'react';
 

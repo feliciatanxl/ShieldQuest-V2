@@ -27,7 +27,7 @@ export function ResetProgress({ onDone }: { onDone: (message: string) => void })
       navigate('/play');
       return;
     }
-    onDone('Your progress on this device has been reset. Lumen is ready for a fresh start.');
+    onDone('Your progress on this device has been reset. The city is ready for a fresh start.');
   };
 
   return (

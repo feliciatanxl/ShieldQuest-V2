@@ -186,7 +186,7 @@ export function pitchTextProblems(text: string, field: PitchField): PitchProblem
   if (SCHOOL_NAME.test(text) || INSTITUTIONS.test(text))
     out.push({ field, level: 'error', message: 'Please use a made-up school name. Fictional only, no real people or places.' });
   if (PROFANITY.test(text)) out.push({ field, level: 'error', message: 'Please keep it free of swear words.' });
-  // A warning, not a block: the team swaps real names for Lumen ones (ChatLah, Barang Market…) anyway.
+  // A warning, not a block: the team swaps real names for in-game ones (ChatLah, Barang Market…) anyway.
   const brand = REAL_BRAND.exec(text)?.[0];
   if (brand)
     out.push({

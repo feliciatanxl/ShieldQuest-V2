@@ -4,6 +4,13 @@
 //
 // Privacy rule: never store names, NRIC, phone numbers, emails, IP addresses or per-player
 // gameplay histories. Store aggregates, pseudonymous assessment codes and moderated content only.
+//
+// One narrow exception: Save Cards ('save-cards', save/routes.ts). A player who opts in may park their own
+// progress here as an opaque blob encrypted on their device (AES-GCM, key derived from four random words that
+// never leave the device). Each record is { id, blob, updatedAt (day only), size, rev (an upload counter) }: the
+// id is a one-way PBKDF2 hash of the words, so it is not an identifier of anyone, and nothing else is stored with
+// it (no IP address, no device or account data). The server cannot read the blob. Records not updated for 180 days are deleted, and
+// the player can delete theirs at any time.
 
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';

@@ -31,6 +31,7 @@ import {
 } from './screenLogic';
 import { Lanes, LobbyView, LookUpView, MissionCentre, PausedView, RoomFreezeView, SpotlightPanel } from './views';
 import { ScreenCity, ScreenMission } from './World';
+import { ScreenDash, screenDashText } from '../dash/ScreenDash';
 
 const SCAFFOLD = { guided: 'Guided', light: 'Light', wildcard: 'Wildcard Sprint' } as const;
 
@@ -76,7 +77,7 @@ export function BigScreen({ snap }: { snap: ScreenSnapshot }) {
   const reduced = prefersReducedMotion(motion);
   const renderMode = useRenderMode();
   const playing = session.phase === 'mission' && !session.missionComplete;
-  const now = useServerNow(playing || session.phase === 'room-freeze' ? 200 : 1000);
+  const now = useServerNow(playing || session.phase === 'room-freeze' || snap.dash?.stage === 'question' ? 200 : 1000);
   useWakeLock(session.phase !== 'ended');
 
   const mission: Mission | undefined =
@@ -158,7 +159,7 @@ export function BigScreen({ snap }: { snap: ScreenSnapshot }) {
   let caption: string;
   let centre: ReactNode;
   let showLanes = false;
-  const deadline = playing ? roomDeadline(tl, phase) : null;
+  let deadline = playing ? roomDeadline(tl, phase) : null;
 
   if (mission && session.missionIndex !== null && (session.phase === 'mission' || session.phase === 'room-freeze')) {
     kicker = `Mission ${session.missionIndex + 1} of ${session.missionIds.length} · ${districtById(mission.district).name} · ${SCAFFOLD[mission.scaffold]}`;
@@ -211,6 +212,19 @@ export function BigScreen({ snap }: { snap: ScreenSnapshot }) {
       centre = <ClosingView snap={snap} reduced={reduced} />;
   }
 
+  // Squad Dash (lobby or Look Up only): the question, then the answer, then squad totals.
+  const dash = snap.dash && (session.phase === 'lobby' || (session.phase === 'mission' && session.missionComplete)) ? snap.dash : null;
+  if (dash) {
+    const text = screenDashText(dash);
+    title = text.title;
+    kicker = text.kicker;
+    caption = text.caption;
+    centre = <ScreenDash dash={dash} />;
+    showLanes = false;
+    // A soft clock, and none at all in Calm or Gentle mode.
+    deadline = dash.stage === 'question' && dash.endsAt !== null && !dash.quiet ? { endsAt: dash.endsAt, label: 'to talk it over' } : null;
+  }
+
   // Freeze All Phones (the Look Up break): the whole projector becomes the stretch break.
   if (session.paused && session.phase !== 'ended') {
     title = 'Look Up';
@@ -228,6 +242,7 @@ export function BigScreen({ snap }: { snap: ScreenSnapshot }) {
       data-room-phase={phase ?? undefined}
       data-reduced={reduced ? '' : undefined}
       data-paused={session.paused ? '' : undefined}
+      data-dash={dash ? dash.stage : undefined}
     >
       <div className="sq-scr__world" inert>
         {world}

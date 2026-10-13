@@ -739,7 +739,7 @@ export function CityMap2D(props: Omit<CitySceneProps, 'quality'>) {
         height={h}
         preserveAspectRatio="xMidYMid meet"
         role={interactive ? 'group' : 'img'}
-        aria-label={interactive ? 'Map of Lumen. Choose a district or a mission.' : summary}
+        aria-label={interactive ? 'Map of ShieldQuest City. Choose a district or a mission.' : summary}
         aria-describedby={interactive ? `${uid}-summary` : undefined}
         focusable="false"
       >

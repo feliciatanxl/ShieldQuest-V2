@@ -46,7 +46,7 @@ const TITLES: Record<AssessmentKind, { title: string; lead: string }> = {
     lead: 'Your answers help make ShieldQuest better for everyone who plays it next.',
   },
   return: {
-    title: 'Thanks for coming back to Lumen',
+    title: 'Thanks for coming back to ShieldQuest City',
     lead: 'Your answers show us what people still remember weeks later. That matters a lot.',
   },
 };
@@ -134,7 +134,7 @@ export function DoneScreen(props: DoneScreenProps) {
           </LinkButton>
         ) : (
           <LinkButton href="/play" size="lg" iconRight="arrowRight">
-            {kind === 'pre' ? 'Start playing' : kind === 'return' ? 'Return to Lumen' : 'Keep playing'}
+            {kind === 'pre' ? 'Start playing' : kind === 'return' ? 'Return to ShieldQuest City' : 'Keep playing'}
           </LinkButton>
         )}
         <LinkButton href="/" variant="secondary" size="lg" icon="door">

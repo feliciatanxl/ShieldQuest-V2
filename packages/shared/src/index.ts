@@ -6,3 +6,7 @@ export * from './lint';
 export * from './content';
 export * from './protocol';
 export * from './assessment';
+export * from './rewards';
+export * from './saveWords';
+export * from './content/chance';
+export * from './content/minigames';

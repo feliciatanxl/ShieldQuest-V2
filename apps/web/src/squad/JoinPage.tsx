@@ -231,7 +231,7 @@ function CodeEntry({ initial, error, onSubmit }: { initial: string; error?: stri
         </Button>
       </form>
       <p className="sq-join__alt">
-        Playing on your own? <a href="/play">Explore Lumen solo</a>
+        Playing on your own? <a href="/play">Explore the city solo</a>
       </p>
     </JoinShell>
   );

@@ -35,7 +35,7 @@ export interface AftershockInterludeProps {
   position?: string;
 }
 
-/** The risky branch's delayed cost, shown after an Afterglow ("Meanwhile, in another Lumen…"). */
+/** The risky branch's delayed cost, shown after an Afterglow ("Meanwhile, in another timeline…"). */
 function shadowOf(mission: Mission, chosen: Choice): { choice: Choice; spec: AftershockSpec } | null {
   for (const c of mission.choices) {
     if (c.id !== chosen.id && c.aftershock?.polarity === 'risk') return { choice: c, spec: c.aftershock };
@@ -261,9 +261,9 @@ export function AftershockInterlude({ pending, found, band, seed, reduced, onRes
 
       {step === 'shadow' && shadow && (
         <>
-          <PhaseHeading kicker={`${kicker} · Meanwhile, in another Lumen…`} title={shadow.spec.title}>
+          <PhaseHeading kicker={`${kicker} · Meanwhile, in another timeline…`} title={shadow.spec.title}>
             <p className="msn-phase__sub">
-              In another Lumen, {who} chose: <strong>{withStop(shadow.choice.label)}</strong> {sentenceCase(shadow.spec.timeLabel)}:
+              In another timeline, {who} chose: <strong>{withStop(shadow.choice.label)}</strong> {sentenceCase(shadow.spec.timeLabel)}:
             </p>
           </PhaseHeading>
           <article className="msn-outcome" data-mood="sober">

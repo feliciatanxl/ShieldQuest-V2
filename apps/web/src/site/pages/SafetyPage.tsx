@@ -68,7 +68,7 @@ const CONTENT_RULES: { icon: IconName; title: string; body: string }[] = [
   {
     icon: 'shield',
     title: 'Fictional brands, people and places',
-    body: 'ChatLah, Barang Market, QuikGig, Harbour Bank, LumenPay and CityPass are all made up. Fake links end in .test or .example, and fake phone numbers look like 8XXX XXXX.',
+    body: 'ChatLah, Barang Market, QuikGig, Harbour Bank, MetroPay and CityPass are all made up. Fake links end in .test or .example, and fake phone numbers look like 8XXX XXXX.',
   },
   {
     icon: 'heart',
@@ -103,7 +103,7 @@ const WELLBEING = [
   'Every mission card carries a content note, and facilitators can skip a scenario.',
   'Help channels are one tap away in every debrief and from the help button.',
   'Simulated scam messages never leave the game: no real texts, emails or calls.',
-  'No leaderboards, rankings, streaks, loot boxes or shops.',
+  'No leaderboards, rankings, loot boxes or real money. Stars are earned by playing, never bought.',
 ];
 
 const ACCESSIBILITY = [

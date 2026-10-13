@@ -10,7 +10,7 @@ import { formatMoney, hypercorrectionClue, isConfidentRisk, residentName, withSt
 import { PhaseHeading } from './PhaseHeading';
 import './phases.css';
 
-export const REMEMBER_LINE = 'Lumen will remember this.';
+export const REMEMBER_LINE = 'The city will remember this.';
 export const SEED_LINE = 'Something is still in motion.';
 
 const MOOD_TAG: Record<Choice['outcome']['mood'], string> = {

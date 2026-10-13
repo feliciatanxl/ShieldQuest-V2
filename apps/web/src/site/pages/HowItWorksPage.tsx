@@ -1,4 +1,15 @@
-import { BANDS, SQUAD_ROLES, guardianForSkill, tacticById, type SkillId } from '@shieldquest/shared';
+import {
+  BANDS,
+  GUARDIANS,
+  SKILLS,
+  SQUAD_ROLES,
+  TACTICS,
+  guardianById,
+  guardianForSkill,
+  skillById,
+  tacticById,
+  type SkillId,
+} from '@shieldquest/shared';
 import { Link } from 'wouter';
 import { LinkButton } from '../../ui/Button';
 import { Icon, type IconName } from '../../ui/Icon';
@@ -7,7 +18,7 @@ import { GuardianIcon } from '../../world/flat/GuardianIcon';
 import { FrozenPhoneArt } from '../art/Illustrations';
 import { Reveal, Stagger, StaggerItem } from '../motion';
 import { SiteLayout } from '../SiteLayout';
-import { DocSection, LetterChip, OnThisPage, PageCta, PageHero } from '../parts';
+import { DocSection, LetterChip, OnThisPage, PageCta, PageHero, accent, article } from '../parts';
 import '../home.css';
 import '../pages.css';
 
@@ -34,7 +45,7 @@ const ANATOMY: readonly AnatomyStep[] = [
     name: 'HOLD',
     letters: ['H'],
     when: 'Whenever you choose',
-    body: 'Press and hold to freeze your world. Colour drains, the rain hangs in the air, and messages that haven’t arrived yet float in mid-air so you can read them early. Wait too long and Lumen freezes for you at the decision second. No penalty, ever.',
+    body: 'Press and hold to freeze your world. Colour drains, the rain hangs in the air, and messages that haven’t arrived yet float in mid-air so you can read them early. Wait too long and the city freezes for you at the decision second. Everyone has their own HOLD button, and holding earlier buys more time. No penalty, ever.',
     line: 'Time is held. Nothing is rushing you now.',
   },
   {
@@ -71,7 +82,7 @@ const ANATOMY: readonly AnatomyStep[] = [
     letters: ['E'],
     when: '30–45 seconds',
     body: 'Time resumes and the outcome plays out. A feedback card names the tactic, a safer move and a way to recover. If something is still in motion, a seed drops onto the timeline.',
-    line: 'Lumen will remember this.',
+    line: 'The city will remember this.',
   },
   {
     id: 'aftershock',
@@ -148,6 +159,8 @@ const DIALS: { dial: string; values: [string, string, string] }[] = [
 
 const TOC = [
   { href: '#anatomy', label: 'Mission anatomy' },
+  { href: '#shield', label: 'S.H.I.E.L.D. skills' },
+  { href: '#guardians', label: 'Guardians' },
   { href: '#consequences', label: 'Delayed consequences' },
   { href: '#think-vote-explain', label: 'Think-Vote-Explain' },
   { href: '#peer-shield', label: 'Peer Shield' },
@@ -155,6 +168,7 @@ const TOC = [
   { href: '#solo-or-squad', label: 'Solo or squad' },
   { href: '#accessibility', label: 'Accessibility' },
   { href: '#bands', label: 'Content bands' },
+  { href: '#why-it-works', label: 'Why it works' },
 ] as const;
 
 function GuardianStrip() {
@@ -175,6 +189,7 @@ function GuardianStrip() {
 }
 
 function Anatomy() {
+  const ringLabels = [...new Set(TACTICS.map((t) => t.ringLabel))];
   return (
     <DocSection
       id="anatomy"
@@ -208,6 +223,100 @@ function Anatomy() {
           </StaggerItem>
         ))}
       </Stagger>
+      <Reveal>
+        <p className="site-holdsec__ringhead">Tactics the Pressure Ring can name:</p>
+        <ul className="site-taglist">
+          {ringLabels.map((l) => (
+            <li key={l}>{l}</li>
+          ))}
+        </ul>
+      </Reveal>
+    </DocSection>
+  );
+}
+
+function ShieldFramework() {
+  return (
+    <DocSection
+      id="shield"
+      kicker="The S.H.I.E.L.D. framework"
+      title="Six skills, practised until they’re reflexes."
+      lead="Each letter is a prevention skill the game makes you use, not memorise. Every one has a Guardian who unfolds when your squad shows it."
+      tone="tint"
+    >
+      <Stagger as="ol" className="site-shield">
+        {SKILLS.map((s) => {
+          const g = guardianById(s.guardian);
+          return (
+            <StaggerItem key={s.id} className="site-shield__item">
+              <span className="site-shield__letter" aria-hidden="true" style={accent(g.color)}>
+                {s.id}
+              </span>
+              <h3>
+                <span className="sr-only">{s.id}: </span>
+                {s.name}
+              </h3>
+              <p>{s.description}</p>
+              <p className="site-shield__guardian">
+                <GuardianIcon guardian={g.id} size={28} />
+                <span>
+                  Guardian: <b>{g.name}</b>
+                </span>
+              </p>
+            </StaggerItem>
+          );
+        })}
+      </Stagger>
+    </DocSection>
+  );
+}
+
+function GuardiansGallery() {
+  return (
+    <DocSection
+      id="guardians"
+      kicker="Meet the Guardians"
+      title="Origami companions that fold themselves out of the frozen air."
+      lead="Show a skill and its Guardian unfolds for your whole squad, with an ability you can use once per mission."
+      className="site-section--night"
+    >
+      <Stagger className="site-guardians">
+        {GUARDIANS.map((g) => {
+          const skill = skillById(g.skill);
+          return (
+            <StaggerItem key={g.id} className="site-guardian">
+              <div className="site-guardian__figure" style={accent(g.color)}>
+                <GuardianIcon guardian={g.id} size={88} />
+              </div>
+              <h3>{g.name}</h3>
+              <p className="site-guardian__creature">
+                {article(g.creature)} {g.creature}
+              </p>
+              <p className="site-guardian__skill">
+                <LetterChip letter={g.skill} /> {skill.name} · {g.preventionSkill}
+              </p>
+              <p className="site-guardian__ability">
+                <b>{g.abilityName}:</b> {g.ability}
+              </p>
+            </StaggerItem>
+          );
+        })}
+      </Stagger>
+      <Reveal className="site-noluck">
+        <p className="site-noluck__title">
+          <Icon name="shield" /> Guardians are earned by skill, never by luck.
+        </p>
+        <ul>
+          <li>No loot boxes</li>
+          <li>No real money</li>
+          <li>No leaderboards</li>
+          <li>No random drops</li>
+        </ul>
+        <p className="site-noluck__body">
+          Every Guardian rule is written in plain words in the Bond Book. Bonds are shared by the whole squad and
+          saved only on each player’s own device.
+        </p>
+      </Reveal>
     </DocSection>
   );
 }
@@ -219,7 +328,7 @@ function Consequences() {
       id="consequences"
       kicker="The Delayed Consequence Engine"
       title="Consequences that arrive late, like real ones do."
-      lead="In real life the bill, the bank notice or the screenshot turns up days later. So in Lumen, a choice plants a seed that surfaces a mission later."
+      lead="In real life the bill, the bank notice or the screenshot turns up days later. So in ShieldQuest City, a choice plants a seed that surfaces a mission later."
       tone="tint"
     >
       <div className="site-split site-split--top">
@@ -280,7 +389,7 @@ function Consequences() {
                 relights a lantern.
               </li>
               <li>
-                <b>Safer choices aren’t a dead end.</b> They get an Afterglow, then “Meanwhile, in another Lumen…” shows
+                <b>Safer choices aren’t a dead end.</b> They get an Afterglow, then “Meanwhile, in another timeline…” shows
                 what the risky path would have cost, so every forecast can still be checked.
               </li>
               <li>
@@ -546,6 +655,59 @@ function Bands() {
   );
 }
 
+const WHY: { icon: IconName; title: string; body: string }[] = [
+  {
+    icon: 'play',
+    title: 'Learning by doing',
+    body: 'Players practise the pause itself, inside a realistic moment, instead of hearing about it. A habit is built by using it.',
+  },
+  {
+    icon: 'chat',
+    title: 'Peer discussion',
+    body: 'Everyone votes privately first, then explains. Each squad member sees a different piece of the evidence, so talking is how you win.',
+  },
+  {
+    icon: 'clock',
+    title: 'Delayed consequences',
+    body: 'Choices come back a mission later as Aftershocks, the way real consequences do. Every risky path also shows a way to recover.',
+  },
+  {
+    icon: 'spark',
+    title: 'Transfer to new scenarios',
+    body: 'Prompts fade across a session. The last mission, and the after-check, use situations the room has never seen.',
+  },
+];
+
+function WhyItWorks() {
+  return (
+    <DocSection
+      id="why-it-works"
+      kicker="Why it works"
+      title="Not a lecture with graphics. Practice that feels like play."
+      lead="ShieldQuest is built on four ideas from game-based learning: do it, discuss it, feel the fallout, then try it somewhere new."
+    >
+      <Stagger className="site-why">
+        {WHY.map((w) => (
+          <StaggerItem key={w.title}>
+            <span className="site-why__icon" aria-hidden="true">
+              <Icon name={w.icon} />
+            </span>
+            <h3>{w.title}</h3>
+            <p>{w.body}</p>
+          </StaggerItem>
+        ))}
+      </Stagger>
+      <Reveal className="site-research">
+        <b>Grounded in research.</b>
+        <span>
+          The design draws on game-based learning studies named in the Project SHIELD proposal.{' '}
+          <Link href="/about#research">See the studies</Link>.
+        </span>
+      </Reveal>
+    </DocSection>
+  );
+}
+
 export function HowItWorksPage() {
   return (
     <SiteLayout
@@ -555,12 +717,14 @@ export function HowItWorksPage() {
       <PageHero
         kicker="How it works"
         title="Inside the second before."
-        lead="Every ShieldQuest mission is built around one frozen moment. Here is what happens inside it, beat by beat, and why each beat is there."
+        lead="In ShieldQuest City you are a Holder: you can stop time for one second, the second before someone makes a choice they can’t take back. Every mission is built around that frozen moment. Here is what happens inside it, beat by beat."
         art={<FrozenPhoneArt />}
       >
         <OnThisPage links={TOC} />
       </PageHero>
       <Anatomy />
+      <ShieldFramework />
+      <GuardiansGallery />
       <Consequences />
       <ThinkVoteExplain />
       <PeerShield />
@@ -568,6 +732,7 @@ export function HowItWorksPage() {
       <SoloOrSquad />
       <Accessibility />
       <Bands />
+      <WhyItWorks />
       <PageCta
         title="The best way to understand Hold is to press it."
         lead="Play a mission in your browser in a couple of minutes. No download, no account."

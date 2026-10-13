@@ -13,7 +13,7 @@ export const behindTheStall: Mission = {
   scene: 'digi-sky',
   bands: ['teen', 'junior'],
   theme: 'Online shopping: pre-order scam',
-  premise: 'Jun wants a sealed box of Lumen Legends cards. A five-star shop has it at less than half price, as a pre-order. It just needs a deposit, paid outside the checkout.',
+  premise: 'Jun wants a sealed box of Metro Legends cards. A five-star shop has it at less than half price, as a pre-order. It just needs a deposit, paid outside the checkout.',
   skillFocus: ['S', 'E'],
   timeOfDay: 'evening',
   scaffold: 'light',
@@ -23,17 +23,17 @@ export const behindTheStall: Mission = {
     { id: 'theo', name: 'Theo', role: 'friend', anchor: 'arcade', pose: 'lean', look: { body: '#34d399', accent: '#064e3b', hair: 'cap' } },
     { id: 'vault', name: 'LegendVault', role: 'pressurer', faceless: true, look: { body: '#334155', accent: '#0f172a', hair: 'none' } },
   ],
-  intro: 'Digi Sky, 8pm. Jun has wanted a sealed box of Lumen Legends cards for months. He and Theo are browsing Barang Market when a shiny new booth lights up.',
+  intro: 'Digi Sky, 8pm. Jun has wanted a sealed box of Metro Legends cards for months. He and Theo are browsing Barang Market when a shiny new booth lights up.',
   live: {
     durationSec: 48,
     decisionPrompt: 'The deposit button is glowing. What should Jun do?',
     beats: [
       { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'A glowing booth: LegendVault. Five gold stars and a long string of review lanterns.' },
-      { id: 'b2', at: 4, from: 'vault', channel: 'chat', text: 'Lumen Legends sealed box, PRE-ORDER! Only S$50. Shops sell it for S$110.', tactic: 'too-good', attachment: { kind: 'listing', label: 'Lumen Legends Booster Box (sealed) · PRE-ORDER', detail: 'S$50 · usual S$110 · 5.0 stars (212 reviews)' } },
+      { id: 'b2', at: 4, from: 'vault', channel: 'chat', text: 'Metro Legends sealed box, PRE-ORDER! Only S$50. Shops sell it for S$110.', tactic: 'too-good', attachment: { kind: 'listing', label: 'Metro Legends Booster Box (sealed) · PRE-ORDER', detail: 'S$50 · usual S$110 · 5.0 stars (212 reviews)' } },
       { id: 'b3', at: 8, from: 'theo', channel: 'speech', text: "Jun, that's less than half price! Half the card club is buying.", tactic: 'everyone-does-it' },
       { id: 'b4', at: 13, from: 'vault', channel: 'chat', text: 'Boxes ship in 3 months. Pre-order now before the price goes up!' },
       { id: 'b5', at: 18, from: 'narrator', channel: 'scene', text: 'The stall next door sells the same box for S$108. Its sign says: "Pay with Barang Checkout. Buyer protection."' },
-      { id: 'b6', at: 23, from: 'vault', channel: 'chat', text: 'Barang checkout has fees. Pay me direct with LumenPay. Cheaper for you 😉' },
+      { id: 'b6', at: 23, from: 'vault', channel: 'chat', text: 'Barang checkout has fees. Pay me direct with MetroPay. Cheaper for you 😉' },
       { id: 'b7', at: 28, from: 'vault', channel: 'chat', text: 'Here are real photos 📸', attachment: { kind: 'image', label: 'box_photo_1.jpg', detail: 'A shiny sealed box on a white table' } },
       { id: 'b8', at: 33, from: 'vault', channel: 'chat', text: 'Pay a S$25 deposit by 10pm tonight. Only 3 boxes left!', tactic: 'urgency' },
       { id: 'b9', at: 38, from: 'vault', channel: 'chat', text: '212 five-star reviews. Very trusted seller, no worries 👍', tactic: 'fake-proof' },
@@ -73,7 +73,7 @@ export const behindTheStall: Mission = {
   choices: [
     {
       id: 'pay-deposit',
-      label: 'Pay the S$25 deposit with LumenPay',
+      label: 'Pay the S$25 deposit with MetroPay',
       safety: 'risky',
       outcome: {
         title: 'Pre-order confirmed!',
@@ -84,7 +84,7 @@ export const behindTheStall: Mission = {
       feedback: {
         tactic: 'too-good',
         saferMove: "to pay only through Barang's own checkout with buyer protection, or to walk away",
-        ifItHappened: 'tell a parent, keep the chats, report the shop to Barang Market, and contact LumenPay or the bank together.',
+        ifItHappened: 'tell a parent, keep the chats, report the shop to Barang Market, and contact MetroPay or the bank together.',
       },
       aftershock: {
         id: 'deposit-gone',
@@ -102,7 +102,7 @@ export const behindTheStall: Mission = {
         recovery: {
           prompt: 'Jun feels awful. What should he do now?',
           options: [
-            { id: 'r-tell', text: 'Tell his dad, report the shop to Barang Market, and contact LumenPay together. Make a police report too.', good: true, response: 'That is the best move. Reporting fast can help stop the seller and warn other buyers. Beacon lights up.', help: ['trusted-adult', 'bank', 'scamshield-report', 'police-hotline'] },
+            { id: 'r-tell', text: 'Tell his dad, report the shop to Barang Market, and contact MetroPay together. Make a police report too.', good: true, response: 'That is the best move. Reporting fast can help stop the seller and warn other buyers. Beacon lights up.', help: ['trusted-adult', 'bank', 'scamshield-report', 'police-hotline'] },
             { id: 'r-wait', text: "Wait a bit longer. Maybe it's just late.", good: false, response: 'Hoping it is just late is natural. But every day of waiting helps the seller take more deposits. Telling his dad and reporting now can still help.' },
             { id: 'r-fee', text: 'Pay the "customs fee" that a new account says will release the box.', good: false, response: 'That message is the same trick asking for more. Don\'t pay. Telling a trusted adult and reporting is still the next step, and it is not too late.' },
           ],
@@ -159,7 +159,7 @@ export const behindTheStall: Mission = {
   peerShield: {
     friend: 'theo',
     timeLabel: 'ONE WEEK LATER',
-    setup: 'Theo found a different pre-order on ChatLah: a Lumen Legends gold tin at a third of the price. The deposit closes at midnight, and his thumb is over Pay.',
+    setup: 'Theo found a different pre-order on ChatLah: a Metro Legends gold tin at a third of the price. The deposit closes at midnight, and his thumb is over Pay.',
     messages: [
       { from: 'theo', text: 'this seller has 300 reviews, must be legit' },
       { from: 'theo', text: 'deposit closes at 12. paying now ok' },

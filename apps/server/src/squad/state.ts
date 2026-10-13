@@ -6,6 +6,9 @@ import type {
   AftershockDelivery,
   BondView,
   ChipBoard,
+  ChoiceCount,
+  DashResult,
+  DashStage,
   DebriefView,
   DecisionView,
   DistrictId,
@@ -163,6 +166,34 @@ export interface Squad {
   mission: SquadMission | null;
 }
 
+/** One squad's outcome for a scored Squad Dash question (squad level; no seat ever appears here). */
+export interface DashSquadResult {
+  squadId: SquadTotemId;
+  /** Final taps per option for this squad (counts only; only this squad's own phones ever see them). */
+  counts: ChoiceCount[];
+  result: DashResult;
+}
+
+export interface DashRound {
+  questionId: string;
+  skipped: boolean;
+  squads: DashSquadResult[];
+}
+
+/** A running Squad Dash. Taps live in memory only and are dropped as soon as the question is revealed. */
+export interface DashState {
+  id: string;
+  questionIds: string[];
+  index: number;
+  stage: DashStage;
+  stageStartedAt: number;
+  endsAt: number | null;
+  /** `${seatId}#${player}` -> option id, for the current question only. Never persisted. */
+  answers: Map<string, string>;
+  /** Scored or skipped questions, in order. */
+  rounds: DashRound[];
+}
+
 export interface SessionState {
   code: string;
   hostKeyHash: string;
@@ -199,4 +230,10 @@ export interface SessionState {
   missionAgg: MissionAggregate | null;
   debrief: DebriefView | null;
   endedAt: number | null;
+  /** The open Squad Dash, or null. */
+  dash: DashState | null;
+  /** Squad Dash rounds opened so far (seeds the question shuffle). */
+  dashRuns: number;
+  /** Question ids already used in this session's Dash rounds (dealt again only when the bank runs dry). */
+  dashUsed: string[];
 }

@@ -24,13 +24,13 @@ export const fiveFingerDareJunior: Mission = {
     { id: 'cashier', name: 'Auntie Lin', role: 'bystander', anchor: 'counter', pose: 'stand', look: { body: '#2dd4bf', accent: '#134e4a', hair: 'bun' } },
     { id: 'bigkids', name: 'LvlUp Squad', role: 'pressurer', faceless: true, look: { body: '#334155', accent: '#0f172a', hair: 'none' } },
   ],
-  intro: 'MiniMart 24, Wednesday, 3.30pm. Kavin and his best friend Jayden stop in after school. Jayden is staring at a pack of Lumen Legends cards.',
+  intro: 'MiniMart 24, Wednesday, 3.30pm. Kavin and his best friend Jayden stop in after school. Jayden is staring at a pack of Metro Legends cards.',
   live: {
     durationSec: 45,
     decisionPrompt: 'Jayden is pointing at the door. What should Kavin do?',
     beats: [
       { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: "Jayden's phone buzzes. It is a group chat with some older kids from school." },
-      { id: 'b2', at: 4, from: 'bigkids', channel: 'chat', text: "Bring the new Lumen Legends pack today. Or you're not in the squad." },
+      { id: 'b2', at: 4, from: 'bigkids', channel: 'chat', text: "Bring the new Metro Legends pack today. Or you're not in the squad." },
       { id: 'b3', at: 9, from: 'jayden', channel: 'speech', text: "I can't pay for it. Just stand by the door and tell me if someone comes." },
       { id: 'b4', at: 14, from: 'jayden', channel: 'speech', text: "You don't even have to take anything. You just stand there.", tactic: 'small-ask' },
       { id: 'b5', at: 19, from: 'jayden', channel: 'speech', text: 'The big kids do it all the time. It is normal.', tactic: 'everyone-does-it' },

@@ -337,71 +337,6 @@
   }
 }
 
-/* ───────────────────────── Purpose / story ───────────────────────── */
-
-.site-purpose {
-  padding-block: clamp(3rem, 7vw, 5rem);
-  border-block: 1px solid rgba(159, 179, 200, 0.12);
-  background: linear-gradient(90deg, rgba(42, 47, 107, 0.5), rgba(26, 42, 69, 0.3));
-}
-.site-purpose__inner {
-  display: grid;
-  gap: 1.5rem;
-  align-items: center;
-}
-.site-purpose__line {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: min(clamp(1.45rem, 2.6vw + 0.8rem, 2.4rem), 9vw);
-  font-weight: 600;
-  line-height: 1.22;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  text-wrap: balance;
-}
-.site-purpose__line mark {
-  background: linear-gradient(transparent 62%, rgba(242, 193, 78, 0.45) 62%);
-  color: inherit;
-  padding: 0 0.05em;
-}
-.site-purpose__who {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.site-purpose__who a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  min-height: var(--tap);
-  padding: 0 1rem;
-  border-radius: 999px;
-  border: 1px solid var(--line-strong);
-  background: rgba(20, 32, 51, 0.55);
-  color: var(--text);
-  font-weight: 600;
-  font-size: 0.92rem;
-  text-decoration: none;
-}
-.site-purpose__who a:hover {
-  border-color: var(--gold);
-}
-.site-purpose__who svg {
-  color: var(--gold);
-}
-@media (min-width: 64rem) {
-  .site-purpose__inner {
-    grid-template-columns: 1.6fr 1fr;
-    gap: 3rem;
-  }
-  .site-purpose__who {
-    justify-content: flex-end;
-  }
-}
-
 /* ───────────────────────── The second before (stats) ───────────────────────── */
 
 .site-stats {
@@ -746,6 +681,12 @@
   }
 }
 
+.site-home__more {
+  max-width: 46rem;
+  margin: 2rem auto 0;
+  text-align: center;
+}
+
 /* ───────────────────────── HOLD section ───────────────────────── */
 
 .site-holdsec {
@@ -850,102 +791,6 @@
 @media (min-width: 72rem) {
   .site-why {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-/* ───────────────────────── Impact (KPIs) ───────────────────────── */
-
-.site-kpis {
-  display: grid;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: site-kpi;
-}
-.site-kpi {
-  position: relative;
-  padding: 1.35rem 1.35rem 1.35rem 4.25rem;
-  border-radius: var(--radius-lg);
-  background: rgba(28, 43, 72, 0.85);
-  border: 1px solid var(--line);
-  counter-increment: site-kpi;
-}
-.site-kpi::before {
-  content: counter(site-kpi);
-  position: absolute;
-  left: 1.25rem;
-  top: 1.25rem;
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.7rem;
-  background: var(--gold);
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-weight: 700;
-}
-.site-kpi h3 {
-  margin: 0 0 0.35rem;
-  font-size: 1.2rem;
-}
-.site-kpi p {
-  margin: 0;
-  color: var(--text-2);
-  font-size: 0.95rem;
-}
-.site-kpi p + p {
-  margin-top: 0.35rem;
-  color: var(--muted);
-  font-size: 0.88rem;
-}
-.site-kpi b {
-  color: var(--text);
-}
-@media (min-width: 40rem) {
-  .site-kpis {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 64rem) {
-  .site-kpis {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.site-measure {
-  display: grid;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-.site-measure__step {
-  display: flex;
-  gap: 0.9rem;
-  align-items: flex-start;
-  padding: 1.1rem 1.25rem;
-  border-radius: var(--radius);
-  background: rgba(60, 200, 184, 0.08);
-  border: 1px solid rgba(60, 200, 184, 0.3);
-}
-.site-measure__step svg {
-  flex: none;
-  margin-top: 0.15rem;
-  color: var(--teal);
-}
-.site-measure__step p {
-  margin: 0;
-}
-.site-measure__step b {
-  display: block;
-  color: var(--text);
-}
-.site-measure__step span {
-  color: var(--text-2);
-  font-size: 0.95rem;
-}
-@media (min-width: 56rem) {
-  .site-measure {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1267,32 +1112,6 @@
   color: var(--ink-2);
   font-size: 0.95rem;
 }
-.site-safe {
-  display: grid;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-.site-safe__item {
-  padding: 1.25rem;
-  border-radius: var(--radius);
-  background: var(--paper-2);
-}
-.site-safe__item h3 {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
-  font-size: 1.1rem;
-  color: var(--ink);
-}
-.site-safe__item h3 svg {
-  color: #0f766e;
-}
-.site-safe__item p {
-  margin: 0;
-  color: var(--ink-2);
-  font-size: 0.95rem;
-}
 @media (min-width: 40rem) {
   .site-privacy {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1302,13 +1121,22 @@
   .site-privacy {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .site-safe {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 @media (min-width: 80rem) {
   .site-privacy {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+/* Four-item variant (the home page trust strip): 2 × 2, then one row. Declared after the base
+   rules so it wins at every width. */
+@media (min-width: 56rem) {
+  .site-privacy--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 72rem) {
+  .site-privacy--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

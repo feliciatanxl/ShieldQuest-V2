@@ -33,6 +33,8 @@ import {
   useServerNow,
   useSquad,
 } from '../socket';
+import { DashPanel } from '../dash/DashPanel';
+import { dashClockSec, dashStageLabel } from '../dash/dashLogic';
 import { ConductorHeader } from './ConductorHeader';
 import { ProbeCheck } from './ProbeCheck';
 import { SquadCard } from './SquadCard';
@@ -238,6 +240,8 @@ function ConsoleView({ snap, hostKey }: { snap: HostSnapshot; hostKey: string })
   const mainPhase = phases[0] ?? null;
   const tl = session.timeline;
   const syncedEnd = tl && mainPhase === 'role-flip' ? tl.liveAt : tl && mainPhase === 'live' ? tl.liveEndsAt : tl && mainPhase === 'aftershock' ? tl.roleFlipAt : null;
+  const dash = snap.dash ?? null;
+  const dashLeft = dash ? dashClockSec(dash, now, session.paused) : null;
 
   return (
     <div className="sq-host" data-paused={session.paused ? '' : undefined}>
@@ -269,12 +273,17 @@ function ConsoleView({ snap, hostKey }: { snap: HostSnapshot; hostKey: string })
               {session.paused ? ' · Phones frozen' : ''}
             </p>
             <h1 id="sq-ctrl-title" className="sq-ctrl__title">
-              {session.phase === 'mission' && !session.missionComplete && mainPhase
+              {dash ? (
+                <>
+                  Squad Dash · {dashStageLabel(dash)}
+                  {dashLeft !== null && <span className="sq-ctrl__clock">{clock(dashLeft)}</span>}
+                </>
+              ) : session.phase === 'mission' && !session.missionComplete && mainPhase
                 ? squadsSummary(phases)
                 : session.phase === 'mission' && session.missionComplete
                   ? 'Mission complete: Look Up time'
                   : SESSION_PHASE_LABEL[session.phase]}
-              {syncedEnd !== null && !session.paused && <span className="sq-ctrl__clock">{clock(secondsLeft(syncedEnd, now))}</span>}
+              {!dash && syncedEnd !== null && !session.paused && <span className="sq-ctrl__clock">{clock(secondsLeft(syncedEnd, now))}</span>}
             </h1>
           </div>
           <div className="sq-ctrl__main">
@@ -286,7 +295,7 @@ function ConsoleView({ snap, hostKey }: { snap: HostSnapshot; hostKey: string })
             </p>
           </div>
           <div className="sq-ctrl__row" role="group" aria-label="Session controls">
-            <button type="button" className="sq-cbtn" disabled={!tl || ended} onClick={() => command({ type: 'extend', sec: 30 })}>
+            <button type="button" className="sq-cbtn" disabled={(dash ? dashLeft === null : !tl) || ended} onClick={() => command({ type: 'extend', sec: 30 })}>
               <Icon name="clock" /> +30 s <kbd>E</kbd>
             </button>
             <button type="button" className="sq-cbtn" aria-pressed={session.paused} disabled={ended} onClick={pause}>
@@ -337,6 +346,7 @@ function ConsoleView({ snap, hostKey }: { snap: HostSnapshot; hostKey: string })
           </section>
         )}
         {snap.debrief && <DebriefView snap={snap} />}
+        {dash && <DashPanel snap={snap} now={now} command={command} busy={busy} />}
         <div className="sq-console__main">
           {/* ---- Squads ---- */}
           <section className="sq-panel sq-squadspanel" aria-labelledby="sq-squads-title">
@@ -438,6 +448,9 @@ function ConsoleView({ snap, hostKey }: { snap: HostSnapshot; hostKey: string })
             <TentCards code={session.code} count={snap.config.squadCount ?? SQUAD_LIMITS.maxSquads} />
             <PairDevice code={session.code} hostKey={hostKey} />
           </section>
+
+          {/* ---- Squad Dash (start) ---- */}
+          {!dash && !ended && session.phase !== 'debrief' && <DashPanel snap={snap} now={now} command={command} busy={busy} />}
 
           {/* ---- Playlist ---- */}
           <section className="sq-panel" aria-labelledby="sq-playlist-title">

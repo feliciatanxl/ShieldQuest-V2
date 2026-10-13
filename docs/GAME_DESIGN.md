@@ -18,7 +18,7 @@
 |---|---|
 | **HOLD UP** | <ul><li>The player triggers HOLD themselves.</li><li>The Pressure Ring names each tactic as it arrives.</li><li>The `sceneAt(t, branchState)` timeline engine.</li><li>DIVE into the Digi-District sky layer and the "Behind the Stall" reveal.</li><li>GUARD and DOUBT meters on the friend in Peer Shield.</li><li>A face atlas for the low-poly characters.</li><li>Plain mode.</li></ul> |
 | **Stillframe** | <ul><li>The freeze ends at a fixed time, so holding earlier buys more time to investigate.</li><li>Confidence shields, plus private correction notes when a player was confident and wrong.</li><li>Late Hold recovery after a bad outcome.</li><li>The fixed offender-focused feedback template and a content linter.</li><li>Genuine-versus-fake Twin pairs in the assessments.</li><li>Prompts that fade across missions: Guided, then Light, then Wildcard.</li><li>Flip the Board in the debrief, and the Return visit 2-4 weeks later.</li><li>Players decide for a fictional Lead character rather than for "you".</li><li>The projector shows only positive trends.</li></ul> |
-| **HOLDFAST** | <ul><li>The Room Freeze in onboarding.</li><li>The LIVE vs HELD counter.</li><li>Pull the String.</li><li>Sealed forecasts that the Aftershock later checks.</li><li>Shieldfin swimming across teammates' screens.</li><li>The neutral line "Lumen will remember this."</li><li>Player progress stays on the device.</li></ul> |
+| **HOLDFAST** | <ul><li>The Room Freeze in onboarding.</li><li>The LIVE vs HELD counter.</li><li>Pull the String.</li><li>Sealed forecasts that the Aftershock later checks.</li><li>Shieldfin swimming across teammates' screens.</li><li>The neutral line "The city will remember this."</li><li>Player progress stays on the device.</li></ul> |
 
 **Where the concepts or the judges disagreed, this document decides:**
 
@@ -48,7 +48,7 @@
 **Tagline:** *Scams need you to hurry. You can Hold.*
 **Programme line (from the proposal):** *Choose Right. Protect Together.*
 
-ShieldQuest V2 is a 3D game for phones, played in squads in a facilitated 90-minute session. It is set in **Lumen**, a fictional island city where every risky decision is caught one second before it happens. Each mission plays live on every player's own phone. A recruiter's countdown runs, a friend says "just try once lah", messages pile in, and a labelled Pressure Ring around the big HOLD button names each tactic as it lands.
+ShieldQuest V2 is a 3D game for phones, played in squads in a facilitated 90-minute session. It is set in **ShieldQuest City**, a fictional island city where every risky decision is caught one second before it happens. Each mission plays live on every player's own phone. A recruiter's countdown runs, a friend says "just try once lah", messages pile in, and a labelled Pressure Ring around the big HOLD button names each tactic as it lands.
 
 When a player presses and holds, *their* world freezes. Rain hangs in the air, the next scam message stops mid-flight where they can read it, and the camera unlocks. Each squad member then examines the frozen moment through a different lens:
 - clues;
@@ -57,7 +57,7 @@ When a player presses and holds, *their* world freezes. Rain hangs in the air, t
 - safe exits;
 - possible futures.
 
-The squad then seals votes privately on their own phones, sees an anonymous split, argues it out, re-seals, and lets time run again. Lumen remembers. Consequences come back as Aftershocks a mission later. Then the scam moves on to a friend, and the squad builds the words to pull them back.
+The squad then seals votes privately on their own phones, sees an anonymous split, argues it out, re-seals, and lets time run again. The city remembers. Consequences come back as Aftershocks a mission later. Then the scam moves on to a friend, and the squad builds the words to pull them back.
 
 On the projector, the whole room's city freezes when the room freezes and lights up as the room protects each other. It ends with the Stillpoint clock finally ticking from 11:59 to 12:00, and the closing card: ***"You can't freeze time out there. But you can Hold."***
 
@@ -94,7 +94,7 @@ On the projector, the whole room's city freezes when the room freezes and lights
 
 ## 3. Player fantasy and tone
 
-**Fantasy.** You are a **Holder**, one of the few people in Lumen who can stop time for exactly one second. That second is the one before someone makes a choice they can't take back. Your phone is your **Hold Lens**. In a frozen moment you can:
+**Fantasy.** You are a **Holder**, one of the few people in ShieldQuest City who can stop time for exactly one second. That second is the one before someone makes a choice they can't take back. Your phone is your **Hold Lens**. In a frozen moment you can:
 - walk around the scene;
 - read the message hanging in the air;
 - pull a glowing string from the person pushing to whoever really gains;
@@ -113,7 +113,7 @@ Then your squad decides, and you let time go.
 
 **Tone rules (required in all copy, art and audio):**
 1. The villain is *the hurry*, and the people who manufacture it. Blame always goes to tactics and offenders. Feedback never says or implies that anyone "fell for", "should have known", was "careless" or "deserved" it.
-2. Risky rewards are **shiny for 3 seconds, then sober**: coins land, the music thins out, the scene goes quiet. Every branch ends with the same neutral line: **"Lumen will remember this."**
+2. Risky rewards are **shiny for 3 seconds, then sober**: coins land, the music thins out, the scene goes quiet. Every branch ends with the same neutral line: **"The city will remember this."**
 3. The biggest spectacle is reserved for protective choices: Guardian unfolds, lanterns rising, the city lighting up.
 4. Every risk outcome ends with a recovery route. Coming forward late is always rewarded and never shamed.
 5. Humour targets situations and scammers, never victims.
@@ -125,8 +125,8 @@ Then your squad decides, and you let time go.
 
 ## 4. World and art direction
 
-### 4.1 Lumen
-- **Lumen** is a fictional island city with a Singapore flavour: void decks, covered walkways, MRT-style fare gates, bubble-tea kiosks, HDB-style slab blocks, a food court under a zinc roof.
+### 4.1 ShieldQuest City
+- **ShieldQuest City** is a fictional island city with a Singapore flavour: void decks, covered walkways, MRT-style fare gates, bubble-tea kiosks, HDB-style slab blocks, a food court under a zinc roof.
 - At the centre stands the **Stillpoint**, a clock tower stuck at **11:59**. It is the source of the Hold power. The session's closing scene ticks it to 12:00.
 - Districts are **hexagonal plates** around the Stillpoint. Glowing viaduct bridges link them, and an MRT-style train glides round the rim every 40 s.
 - The **Digi-District floats above the city as a sky layer**: the same blocks redrawn as a glowing wireframe at night, where apps are places. Players reach it by **DIVE**: the camera flies into a character's phone screen and comes out in the online version of that chat.
@@ -148,8 +148,8 @@ Then your squad decides, and you let time go.
 
 **Fictional brands** (a fixed list; the Portal blocks real brands):
 - ChatLah (messaging), Barang Market (marketplace), QuikGig (jobs), TaskLah (task groups);
-- Harbour Bank, LumenPay (e-wallet), CityPass (digital ID login), EduPass (school login);
-- MiniMart 24, Boba Boleh, LumenPost (courier), Lumen Legends (trading cards).
+- Harbour Bank, MetroPay (e-wallet), CityPass (digital ID login), EduPass (school login);
+- MiniMart 24, Boba Boleh, MetroPost (courier), Metro Legends (trading cards).
 - All in-game web addresses use **`.test`** or **`.example`** domains.
 - All phone numbers are shown as obvious placeholders (`8XXX XXXX`).
 
@@ -303,7 +303,7 @@ This is the reference timing for the 14-16 and 17-24 bands, Mission 1 (Guided). 
 | 5 | **Reveal** | 15 s | <ul><li>Anonymous **dots on each Exit, in shuffled order**.</li><li>10-13 uses **Mood** instead: United / Mostly agree / Split.</li><li>On a split: *"Split decisions are normal. Talk it out."*</li></ul> | The lantern pulses. No per-squad split is shown. | Broadcasts counts only. |
 | 6 | **Explain** (L) | 2:00; the squad can ask for +30 s once; Echo Invite adds +60 s once | <ul><li>"Eyes up" mode dims the screen.</li><li>Shows your role's **sentence-starter** card (e.g. "The person pushing gains…").</li><li>**Reason chips**, pick up to 2: *Too urgent, Can't verify it, Too good to be true, Who gains?, Friend says it's fine, Easy money, Need the money.*</li><li>A chip's count shows on the Board **only when ≥ 2 seats picked it**; the rest are pooled as "other reasons".</li><li>On a split, one **random** seat gets a **Steelman card** ("Make the best case for B"), regardless of how anyone voted. **Pass** is always available.</li></ul> | "Talk it out" timer only. | Picks the Steelman seat with seeded RNG. Votes are not consulted. |
 | 7 | **Re-seal** (L) | 20 s | <ul><li>Privately keep or change your Exit (no confidence this time).</li><li>The squad decision is the majority.</li><li>On a tie, the **Safety Lead's** phone shows the tied Exits; they must add a **"Because…" reason tile**, which the whole squad sees.</li><li>Phones then show a count only, e.g. "2 minds changed".</li></ul> | A **lantern beam** rises from the tower: "Hornbill decided". The choice is never shown. | Writes the `VoteAggregate` (6.5). |
-| 8 | **Release** (E) | 30-45 s | <ul><li>Time resumes: a 300 ms reverse whir and the colour floods back.</li><li>The outcome plays as a captioned 3D sequence. Wallet and Trust dials move.</li><li>Neutral line: **"Lumen will remember this."**</li><li>A **Feedback Card** (fixed template, 6.3) explains any red herrings that were pinned.</li><li>If *this device* sealed a risky Exit with 3 shields, it privately shows a **correction note**: "You were sure. Here's the one detail that flips it…"</li><li>If a consequence is pending, a **Seed** drops onto the Timeline Ribbon, labelled *"Something is still in motion."*</li></ul> | The district's Ripple Map. Discreet mode shows only class-level effects. | Plants the Seeds (6.3). |
+| 8 | **Release** (E) | 30-45 s | <ul><li>Time resumes: a 300 ms reverse whir and the colour floods back.</li><li>The outcome plays as a captioned 3D sequence. Wallet and Trust dials move.</li><li>Neutral line: **"The city will remember this."**</li><li>A **Feedback Card** (fixed template, 6.3) explains any red herrings that were pinned.</li><li>If *this device* sealed a risky Exit with 3 shields, it privately shows a **correction note**: "You were sure. Here's the one detail that flips it…"</li><li>If a consequence is pending, a **Seed** drops onto the Timeline Ribbon, labelled *"Something is still in motion."*</li></ul> | The district's Ripple Map. Discreet mode shows only class-level effects. | Plants the Seeds (6.3). |
 | 8a | **Branch sub-decision** (optional) | up to 75 s | For example, Ask for Proof brings convincing screenshots, then a **Mini-Hold** (45 s) with VeriFox's *Independent?* test, then a second seal. | n/a | Auto-skipped by Conductor pacing if the room is behind. |
 | 9 | **Peer Shield** (D) | 3:00 | See 6.4. "Two days later…" A friend is frozen at their own second; tiles are spread across the phones; GUARD and DOUBT meters react. | Shows the assembled message only if the squad's Safety Lead taps Share. | Tag-rule evaluator. |
 | 10 | **Bond** | 20 s | <ul><li>Letters light up with the six-note motif. Which letters light for *you* is computed on your device and kept private.</li><li>Guardians **Unfold** on every squad phone for the squad's bonds.</li><li>Counter-Playbook stamps.</li><li>"Phones down."</li></ul> | The origami Guardian leaps to the squad tower. | Guardian rules are evaluated over the squad's mission events. |
@@ -369,7 +369,7 @@ Guardians are earned by **demonstrated skill, using deterministic rules** (`pack
 
 | Guardian | Skill | Earned when (rule id) | Ability in play |
 |---|---|---|---|
-| **VeriFox** | Verification before action | `verifox.independent`: the squad runs *Independent?* on proof supplied by the sender (result: not independent) **and** the decision verifies through a channel the sender doesn't control (the registry, the number in the official app or on the card). | **Cross-check:** drag any claim onto VeriFox. The Verify Desk checks it against Lumen's fictional Trusted Directory: *Verified / Contradicted / Can't verify from here*. |
+| **VeriFox** | Verification before action | `verifox.independent`: the squad runs *Independent?* on proof supplied by the sender (result: not independent) **and** the decision verifies through a channel the sender doesn't control (the registry, the number in the official app or on the card). | **Cross-check:** drag any claim onto VeriFox. The Verify Desk checks it against the city's fictional Trusted Directory: *Verified / Contradicted / Can't verify from here*. |
 | **Echo** | Help-seeking and consultation | `echo.consult`: the chosen Exit or sub-choice consults a trusted person, **or** a trusted-adult Channel tile is played in Peer Shield. (Not "everyone tapped Said it".) | **Invite:** deals a Steelman card to a random teammate (Pass always available) and adds +60 s to Explain. In solo it brings in the Echo Council's counter-view. |
 | **Beacon** | Personal safety and escalation | `beacon.channel`: on the Channel Map, the genuine safe channel is picked over a decoy (e.g. a scammer's "compliance hotline"), **or** the Late Hold recovery is chosen. | **Light the path:** lights up safe exits and channels in the Path lens on every squad phone, and dims the decoy. |
 | **Shieldfin** | Refusal and peer support | `shieldfin.shield`: Peer Shield reaches *Open* with no blame, shame or dismiss tile in the final message. | **Shield:** flick it to block a Pressure Surge. It swims across every teammate's screen, protecting other players from a pressure event. |
@@ -403,7 +403,7 @@ interface Seed {
   conditions?: { all?: string[]; any?: string[]; none?: string[] }; // squad flags
   effects: {
     wallet?: number;          // in-fiction S$ (squad / solo)
-    trust?: number;           // district Trust Meter delta for this squad's Lumen (-3..+3)
+    trust?: number;           // district Trust Meter delta for this squad's city (-3..+3)
     risk?: number;            // hidden risk level delta (0..3), revealed on delivery
     setFlags?: string[];      // e.g. 'accountRestricted', 'dataLeaked'
     clearFlags?: string[];
@@ -438,10 +438,10 @@ interface ScheduledSeed {
 4. **Delivery sequence** (≤ 90 s): Timeline Ribbon fast-forward, then **Ripple Trace** (each phone privately taps which earlier choice planted it; aggregate accuracy only), then the consequence scene, then the **forecast check**, then **Late Hold** for risk Seeds.
    - **Forecast check:** the device compares against its own sealed token; the squad sees "3 of 5 forecasts matched".
    - **Late Hold** (30 s, "Ren is panicking. What now?"): coming forward relights a lantern and counts towards Beacon.
-5. **Shadow check.** If the squad chose a safe Exit, the Aftershock slot plays its Afterglow and then a 10 s card: *"Meanwhile, in another Lumen…"*. The card shows the risky branch's outcome so every squad's forecast can still be checked (KPI 3 signal).
+5. **Shadow check.** If the squad chose a safe Exit, the Aftershock slot plays its Afterglow and then a 10 s card: *"Meanwhile, in another timeline…"*. The card shows the risky branch's outcome so every squad's forecast can still be checked (KPI 3 signal).
 6. **State:**
    - **Wallet** is in-fiction money per squad.
-   - Each squad's Lumen has a per-district **Trust Meter** (the proposal's Trust Meter). It can fall, and recovery raises it again.
+   - Each squad's city has a per-district **Trust Meter** (the proposal's Trust Meter). It can fall, and recovery raises it again.
    - **Risk** stays hidden until a Seed reveals it.
    - **Flags** change later scenes. For example, `accountRestricted` makes Ren's card decline in a later Retail mission, and a recruiter may message again.
    - The room's **City Pulse** (lanterns on the projector) **only ever increases**.
@@ -531,14 +531,14 @@ It must include a recovery line and must not use any word from the victim-blamin
   - **Gate:** disclaimer and data notice.
   - **Comfort Settings:** text size, captions, reduced motion, sound and haptics, 2D mode.
   - **"Which fits you best?"** Primary / Lower Secondary, Upper Secondary, or Post-secondary / working. This sets the band. **The game never asks for a date of birth.**
-- **No account.** Progress (Bond Book, Counter-Playbook, Moment Atlas, Lumen Block, If-Then card) lives in IndexedDB.
+- **No account.** Progress (Bond Book, Counter-Playbook, Moment Atlas, Home Block, If-Then card) lives in IndexedDB.
   - Moving to another device is done by **exporting progress as a QR code or file**. Nothing is stored on a server.
 - **Each Moment takes 5-7 min** and follows the same anatomy as squad play, with these changes:
   - a **Lens Dial** (thumb dial switching between all 5 lenses; some clues appear in only one lens);
   - the Echo Council;
   - Peer Shield with a 6-tile hand and unlimited retries.
-- **A Lumen Day** is 3 Moments, about 18 min. Then **Nightfall**: due Seeds land, the Trust Meter updates, and the game says "Lumen is resting". It is a natural stopping point, not an endless feed.
-- **On the next launch:** a captioned **Lumen FM "Morning After"** bulletin delivers any `nextLaunch` Seeds ("While you were away…"). There are **no push notifications**.
+- **A City Day** is 3 Moments, about 18 min. Then **Nightfall**: due Seeds land, the Trust Meter updates, and the game says "The city is resting". It is a natural stopping point, not an endless feed.
+- **On the next launch:** a captioned **Metro FM "Morning After"** bulletin delivers any `nextLaunch` Seeds ("While you were away…"). There are **no push notifications**.
 - **Rewind** unlocks after the first, authentic playthrough, so players can explore other branches (7.6, 8).
 - **Fully offline** after the first load. Anonymous counters (mission, band, Exit, campaign tag; no identifier) queue up and send when the device is back online.
 
@@ -557,7 +557,7 @@ It must include a recovery line and must not use any word from the victim-blamin
 
 | Clock | Segment | What happens |
 |---|---|---|
-| 00:00-03:00 | **Onboarding** (15 min total) | Welcome cinematic over Lumen at 11:59. Ground rules (respect; you never have to share anything personal; Pause and Pass are always OK). Facilitator reads the disclaimer aloud. |
+| 00:00-03:00 | **Onboarding** (15 min total) | Welcome cinematic over ShieldQuest City at 11:59. Ground rules (respect; you never have to share anything personal; Pause and Pass are always OK). Facilitator reads the disclaimer aloud. |
 | 03:00-06:00 | | QR join, Comfort Settings, session code (also written on a paper slip), totems. |
 | 06:00-11:00 | | **Calibration (pre-assessment)**, Form A or B. In the background, the 3D chunk and today's mission packs prefetch and a 1 s tier benchmark runs. |
 | 11:00-13:00 | | **Six Beats:** each S.H.I.E.L.D. letter lights a district and a Guardian silhouette while the facilitator explains it. |
@@ -685,7 +685,7 @@ Screen time stays within the risk assessment's 15-20 minute bursts: missions are
   - Confidence items (KPI 4) appear in both pre and post.
   - **Post** takes about 6 min and adds the feedback form.
   - Items are piloted for difficulty in co-design Weeks 1-3.
-- **Return to Lumen** (`/return`, 2-4 weeks later):
+- **Return to ShieldQuest City** (`/return`, 2-4 weeks later):
   - The partner sends the link through its own channel. We send nothing.
   - Entering the code opens **Form C**.
   - It also opens **one Wildcard Moment** and the **"jammed Freeze" frame**. In that frame, HOLD fails for one second, and the player must make a real-world Hold: put the phone face down for 10 s, stop replying, and choose *who* to tell. This corrects the "there's always time" misconception.
@@ -706,8 +706,8 @@ Replay comes from **curiosity, mastery, contribution and story**. It never comes
    - A page unlocks when you **spot** the tactic (pin it or name it), never when you fall for it.
    - It fills with up to 3 sightings from different surfaces, side by side, plus a one-line counter-move. It doubles as a take-home field guide.
 3. **Guardian Bond Book:** 6 Guardians × 3 Bond marks. All rules are visible; marks are cosmetic.
-4. **Your Lumen Block** (solo): finishing Moments restores your home block (lights, plants, a kopi stall reopening, Guardians perched around it). Deterministic and cosmetic.
-5. **Return to Lumen:** the 2-4 week event (7.6).
+4. **Your Home Block** (solo): finishing Moments restores your home block (lights, plants, a kopi stall reopening, Guardians perched around it). Deterministic and cosmetic.
+5. **Return to ShieldQuest City:** the 2-4 week event (7.6).
 6. **New Moments:** reviewed batches and approved Moment Cards arrive with a soft ripple on the map.
 7. **City Pulse:** room-level lanterns during a session. *(A pilot-wide "Community Light" city is deferred.)*
 8. **Private mirrors, computed on the device and never uploaded:**
@@ -906,11 +906,11 @@ Every helpline, legal or statistical line carries one of these keys in the Porta
 - **Lines:** platform reporting, then the OSC [S11]; "Singapore has laws against harassment and online harms."
 
 **M07 The Lucky Draw Booth** (Retail, mall atrium. **10-13**, 14-16, 17-24)
-- **Premise:** Mei, 12. A promoter offers free bubble tea and a lucky-draw entry for a "Lumen Tab" if she scans a QR code and fills in her full name, birth date, address, a parent's phone number and a selfie ("draw closes at 5!").
+- **Premise:** Mei, 12. A promoter offers free bubble tea and a lucky-draw entry for a "Metro Tab" if she scans a QR code and fills in her full name, birth date, address, a parent's phone number and a selfie ("draw closes at 5!").
 - **Players inspect the form's fields and never type anything.**
 - **Clues:**
   - far more data requested than a draw needs;
-  - the QR leads to `lumen-luckydraw.test`, not the mall's site;
+  - the QR leads to `metro-luckydraw.test`, not the mall's site;
   - no organiser name and no terms;
   - red herring: the mall's genuine kiosk, which asks only for a star rating.
 - **Exits:**
@@ -986,7 +986,7 @@ Every helpline, legal or statistical line carries one of these keys in the Porta
 - **14-16 variant:** S$30 to receive an e-wallet top-up and forward it. Three Exits. Consequences in simple words: "the account was restricted, and a trusted adult helped sort it out".
 
 **M10 Behind the Stall** (Digi Sky, Barang Market, reached by DIVE from the food court. **14-16**; 10-13 as a card-pack pre-order with 2-3 Exits; 17-24 as a concert-lightstick deposit)
-- **Premise:** Jun, 15, wants a sealed *Lumen Legends* trading-card box at 55% below the usual price. It's a pre-order that "arrives in 3 months". The seller wants a 50% deposit by bank transfer now, asks to move off the platform's chat ("no fees"), and has five-star reviews.
+- **Premise:** Jun, 15, wants a sealed *Metro Legends* trading-card box at 55% below the usual price. It's a pre-order that "arrives in 3 months". The seller wants a 50% deposit by bank transfer now, asks to move off the platform's chat ("no fees"), and has five-star reviews.
 - **Signature moment:** orbit behind the glossy booth and find a **cardboard facade propped up on sticks. Every review lantern was hung on the same day.**
 - **Clues:**
   - a price far below market;
@@ -1010,14 +1010,14 @@ Every helpline, legal or statistical line carries one of these keys in the Porta
   - All marketplaces are fictional.
 
 **M11 Parcel Re-delivery** (Digi-District, phone kiosk, with a DIVE to the fake site. **14-16**, 10-13, 17-24)
-- **Premise:** Sara, 16, is expecting a parcel. A message arrives: "LumenPost: parcel undeliverable. Pay S$1.80 re-delivery fee within 24h". It links to `lumenpost-redeliver.test`, which asks for her card details, then an OTP "to verify".
+- **Premise:** Sara, 16, is expecting a parcel. A message arrives: "MetroPost: parcel undeliverable. Pay S$1.80 re-delivery fee within 24h". It links to `metropost-redeliver.test`, which asks for her card details, then an OTP "to verify".
   - If `dataLeaked` is set (from M07), the message uses her real name.
 - **Clues:**
   - the lookalike domain;
   - the OTP request;
   - the urgency;
   - the sender name (a sender ID alone proves nothing [S22]);
-  - red herring: LumenPost's real app shows the parcel "out for delivery".
+  - red herring: MetroPost's real app shows the parcel "out for delivery".
 - **Exits:**
   - A: pay through the link and enter the OTP.
   - B: call the number given in the message.
@@ -1575,7 +1575,7 @@ interface HelpChannel { id: string; bands: Band[]; situation: string; textKey: s
 | **Weeks 6-7** | Grant mechanics | <ul><li>DCE in sessions: Aftershock slots, Ripple Trace, sealed forecasts and Shadow check, Late Hold.</li><li>Peer Shield with GUARD/DOUBT.</li><li>All six Guardian rules and abilities; Bond Book (local).</li><li>Pressure Surge and Shieldfin swim.</li><li>Room Freeze, Look Up, Freeze All.</li><li>Debrief: Stop Frames, Flip the Board, Shield Lines Wall.</li><li>Solo v1 with Echo Council.</li></ul> |
 | **Weeks 8-9** | Portal and content | <ul><li>Portal: library and coverage matrix, Composer (form plus live preview), script and Ripple editors, moment-lint, two-signature publish, Help Card editor, Polly publish.</li><li>Moment Cards with scrubber and moderation queue.</li><li>Analytics views and dashboard (n ≥ 5).</li><li>Sets S2/S4/S6/S7 and DIVE.</li><li>**Content sprint:** all 17-24 and 14-16 variants, PS1, tutorial.</li><li>**Printable kit export** (proposal: offline companion kit by Week 9).</li></ul> |
 | **Weeks 10-12** (Jan 2027) | Test and refine | <ul><li>Accessibility pass (10.1); device lab; tier tuning.</li><li>bot-squad load tests.</li><li>Two usability rounds.</li><li>Facilitator toolkit v1 (run sheet, scripts, ground rules, ACT mapping, Help Card).</li><li>Lighthouse budgets green; security review.</li><li>**Full 90-minute dress rehearsal** with bots and about 10 volunteers.</li><li>**Feature freeze at the end of Week 12.**</li></ul> |
-| **Weeks 13-18** (Feb-Mar) | Controlled pilots | <ul><li>**NYP pilot** (17-24) in Weeks 13-14.</li><li>Fixes and wording in Weeks 15-16.</li><li>**Return to Lumen** live by Week 15 (Form C, Wildcard, jammed Freeze) for the NYP follow-up 2-4 weeks later.</li><li>Intended **ITE pilot** in Weeks 17-18.</li><li>During pilot weeks: bug fixes and content only; hotfixes outside session hours.</li></ul> |
+| **Weeks 13-18** (Feb-Mar) | Controlled pilots | <ul><li>**NYP pilot** (17-24) in Weeks 13-14.</li><li>Fixes and wording in Weeks 15-16.</li><li>**Return to ShieldQuest City** live by Week 15 (Form C, Wildcard, jammed Freeze) for the NYP follow-up 2-4 weeks later.</li><li>Intended **ITE pilot** in Weeks 17-18.</li><li>During pilot weeks: bug fixes and content only; hotfixes outside session hours.</li></ul> |
 | **Weeks 19-22** (Mar-Apr) | Refined community pilot | <ul><li>Enable the 10-13 band (rail camera, Mood reveal, Daylight grade, PS2, the 10-13 variants).</li><li>Secondary-school and community sessions.</li><li>**Community activation** (solo QR posters plus a Big Screen session).</li><li>Content batch 2, including approved Moment Cards.</li><li>Solo Nightfall and Morning After.</li></ul> |
 | **Weeks 23-24** (Apr) | Evaluation and handover | <ul><li>Aggregate exports and the impact report (KPI deltas with confidence intervals; d′ and c).</li><li>Final facilitator toolkit.</li><li>Scale-up plan (including the TWA/Capacitor decision from section 2).</li><li>Retention purge scheduled.</li><li>Handover docs.</li></ul> |
 
@@ -1604,7 +1604,7 @@ interface HelpChannel { id: string; bands: Band[]; situation: string; textKey: s
 
 ## 14. Signature moments
 
-1. **The Room Freeze.** The facilitator says "Everyone, press and hold." On the projector, the rain over Lumen freezes drop by drop in proportion to the number of thumbs down. When the last person holds, the thunder cuts to silence and the hanging rain glows. The room has just practised Hold Before Acting together.
+1. **The Room Freeze.** The facilitator says "Everyone, press and hold." On the projector, the rain over the city freezes drop by drop in proportion to the number of thumbs down. When the last person holds, the thunder cuts to silence and the hanging rain glows. The room has just practised Hold Before Acting together.
 2. **Your own Hold.** The countdown reads 0:07 and Dev is halfway through "just try once lah" when you press HOLD. The tape-stop drops, colour drains, and the header reads *Nothing is rushing you now.*
 3. **The message in mid-air.** You held early, so Mel's next message is still a folded card hanging in the air: *"Don't mention it to your bank."* You read it before it lands.
 4. **LIVE 2 · HELD 7.** The counter jumps, and pausing visibly lets you see more.

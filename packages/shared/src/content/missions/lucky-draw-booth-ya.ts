@@ -16,7 +16,7 @@ export const luckyDrawBoothYa: Mission = {
   bands: ['young-adult'],
   theme: 'Identity data requests',
   premise:
-    'A mall booth gives S$10 LumenPay credit and a shot at a Lumen Tab Pro for a one-minute sign-up. The form wants Jun Hao\'s IC number, address and a selfie holding his IC.',
+    'A mall booth gives S$10 MetroPay credit and a shot at a Metro Tab Pro for a one-minute sign-up. The form wants Jun Hao\'s IC number, address and a selfie holding his IC.',
   skillFocus: ['S', 'E'],
   timeOfDay: 'evening',
   scaffold: 'light',
@@ -27,15 +27,15 @@ export const luckyDrawBoothYa: Mission = {
     { id: 'huimin', name: 'Hui Min', role: 'friend', anchor: 'phone-shop', pose: 'phone', look: { body: '#f472b6', accent: '#831843', hair: 'long' } },
   ],
   intro:
-    'Lumen Mall, Friday, 7.25pm. Jun Hao, 19, is passing the time while his friend Hui Min picks a phone case. A booth in the atrium is giving out bubble tea, and the queue is moving fast.',
+    'Metro Mall, Friday, 7.25pm. Jun Hao, 19, is passing the time while his friend Hui Min picks a phone case. A booth in the atrium is giving out bubble tea, and the queue is moving fast.',
   live: {
     durationSec: 55,
     decisionPrompt: "The camera is counting down with Jun Hao's IC in the frame. What should he do?",
     beats: [
-      { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'The booth\'s banner glows: "WIN A LUMEN TAB PRO. Every sign-up gets S$10 LumenPay credit + free bubble tea."' },
-      { id: 'b2', at: 4, from: 'promoter', channel: 'speech', text: 'Bro, free S$10 credit, confirm. Plus the Lumen Tab Pro draw tonight!', tactic: 'too-good' },
-      { id: 'b3', at: 9, from: 'promoter', channel: 'speech', text: 'Just scan this, one minute only.', attachment: { kind: 'code', label: 'QR standee', detail: 'Opens lumen-luckydraw.test' } },
-      { id: 'b4', at: 14, from: 'narrator', channel: 'scene', text: 'The sign-up form loads on Jun Hao\'s phone.', attachment: { kind: 'link', label: 'lumen-luckydraw.test/signup', detail: 'Full name · Date of birth · IC number · Home address · Mobile number · Selfie holding your IC' } },
+      { id: 'b1', at: 1, from: 'narrator', channel: 'scene', text: 'The booth\'s banner glows: "WIN A METRO TAB PRO. Every sign-up gets S$10 MetroPay credit + free bubble tea."' },
+      { id: 'b2', at: 4, from: 'promoter', channel: 'speech', text: 'Bro, free S$10 credit, confirm. Plus the Metro Tab Pro draw tonight!', tactic: 'too-good' },
+      { id: 'b3', at: 9, from: 'promoter', channel: 'speech', text: 'Just scan this, one minute only.', attachment: { kind: 'code', label: 'QR standee', detail: 'Opens metro-luckydraw.test' } },
+      { id: 'b4', at: 14, from: 'narrator', channel: 'scene', text: 'The sign-up form loads on Jun Hao\'s phone.', attachment: { kind: 'link', label: 'metro-luckydraw.test/signup', detail: 'Full name · Date of birth · IC number · Home address · Mobile number · Selfie holding your IC' } },
       { id: 'b5', at: 19, from: 'junhao', channel: 'speech', text: 'Why do you need my IC for a lucky draw?' },
       { id: 'b6', at: 23, from: 'promoter', channel: 'speech', text: "Standard procedure lah, to verify you're 18 and above. All the big brands do it.", tactic: 'authority' },
       { id: 'b7', at: 29, from: 'huimin', channel: 'speech', text: 'Eh, malls do real lucky draws what. I won a S$50 voucher last Chinese New Year.' },
@@ -46,8 +46,8 @@ export const luckyDrawBoothYa: Mission = {
     ],
   },
   clues: [
-    { id: 'c-prize', label: 'S$10 credit, bubble tea and a Lumen Tab Pro draw, for one minute', target: { kind: 'beat', beatId: 'b2' }, redFlag: true, tactic: 'too-good', explain: 'The giveaway is cheap. What it buys is worth far more: a full identity profile, collected in a minute.' },
-    { id: 'c-link', label: "The QR opens lumen-luckydraw.test, not the mall's own site or app", target: { kind: 'beat', beatId: 'b3' }, redFlag: true, explain: 'A QR code is just a link someone printed. This one sends everything to a site with no connection to the mall.' },
+    { id: 'c-prize', label: 'S$10 credit, bubble tea and a Metro Tab Pro draw, for one minute', target: { kind: 'beat', beatId: 'b2' }, redFlag: true, tactic: 'too-good', explain: 'The giveaway is cheap. What it buys is worth far more: a full identity profile, collected in a minute.' },
+    { id: 'c-link', label: "The QR opens metro-luckydraw.test, not the mall's own site or app", target: { kind: 'beat', beatId: 'b3' }, redFlag: true, explain: 'A QR code is just a link someone printed. This one sends everything to a site with no connection to the mall.' },
     { id: 'c-fields', label: 'IC number, address, mobile and a selfie holding the IC', target: { kind: 'beat', beatId: 'b4' }, redFlag: true, explain: 'A draw needs one way to reach the winner. A name, IC number, address and an IC selfie together are enough to pass as Jun Hao.' },
     { id: 'c-ic', label: '"Standard procedure" to check age with an IC selfie', target: { kind: 'beat', beatId: 'b6' }, redFlag: true, tactic: 'authority', explain: 'A face next to an ID card is what is used to prove who you are. A lucky draw has no reason to collect it, and "all the big brands do it" is not a source.' },
     { id: 'c-badge', label: '"Official Event Partner" badge with a lookalike mall logo', target: { kind: 'beat', beatId: 'b8' }, redFlag: true, tactic: 'fake-proof', explain: 'The booth printed its own badge. Logos are easy to copy, and "100% secure" is a claim from the people asking.' },
@@ -59,14 +59,14 @@ export const luckyDrawBoothYa: Mission = {
   influence: {
     from: 'promoter',
     hidden: {
-      label: 'Whoever runs lumen-luckydraw.test',
+      label: 'Whoever runs metro-luckydraw.test',
       description:
         'The booth is a front for collecting identity details in bulk. A name, IC number, address and an IC selfie together can be used to impersonate someone, or passed on to make scam messages that sound real.',
     },
     question: 'Pull the thread from the promoter. Who gains most if Jun Hao completes the sign-up?',
     options: [
       { id: 'i-mall', text: 'The mall. It wants data on its shoppers.', correct: false, explain: "The mall's own screen asks for stars only, and the form never touches the mall's site. The thread runs elsewhere." },
-      { id: 'i-site', text: 'Whoever runs lumen-luckydraw.test. They walk away with a ready-made identity kit.', correct: true, explain: 'Right. The S$10 is the cost of doing business. An IC number plus an IC selfie can be reused again and again.' },
+      { id: 'i-site', text: 'Whoever runs metro-luckydraw.test. They walk away with a ready-made identity kit.', correct: true, explain: 'Right. The S$10 is the cost of doing business. An IC number plus an IC selfie can be reused again and again.' },
       { id: 'i-promoter', text: 'The promoter. Each sign-up earns a commission, and that is all.', correct: false, explain: "The promoter may well be paid per sign-up, but the thread keeps going: the details go to the site's owners, who keep them." },
     ],
   },
@@ -74,7 +74,7 @@ export const luckyDrawBoothYa: Mission = {
     question: 'If Jun Hao completes the sign-up, what is most likely within the next month or two?',
     horizon: 'next-month',
     options: [
-      { id: 'f-win', text: 'He wins the Lumen Tab Pro.', likely: false },
+      { id: 'f-win', text: 'He wins the Metro Tab Pro.', likely: false },
       { id: 'f-impersonate', text: "Messages and fake profiles start using Jun Hao's name, details and face.", likely: true },
       { id: 'f-spam', text: 'A few marketing SMSes, nothing worse.', likely: false },
     ],
@@ -87,7 +87,7 @@ export const luckyDrawBoothYa: Mission = {
       safety: 'risky',
       outcome: {
         title: '+S$10 credit',
-        text: 'Jun Hao holds his IC next to his face, the camera clicks, and S$10 LumenPay credit lands a minute later. "Good luck tonight!" It really did take one minute.',
+        text: 'Jun Hao holds his IC next to his face, the camera clicks, and S$10 MetroPay credit lands a minute later. "Good luck tonight!" It really did take one minute.',
         mood: 'shiny',
         effects: { wallet: 10 },
       },
@@ -102,7 +102,7 @@ export const luckyDrawBoothYa: Mission = {
         afterMissions: 2,
         timeLabel: '6 WEEKS LATER',
         title: "Jun Hao's details are being used",
-        text: 'A classmate messages: "Bro, is this your new ChatLah account? It\'s asking me to lend it S$300." The profile uses his booth selfie. The same week, an SMS arrives with his full name and IC number: "Harbour Bank: confirm your new card at harbour-verify.test." Nobody won a Lumen Tab Pro that night.',
+        text: 'A classmate messages: "Bro, is this your new ChatLah account? It\'s asking me to lend it S$300." The profile uses his booth selfie. The same week, an SMS arrives with his full name and IC number: "Harbour Bank: confirm your new card at harbour-verify.test." Nobody won a Metro Tab Pro that night.',
         effects: { trust: -2, risk: 2 },
         fact: {
           text: 'ScamShield\'s advice: "Check for scam signs and with official sources." That means the bank\'s own app or the number on your card, never a link in the message.',
@@ -141,7 +141,7 @@ export const luckyDrawBoothYa: Mission = {
       safety: 'unsure',
       outcome: {
         title: 'A card with another QR',
-        text: 'The promoter hands over a glossy card: "All the terms are here." The QR opens lumen-luckydraw.test/terms, on the same site, written by the same people. Asking was smart. The answer just cannot be checked.',
+        text: 'The promoter hands over a glossy card: "All the terms are here." The QR opens metro-luckydraw.test/terms, on the same site, written by the same people. Asking was smart. The answer just cannot be checked.',
         mood: 'sober',
         effects: {},
       },
@@ -157,7 +157,7 @@ export const luckyDrawBoothYa: Mission = {
       safety: 'safe',
       outcome: {
         title: 'Not on the list',
-        text: '"No lucky draw is registered with us today," the customer service officer says, and calls mall security to speak to the booth. Jun Hao reports lumen-luckydraw.test in the ScamShield app. Hui Min goes quiet: she signed up ten minutes ago.',
+        text: '"No lucky draw is registered with us today," the customer service officer says, and calls mall security to speak to the booth. Jun Hao reports metro-luckydraw.test in the ScamShield app. Hui Min goes quiet: she signed up ten minutes ago.',
         mood: 'warm',
         effects: { trust: 2, risk: -1 },
       },
@@ -185,9 +185,9 @@ export const luckyDrawBoothYa: Mission = {
   peerShield: {
     friend: 'huimin',
     timeLabel: 'THAT NIGHT',
-    setup: 'Near midnight, Hui Min messages Jun Hao. She gave the booth everything, IC selfie included, and now a "Lumen Lucky Draw" account says she has won.',
+    setup: 'Near midnight, Hui Min messages Jun Hao. She gave the booth everything, IC selfie included, and now a "Metro Lucky Draw" account says she has won.',
     messages: [
-      { from: 'huimin', text: 'eh I WON the lumen tab pro?? they just texted me' },
+      { from: 'huimin', text: 'eh I WON the metro tab pro?? they just texted me' },
       { from: 'huimin', text: 'need to pay S$30 processing fee and confirm my details by midnight' },
       { from: 'huimin', text: "don't tell the others yet ok, I want to surprise them 😆" },
     ],

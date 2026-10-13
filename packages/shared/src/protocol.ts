@@ -569,6 +569,120 @@ export const ROOM_MIN_N = 5;
 export const ROOM_MIN_SQUADS = 2;
 
 // ---------------------------------------------------------------------------------------------
+// Squad Dash: a short, optional team quiz the Conductor runs between missions (or as a warm-up).
+// Questions come from the chance bank (content/chance.ts). Each squad answers as one: every player taps,
+// the squad's pick is its majority, and only squads are ever scored. Nobody sees who tapped what.
+
+/** Round lengths the Conductor can choose. */
+export const DASH_LENGTHS = [4, 6, 8] as const;
+export type DashLength = (typeof DASH_LENGTHS)[number];
+
+/** question: players tap · reveal: answer + why · results: squad totals and a closing tip. */
+export const DASH_STAGES = ['question', 'reveal', 'results'] as const;
+export type DashStage = (typeof DASH_STAGES)[number];
+
+/** Once every active player has tapped, the question reveals after this many seconds (not in Calm Mode). */
+export const DASH_ALL_IN_SEC = 5;
+
+/**
+ * Seconds to answer one question: a soft clock, longer for the junior band and with Relaxed timing.
+ * In Calm Mode there is no clock at all (the Conductor reveals when the room is ready).
+ */
+export function dashQuestionSec(input: { band: BandId; relaxed?: boolean }): number {
+  const base = input.band === 'junior' ? 30 : 20;
+  return Math.round(base * (input.relaxed ? 1.5 : 1));
+}
+
+/**
+ * The squad's pick for a question: the option most of its players tapped. A tie for the top is a split
+ * (no pick, so it does not score), and so is a question nobody answered.
+ */
+export function dashSquadPick(counts: readonly ChoiceCount[]): string | null {
+  return majorityOf(counts).winner;
+}
+
+export interface DashResult {
+  /** The squad's majority pick, or null for a split (tied top) or no taps. */
+  pick: string | null;
+  correct: boolean;
+  /** Players tapped, but the top options were tied. */
+  split: boolean;
+  /** Players who tapped (a count only). */
+  answered: number;
+}
+
+export interface DashScore {
+  /** Questions this squad got right. */
+  correct: number;
+  /** Questions this squad was scored on. */
+  played: number;
+}
+
+/** What every audience gets about a running Squad Dash. Times are server epoch ms. */
+export interface DashBase {
+  /** Changes for every new round (clients reset local state on a new id). */
+  id: string;
+  /** Questions in this round (fewer than chosen only if a band runs short). */
+  length: number;
+  /** Current question, 0-based (on the results card: the number of questions played). */
+  index: number;
+  stage: DashStage;
+  /** The current question id (look it up with chanceById), or null on the results card. */
+  questionId: string | null;
+  stageStartedAt: number;
+  /** Soft countdown for the question; null in Calm Mode, after the question and while paused. */
+  endsAt: number | null;
+  /** No countdown visuals (Calm or Gentle mode). */
+  quiet: boolean;
+  /** On reveal: squads whose pick was right, out of the squads scored on this question. */
+  room: { correct: number; squads: number } | null;
+  /** Running room total: right squad picks out of squad picks scored so far. */
+  totals: { correct: number; played: number };
+}
+
+export interface SeatDashView extends DashBase {
+  /** This squad's taps per option (counts only, never who); null on the results card. */
+  tally: { counts: ChoiceCount[]; answered: number; total: number } | null;
+  /** This phone's own taps per player. optionId is omitted on shared (pass-and-play) phones. */
+  mine: { player: number; optionId?: string }[];
+  /** On reveal: this squad's pick and whether it was right. */
+  result: DashResult | null;
+  score: DashScore;
+}
+
+export interface HostDashSquad {
+  squadId: SquadTotemId;
+  name: string;
+  shape: string;
+  /** Players who have tapped this question / players who can (counts only, never which option). */
+  answered: number;
+  total: number;
+  /** On reveal: the squad's pick (squad-level only). */
+  result: DashResult | null;
+  score: DashScore;
+}
+
+export interface HostDashView extends DashBase {
+  squads: HostDashSquad[];
+  /** Every question scored or skipped so far, room level. */
+  rounds: { questionId: string; skipped: boolean; correct: number; squads: number }[];
+}
+
+export interface ScreenDashSquad {
+  squadId: SquadTotemId;
+  name: string;
+  shape: string;
+  answered: number;
+  total: number;
+  score: DashScore;
+}
+
+export interface ScreenDashView extends DashBase {
+  /** Fixed totem order, never ranked. */
+  squads: ScreenDashSquad[];
+}
+
+// ---------------------------------------------------------------------------------------------
 // Snapshot building blocks
 
 export type Audience = 'host' | 'screen' | 'seat';
@@ -709,7 +823,7 @@ export interface AftershockDelivery {
   forecast: { matched: number; total: number };
 }
 
-/** "Meanwhile, in another Lumen…": the risky branch a safe squad avoided, so every forecast can be checked. */
+/** "Meanwhile, in another timeline…": the risky branch a safe squad avoided, so every forecast can be checked. */
 export interface ShadowCheck {
   missionId: string;
   choiceId: string;
@@ -747,8 +861,8 @@ export interface SquadMissionView {
   shared: boolean;
 }
 
-export interface SquadLumen {
-  /** In-fiction S$ for the squad's Lumen. */
+export interface SquadCity {
+  /** In-fiction S$ for the squad's city. (The `lumen` field name is kept for saved-session compatibility.) */
   wallet: number;
   /** Per-district Trust Meter, -3..+3. */
   trust: Partial<Record<DistrictId, number>>;
@@ -763,7 +877,7 @@ export interface SquadView {
   members: SquadMember[];
   /** Guardians the squad has bonded this session (shared credit). */
   guardians: GuardianId[];
-  lumen: SquadLumen;
+  lumen: SquadCity;
   /** The squad's decided Exit per finished mission (for Ripple Trace and later scenes). */
   decisions: { missionId: string; choiceId: string }[];
   mission: SquadMissionView | null;
@@ -823,6 +937,8 @@ export interface SeatSnapshot extends SnapshotBase {
   squad: SquadView;
   me: SeatPrivate;
   debrief: DebriefView | null;
+  /** A running Squad Dash (absent from older servers). */
+  dash?: SeatDashView | null;
 }
 
 export interface HostSeat {
@@ -898,6 +1014,7 @@ export interface HostSnapshot extends SnapshotBase {
   };
   spotlight: SquadTotemId | null;
   debrief: DebriefView | null;
+  dash?: HostDashView | null;
 }
 
 export interface ScreenSquad {
@@ -934,6 +1051,7 @@ export interface ScreenSnapshot extends SnapshotBase {
   room: RoomPositive;
   spotlight: SpotlightView | null;
   debrief: DebriefView | null;
+  dash?: ScreenDashView | null;
 }
 
 export interface ShieldLine {
@@ -1093,7 +1211,18 @@ export type HostCommand =
   /** Put a squad's Evidence Board on the Big Screen (only after its Safety Lead tapped Share), or null to clear. */
   | { type: 'spotlight'; squadId: SquadTotemId | null }
   /** First call: Long Fast-Forward + debrief. Second call (in debrief): end and close the session. */
-  | { type: 'endSession' };
+  | { type: 'endSession' }
+  /**
+   * Squad Dash (only while no mission is running: in the lobby or at Look Up). Starting a mission, the Room
+   * Freeze or the debrief closes an open Dash first. While a Dash is open, `next` does what dashNext does.
+   */
+  | { type: 'dashStart'; questions: DashLength }
+  /** Question -> reveal now; reveal -> next question (or the results card); results -> close the Dash. */
+  | { type: 'dashNext' }
+  /** Drop the current question unscored and move on. */
+  | { type: 'dashSkip' }
+  /** Straight to the results card (the current question is dropped unless revealed); on the results card, close. */
+  | { type: 'dashEnd' };
 
 export interface ClientToServerEvents {
   /** Full snapshot for this socket's audience (e.g. on visibilitychange). */
@@ -1120,6 +1249,8 @@ export interface ClientToServerEvents {
   roomHold: (p: { on: boolean }, ack: AckFn) => void;
   lateHold: (p: { key: string; optionId: string } & PlayerRef, ack: AckFn) => void;
   signal: (p: { kind: 'see-differently' }, ack: AckFn) => void;
+  /** Squad Dash tap (changeable until the reveal). */
+  dashAnswer: (p: { questionId: string; optionId: string } & PlayerRef, ack: AckFn) => void;
   // Conductor
   command: (cmd: HostCommand, ack: AckFn) => void;
 }
@@ -1249,7 +1380,34 @@ export interface SessionAggregate {
   lanterns: number;
   /** True once the session ended normally (false while in progress or after an idle expiry). */
   complete: boolean;
+  /** Squad Dash counts (squad level only; absent when no Dash was played). */
+  dash?: DashAggregate;
 }
+
+export interface DashAggregate {
+  /** Squad Dash rounds opened. */
+  rounds: number;
+  /** Questions revealed (skipped ones are not counted). */
+  questions: number;
+  /** Squad picks scored (squads x questions) and how many were right. */
+  squadAnswers: number;
+  squadCorrect: number;
+  /** Squad picks that were a split (tied top) and squads with no taps. */
+  splits: number;
+  none: number;
+  /** Per question id: squads scored and squads right. */
+  byQuestion: Record<string, { squads: number; correct: number }>;
+}
+
+export const emptyDashAggregate = (): DashAggregate => ({
+  rounds: 0,
+  questions: 0,
+  squadAnswers: 0,
+  squadCorrect: 0,
+  splits: 0,
+  none: 0,
+  byQuestion: {},
+});
 
 export function emptyMissionAggregate(missionId: string): MissionAggregate {
   return {

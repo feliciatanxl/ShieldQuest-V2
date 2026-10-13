@@ -26,7 +26,7 @@ export function SectionHead({
 }: {
   id: string;
   kicker: string;
-  title: string;
+  title: ReactNode;
   lead?: string;
   tone?: 'night' | 'paper';
   align?: 'start' | 'center';

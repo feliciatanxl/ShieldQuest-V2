@@ -219,7 +219,7 @@ export function RoomCode({ code, className }: { code: string; className?: string
   );
 }
 
-/** Short join URL without the protocol, e.g. "lumen.example/j/H7KQ2M". */
+/** Short join URL without the protocol, e.g. "metro.example/j/H7KQ2M". */
 export function joinUrl(path: string): { full: string; short: string } {
   const origin = typeof window === 'undefined' ? '' : window.location.origin;
   return { full: `${origin}${path}`, short: `${origin.replace(/^https?:\/\//, '')}${path}` };

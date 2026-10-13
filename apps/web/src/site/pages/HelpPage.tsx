@@ -1,10 +1,11 @@
 import { GAME, HELP_CHANNELS, helpById } from '@shieldquest/shared';
 import { Link } from 'wouter';
 import { Icon, type IconName } from '../../ui/Icon';
-import { HELP_GROUPS } from '../data';
+import { HELP_GROUPS, PLAYER_FAQ } from '../data';
 import { Reveal, Stagger, StaggerItem } from '../motion';
 import { SiteLayout } from '../SiteLayout';
-import { PageHero } from '../parts';
+import { Faq, PageHero, SectionHead } from '../parts';
+import '../home.css';
 import '../pages.css';
 
 const GROUP_ICON: Record<string, IconName> = { check: 'eye', report: 'shield', talk: 'chat' };
@@ -148,6 +149,18 @@ export function HelpPage() {
               </ul>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      <section className="site-section site-section--tint" id="faq" aria-labelledby="faq-title">
+        <div className="container site-faqwrap">
+          <SectionHead
+            id="faq-title"
+            kicker="Questions about the game"
+            title="Good questions, straight answers."
+            lead="Something else on your mind? The safety page and the educator guide go deeper."
+          />
+          <Faq items={PLAYER_FAQ} />
         </div>
       </section>
 

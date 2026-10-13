@@ -1,0 +1,553 @@
+/* Squad Dash (prefix: sq-dash, sq-scr-dash, sq-dashpanel): the phone, the projector and the Conductor panel.
+   Mobile-first (320 px), rem everywhere so the text-size setting scales it. The answer is marked with an icon
+   and the word "Answer", never by colour alone. Animations collapse under reduced motion (squad.css). */
+
+/* ------------------------------------------------------------------------------------------------
+   Phone */
+.sq-dash__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.sq-dash__kicker .sq-totem__name {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text);
+}
+.sq-dash__prompt {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.4rem, 6vw, 1.9rem);
+}
+.sq-dash__prompt:focus {
+  outline: none;
+}
+/* Focus moves here on every new question: keep it clear of the sticky header. */
+.sq-dash__prompt {
+  scroll-margin-top: 5rem;
+}
+.sq-dash .sq-note {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+.sq-dash .sq-note > svg {
+  margin-top: 0.15em;
+}
+.sq-dash__question {
+  margin: 0 0 0.9rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.sq-dash__players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+}
+.sq-dash__player {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: var(--tap);
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 650;
+  touch-action: manipulation;
+}
+.sq-dash__player[aria-pressed='true'] {
+  background: var(--frost);
+  border-color: var(--frost);
+  color: var(--ink);
+}
+
+.sq-dash__opts {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+.sq-dash-opt {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: 'letter text' 'letter tally' 'flag flag';
+  align-items: center;
+  gap: 0.2rem 0.75rem;
+  width: 100%;
+  min-height: calc(var(--tap) + 0.75rem);
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--line-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  touch-action: manipulation;
+  transition:
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    opacity 200ms var(--ease-out);
+}
+.sq-dash-opt:hover:not([aria-disabled]) {
+  border-color: var(--text-2);
+}
+.sq-dash-opt[aria-pressed='true'] {
+  border-color: var(--frost);
+  background: rgba(207, 232, 255, 0.14);
+  box-shadow: 0 0 0 2px rgba(207, 232, 255, 0.35);
+}
+.sq-dash-opt[aria-disabled] {
+  cursor: default;
+}
+.sq-dash-opt[data-answer] {
+  border-color: var(--safe);
+  border-width: 3px;
+  background: rgba(46, 211, 152, 0.14);
+  animation: sq-rise 320ms var(--ease-out) both;
+}
+.sq-dash-opt[data-dim] {
+  opacity: 0.62;
+}
+.sq-dash-opt__letter {
+  grid-area: letter;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.sq-dash-opt[aria-pressed='true'] .sq-dash-opt__letter {
+  background: var(--frost);
+}
+.sq-dash-opt__text {
+  grid-area: text;
+  font-weight: 650;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.sq-dash-opt__tally {
+  grid-area: tally;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.5rem;
+  color: var(--text-2);
+  font-size: 0.88rem;
+}
+.sq-dash-opt__dots {
+  letter-spacing: 0.15em;
+  color: var(--text);
+}
+.sq-dash-opt__flag,
+.sq-dash-opt__mine {
+  grid-area: flag;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.sq-dash-opt__flag {
+  background: var(--safe);
+  color: var(--ink);
+}
+.sq-dash-opt__mine {
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+}
+.sq-dash-opt[data-answer] .sq-dash-opt__mine {
+  grid-area: auto;
+  grid-column: 1 / -1;
+}
+
+.sq-dash__live {
+  margin: 0 0 0.5rem;
+  font-weight: 650;
+}
+.sq-dash__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  margin: 0.5rem 0 1rem;
+  font-weight: 650;
+}
+.sq-dash__status > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.sq-dash__calm {
+  color: var(--text-2);
+  font-weight: 500;
+}
+
+.sq-dash__reveal {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.sq-dash__why {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-left: 0.3rem solid var(--safe);
+  border-radius: var(--radius-sm);
+  background: rgba(20, 32, 51, 0.6);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+.sq-dash__result {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+.sq-dash__result > svg {
+  flex: none;
+  margin-top: 0.2em;
+}
+.sq-dash__result[data-correct] > svg {
+  color: var(--safe);
+}
+.sq-dash__room,
+.sq-dash__score {
+  margin: 0;
+  color: var(--text-2);
+}
+
+.sq-dash__bigscore {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  margin: 0.5rem 0 1rem;
+}
+.sq-dash__bigscore strong {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--gold);
+}
+.sq-dash__bigscore span {
+  font-size: 1.1rem;
+  font-weight: 650;
+}
+.sq-dash__results .sq-callout {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.sq-dash__results .sq-callout > svg {
+  flex: none;
+  margin-top: 0.2em;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Projector (1rem is the smallest text there) */
+.sq-scr-dash {
+  display: grid;
+  gap: 0.7rem;
+  width: min(100%, 52rem);
+  max-height: 100%;
+  padding: 0.7rem 1.1rem;
+  border-radius: var(--radius-lg);
+  background: rgba(14, 22, 42, 0.84);
+  animation: sq-rise 420ms var(--ease-out);
+}
+.sq-scr-dash__prompt {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 650;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.sq-scr-dash__opts {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+.sq-scr-dash__opts[data-count='3'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.sq-scr-dash__opt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--radius);
+  border: 2px solid rgba(244, 239, 230, 0.35);
+  background: rgba(244, 239, 230, 0.08);
+  font-size: 1.05rem;
+  font-weight: 650;
+  transition: opacity 300ms var(--ease-out);
+}
+.sq-scr-dash__opt[data-answer] {
+  border: 4px solid var(--safe);
+  background: rgba(46, 211, 152, 0.18);
+}
+.sq-scr-dash__opt[data-dim] {
+  opacity: 0.5;
+}
+.sq-scr-dash__letter {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.sq-scr-dash__flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--safe);
+  color: var(--ink);
+  font-size: 1rem;
+}
+.sq-scr-dash__why {
+  margin: 0;
+  padding-left: 0.6rem;
+  border-left: 0.25rem solid var(--safe);
+  font-size: 1.15rem;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+.sq-scr-dash[data-stage='reveal'] .sq-scr-dash__prompt {
+  font-size: 1.05rem;
+  color: var(--text-2);
+}
+.sq-scr-dash[data-stage='reveal'] .sq-scr-dash__opt {
+  padding-block: 0.25rem;
+}
+.sq-scr-dash__squads,
+.sq-scr-dash__totals {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.2rem;
+  margin: 0;
+  padding: 0;
+}
+.sq-scr-dash__squads li,
+.sq-scr-dash__totals li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1rem;
+}
+.sq-scr-dash__squads li[data-in] .sq-scr-dash__n {
+  color: var(--safe);
+}
+.sq-scr-dash__segs {
+  display: inline-flex;
+  gap: 0.15rem;
+}
+.sq-scr-dash__segs span {
+  width: 0.45em;
+  height: 1em;
+  border-radius: 0.15em;
+  border: 2px solid rgba(244, 239, 230, 0.55);
+}
+.sq-scr-dash__segs span[data-on] {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.sq-scr-dash__n {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.sq-scr-dash--results {
+  justify-items: center;
+}
+.sq-scr-dash__totals {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+.sq-scr-dash__totals li {
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius);
+  background: rgba(244, 239, 230, 0.08);
+}
+.sq-scr-dash__total {
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+.sq-scr-dash__total strong {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--gold);
+}
+.sq-scr-dash__tip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 650;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------------------------------------
+   Conductor panel */
+.sq-dashpanel {
+  display: grid;
+  gap: 0.6rem;
+}
+.sq-dashpanel .sq-panel__title {
+  margin-bottom: 0;
+}
+.sq-dashpanel[data-live] {
+  border-color: rgba(242, 193, 78, 0.55);
+}
+.sq-dashpanel__lead,
+.sq-dashpanel__hint {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.95rem;
+}
+.sq-dashpanel__lengths {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.sq-dashpanel__lengths legend {
+  float: left;
+  margin-right: 0.4rem;
+  font-weight: 650;
+}
+.sq-dashpanel__lengths .sq-cbtn:has(input:checked) {
+  border-color: var(--frost);
+}
+.sq-dashpanel > .ui-btn {
+  justify-self: start;
+}
+.sq-dashpanel__q {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.sq-dashpanel__prompt,
+.sq-dashpanel__answer,
+.sq-dashpanel__why,
+.sq-dashpanel__room {
+  margin: 0;
+}
+.sq-dashpanel__prompt {
+  font-weight: 650;
+}
+.sq-dashpanel__answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-2);
+}
+.sq-dashpanel__answer > svg {
+  color: var(--safe);
+}
+.sq-dashpanel__why {
+  color: var(--text-2);
+  font-size: 0.95rem;
+}
+.sq-dashpanel__squads {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+}
+.sq-dashpanel__squads li {
+  display: grid;
+  grid-template-columns: auto minmax(3rem, 1fr);
+  align-items: center;
+  gap: 0.25rem 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-2);
+}
+.sq-dashpanel__squads li[data-in],
+.sq-dashpanel__squads li[data-right] {
+  border-color: var(--safe);
+}
+.sq-dashpanel__bar {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(159, 179, 200, 0.2);
+  overflow: hidden;
+}
+.sq-dashpanel__bar span {
+  display: block;
+  height: 100%;
+  background: var(--frost);
+  transition: width 240ms var(--ease-out);
+}
+.sq-dashpanel__status {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 650;
+}
+.sq-dashpanel__status > svg {
+  color: var(--safe);
+}
+.sq-dashpanel__score {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.sq-dashpanel__room {
+  font-weight: 650;
+}

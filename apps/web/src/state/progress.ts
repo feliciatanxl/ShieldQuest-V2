@@ -14,9 +14,11 @@ import {
   type RunInput,
   type RunSummary,
 } from '@shieldquest/shared';
+import { useRewards } from './rewards';
 import { deviceStorage } from './storage';
 
-// Solo progress lives only on this device (privacy by design: no accounts, nothing uploaded).
+// Solo progress lives only on this device (privacy by design: no accounts). The optional Save Card
+// uploads it only as a blob encrypted on the device (see state/saveCard.ts).
 
 interface ProgressStore {
   progress: Progress;
@@ -38,8 +40,10 @@ export const useProgress = create<ProgressStore>()(
       progress: emptyProgress(),
       completeMission: (mission, run) => {
         const summary = evaluateRun(mission, run);
+        const firstTime = !get().progress.runs[mission.id];
         const { progress, guardianLevelUps } = applyRun(get().progress, mission, summary, Date.now());
         set({ progress });
+        useRewards.getState().mission({ district: mission.district, firstTime, safety: summary.choice.safety });
         return { summary, guardianLevelUps };
       },
       due: (endOfSession = false) => dueAftershocks(get().progress, endOfSession),

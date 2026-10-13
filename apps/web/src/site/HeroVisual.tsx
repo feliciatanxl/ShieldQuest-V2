@@ -25,7 +25,7 @@ function saveDataOn(): boolean {
 }
 
 /**
- * The hero window onto Lumen. The poster (gradient + skyline SVG) paints instantly and holds the
+ * The hero window onto ShieldQuest City. The poster (gradient + skyline SVG) paints instantly and holds the
  * layout; the live 3D city only downloads once the hero is on screen and the browser is idle,
  * then fades in on top. In 2D mode, on Save-Data, or without WebGL2 the poster is the hero.
  */
@@ -63,7 +63,7 @@ export function HeroVisual() {
       ref={ref}
       className="site-hero__visual"
       role="img"
-      aria-label="The city of Lumen at blue hour. Rain hangs in the air and the Stillpoint clock tower reads 11:59."
+      aria-label="ShieldQuest City at blue hour. Rain hangs in the air and the Stillpoint clock tower reads 11:59."
     >
       <SkylinePoster className="site-hero__poster" />
       {want3D && mode !== '2d' && (
@@ -102,7 +102,7 @@ export function HeroVisual() {
           <span className="site-hero__hold-btn">HOLD</span>
         </div>
         <span className="site-hero__time">
-          <span className="site-hero__dot" /> Lumen · 11:59
+          <span className="site-hero__dot" /> 11:59
         </span>
       </div>
     </div>

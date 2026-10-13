@@ -8,7 +8,7 @@ import { seededShuffle } from '../runLogic';
 import { PhaseHeading } from './PhaseHeading';
 import './phases.css';
 
-export const FORECAST_SEALED_LINE = 'Sealed. Lumen will check it later.';
+export const FORECAST_SEALED_LINE = 'Sealed. The city will check it later.';
 
 export interface ForecastPhaseProps {
   forecast: Forecast;
