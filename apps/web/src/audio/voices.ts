@@ -59,7 +59,7 @@ export function tickAt(ctx: AudioContext, out: AudioNode, t: number, intensity: 
   const i = clamp01(intensity);
   const v = new Voice(ctx, out);
   const body = (tock ? 1480 : 1960) * (1 + 0.15 * i);
-  const g = 0.05 + 0.12 * i;
+  const g = 0.075 + 0.11 * i;
   noiseHit(v, t, 0.016, { type: 'bandpass', freq: body * 1.7, q: 4, gain: g, attack: 0.0008 });
   const amp = v.gain(0);
   const end = ad(amp.gain, t, 0.001, g * 0.45, 0.035 - 0.012 * i);
@@ -75,8 +75,8 @@ const freeze: Recipe = (ctx, out, t) => {
   const D = 0.42;
   const amp = v.gain(0);
   amp.gain.setValueAtTime(0, t);
-  amp.gain.linearRampToValueAtTime(0.13, t + 0.012);
-  amp.gain.setValueAtTime(0.13, t + 0.2);
+  amp.gain.linearRampToValueAtTime(0.115, t + 0.012);
+  amp.gain.setValueAtTime(0.115, t + 0.2);
   amp.gain.exponentialRampToValueAtTime(FLOOR, t + D + 0.08);
   const lp = v.filter('lowpass', 3200, 0.9, amp);
   lp.frequency.setValueAtTime(3200, t);
@@ -192,7 +192,7 @@ const aftershock: Recipe = (ctx, out, t, o) => {
   const w = 0.75 + 0.25 * clamp01(o.intensity ?? 0.6);
   const amp = v.gain(0);
   amp.gain.setValueAtTime(0, t);
-  amp.gain.linearRampToValueAtTime(0.2 * w, t + 0.7);
+  amp.gain.linearRampToValueAtTime(0.14 * w, t + 0.7);
   amp.gain.exponentialRampToValueAtTime(FLOOR, t + 2.6);
   const lp = v.filter('lowpass', 650, 0.7, amp);
   lp.frequency.setValueAtTime(650, t);
@@ -237,11 +237,11 @@ const unfold: Recipe = (ctx, out, t) => {
   for (let i = 0; i < 4; i++) {
     const at = t + i * 0.055 + Math.random() * 0.02;
     const freq = 2200 + Math.random() * 2600;
-    end = Math.max(end, noiseHit(v, at, 0.04 + Math.random() * 0.03, { freq, q: 1.8, gain: 0.045, attack: 0.003 }));
+    end = Math.max(end, noiseHit(v, at, 0.04 + Math.random() * 0.03, { freq, q: 1.8, gain: 0.065, attack: 0.003 }));
   }
   [86, 88, 90, 93, 95].forEach((m, i) => {
     const dest = v.pan(-0.4 + i * 0.2);
-    end = Math.max(end, pluck(v, mtof(m), t + 0.18 + i * 0.055, { gain: 0.045, decay: 0.45, wave: 'sine', dest }));
+    end = Math.max(end, pluck(v, mtof(m), t + 0.18 + i * 0.055, { gain: 0.075, decay: 0.5, wave: 'sine', dest }));
   });
   return end;
 };
@@ -252,8 +252,8 @@ const surge: Recipe = (ctx, out, t, o) => {
   const s = 0.7 + 0.3 * clamp01(o.intensity ?? 0.5);
   const amp = v.gain(0);
   amp.gain.setValueAtTime(0, t);
-  amp.gain.linearRampToValueAtTime(0.1 * s, t + 0.03);
-  amp.gain.setValueAtTime(0.1 * s, t + 0.18);
+  amp.gain.linearRampToValueAtTime(0.085 * s, t + 0.03);
+  amp.gain.setValueAtTime(0.085 * s, t + 0.18);
   amp.gain.exponentialRampToValueAtTime(FLOOR, t + 0.48);
   const lp = v.filter('lowpass', 260, 3.5, amp);
   lp.frequency.setValueAtTime(260, t);
@@ -301,8 +301,8 @@ const softFail: Recipe = (ctx, out, t) => {
 
 const pageTurn: Recipe = (ctx, out, t) => {
   const v = new Voice(ctx, out);
-  const a = noiseHit(v, t, 0.13, { freq: 1400, to: 5200, q: 1.2, gain: 0.055, attack: 0.025 });
-  const b = noiseHit(v, t + 0.06, 0.07, { type: 'highpass', freq: 3000, gain: 0.02, attack: 0.01 });
+  const a = noiseHit(v, t, 0.13, { freq: 1400, to: 5200, q: 0.9, gain: 0.11, attack: 0.025 });
+  const b = noiseHit(v, t + 0.06, 0.07, { type: 'highpass', freq: 3000, gain: 0.035, attack: 0.01 });
   return Math.max(a, b);
 };
 

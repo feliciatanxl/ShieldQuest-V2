@@ -294,7 +294,7 @@ function echo({ o, t, a, level }: BuildContext): void {
     if (level >= 3) {
       // Sound ripples either side of the head: "a second opinion" echoing out.
       o.symmetric((_m, s) => {
-        for (const rr of [0.2, 0.27]) {
+        for (const rr of [0.17, 0.23]) {
           const pts = (r: number) =>
             Array.from({ length: 5 }, (_, i) => {
               const phi = (-50 + i * 25) * (Math.PI / 180);

@@ -48,6 +48,8 @@ export interface UseMissionRunOptions {
   announce: (text: string) => void;
   /** Fixed seed for tests or replays; a fresh random seed otherwise. */
   seed?: number;
+  /** Gentle mode setting: no Pressure Surge. */
+  gentle?: boolean;
 }
 
 export interface MissionRunApi {
@@ -90,7 +92,7 @@ function cluepawNudgeAfter(mission: Mission, band: BandId | null): number | null
   return 90;
 }
 
-export function useMissionRun({ mission, band, reduced, cues, announce, seed }: UseMissionRunOptions): MissionRunApi {
+export function useMissionRun({ mission, band, reduced, cues, announce, seed, gentle = false }: UseMissionRunOptions): MissionRunApi {
   const [state, dispatch] = useReducer(runReducer, undefined, () => createRunState(mission, seed ?? newRunSeed(), band));
   const [t, setT] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -241,7 +243,7 @@ export function useMissionRun({ mission, band, reduced, cues, announce, seed }: 
   const surge = useMemo(() => surgeLine(mission), [mission]);
   useEffect(() => {
     if (state.phase !== 'freeze' || state.surge !== 'idle' || state.freezeDone) return;
-    if (!surgeEnabled(band) || !surge) {
+    if (!surgeEnabled(band) || gentle || !surge) {
       dispatch({ type: 'surge', to: 'off' });
       return;
     }
@@ -251,7 +253,7 @@ export function useMissionRun({ mission, band, reduced, cues, announce, seed }: 
       safeHaptic([80, 60, 80]);
       announce(`${surge.name} is pushing: ${surge.text} Press HOLD again to clear it. Nothing is timed.`);
     }
-  }, [state.phase, state.surge, state.freezeDone, freezeElapsed, band, surge, cue, announce]);
+  }, [state.phase, state.surge, state.freezeDone, freezeElapsed, band, gentle, surge, cue, announce]);
 
   const nudge = useMemo(() => {
     if (state.phase !== 'freeze' || state.freezeDone) return null;

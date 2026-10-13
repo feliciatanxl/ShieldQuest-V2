@@ -1,0 +1,55 @@
+/* Lumen (3D City Hub): the frame round the canvas. The bay fills the view; this gradient matches it so the
+   first paint (before WebGL draws) and any letterboxing read as the same blue-hour water. */
+
+.w-city {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 75% at 50% 46%, #34418a 0%, #283373 38%, #222b62 66%, #262c66 100%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.w-city[data-grade='bright-room'] {
+  background: radial-gradient(120% 75% at 50% 46%, #3f4d9c 0%, #313d84 40%, #2b3474 100%);
+}
+
+/* Decorative views (home page hero, projector) sit over their own poster: stay see-through until drawn. */
+.w-city.w-city--decorative {
+  background: transparent;
+}
+
+/* Hub only: a quiet status line while the first frame is prepared (shaders compile on slower phones). */
+.w-city__loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  color: var(--text-2);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+
+/* The canvas fades in on its first frame (shader warm-up never shows as a flash of empty water). */
+.w-city > .w-canvas {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out, ease-out);
+}
+.w-city[data-ready] > .w-canvas {
+  opacity: 1;
+}
+:root[data-motion='reduced'] .w-city > .w-canvas {
+  transition: none;
+}
+
+/* Interactive hub: the canvas owns drags (spin and tilt), so the browser must not pan or zoom on it. */
+.w-city--interactive .w-canvas__stage canvas {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}

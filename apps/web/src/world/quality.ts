@@ -5,11 +5,24 @@ export type QualityTier = 'high' | 'medium' | 'low';
 export type RenderMode = QualityTier | '2d';
 
 /** Per-tier render budgets (from the mobile performance playbook). */
-export const QUALITY_BUDGET: Record<QualityTier, { dpr: [number, number]; shadows: boolean; antialias: boolean; particles: number }> = {
-  high: { dpr: [1, 2], shadows: true, antialias: true, particles: 1500 },
-  medium: { dpr: [1, 1.5], shadows: false, antialias: true, particles: 600 },
-  low: { dpr: [1, 1], shadows: false, antialias: false, particles: 150 },
+export interface QualityBudget {
+  dpr: [number, number];
+  shadows: boolean;
+  antialias: boolean;
+  particles: number;
+  /** Per-scene render budgets (GDD §10.2) for tests and scene builders to assert against. */
+  maxDrawCalls: number;
+  maxTriangles: number;
+}
+
+export const QUALITY_BUDGET: Record<QualityTier, QualityBudget> = {
+  high: { dpr: [1, 2], shadows: true, antialias: true, particles: 1500, maxDrawCalls: 120, maxTriangles: 150_000 },
+  medium: { dpr: [1, 1.5], shadows: false, antialias: true, particles: 600, maxDrawCalls: 60, maxTriangles: 60_000 },
+  low: { dpr: [1, 1], shadows: false, antialias: false, particles: 150, maxDrawCalls: 40, maxTriangles: 40_000 },
 };
+
+/** Per-set limits inside a mission scene (GDD §10.2). */
+export const SET_BUDGET = { maxTriangles: 8000, maxDrawCalls: 6 } as const;
 
 let cachedWebGL2: boolean | null = null;
 export function hasWebGL2(): boolean {

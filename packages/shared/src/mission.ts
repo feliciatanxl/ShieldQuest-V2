@@ -44,8 +44,38 @@ export interface CastMember {
   anchor?: SceneAnchor;
   pose?: 'stand' | 'sit' | 'phone' | 'lean' | 'walk';
   /** Code-built figure styling. Strangers/offenders are faceless silhouettes with no ethnic or gender coding. */
-  look: { body: string; accent: string; hair?: 'short' | 'long' | 'bun' | 'cap' | 'hijab' | 'none' };
+  look: CastLook;
   faceless?: boolean;
+}
+
+/** The 12 hair/headwear silhouettes the bean kit can build (GDD §4.4). */
+export const CAST_HAIRS = [
+  'short',
+  'long',
+  'bun',
+  'cap',
+  'hijab',
+  'none',
+  'curly',
+  'ponytail',
+  'spiky',
+  'beanie',
+  'puffs',
+  'buzz',
+] as const;
+export type CastHair = (typeof CAST_HAIRS)[number];
+
+export interface CastLook {
+  /** Top colour (hex). */
+  body: string;
+  /** Bottoms, trims, caps and headscarves (hex). */
+  accent: string;
+  hair?: CastHair;
+  /** Skin tone (hex); when omitted the figure picks one deterministically from the cast id. */
+  skin?: string;
+  hairColor?: string;
+  glasses?: boolean;
+  outfit?: 'casual' | 'school' | 'work';
 }
 
 export type BeatChannel = 'chat' | 'speech' | 'notification' | 'scene';

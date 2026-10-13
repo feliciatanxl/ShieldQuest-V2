@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import type { Mission, SceneId } from '@shieldquest/shared';
 import type { SceneMood } from '../../contracts';
 import type { QualityTier } from '../../quality';
+import type { FlatStaging, SetStaging } from '../core/staging';
 
 type Vec3 = [number, number, number];
 
@@ -38,12 +39,20 @@ export interface SetPiece {
     /** Constrained orbit while frozen. */
     orbit: { target: Vec3; minDistance: number; maxDistance: number };
   };
-  /** Static set geometry only (characters, hotspots, rain and threads are added by MissionScene). */
+  /**
+   * Static set geometry only (characters, hotspots, rain and threads are added by MissionScene).
+   * May be React.lazy and suspend while its 3D chunk loads: render it inside <Suspense> (MissionScene covers the
+   * stage with the Flat View until it is ready).
+   */
   Component: FC<SetPieceProps>;
+  /** Optional staging: influence window, seat stand-ins, rain zone, junior rail stops, DOM sign labels. */
+  staging?: SetStaging;
   /** 2D twin for Flat View: an SVG drawing plus 2D anchor positions (in viewBox units). */
   flat: {
     viewBox: string;
     Draw: FC<{ timeOfDay: Mission['timeOfDay'] }>;
     anchors: Record<string, { x: number; y: number }>;
+    /** Optional Flat View staging (projection, hotspot spots, seats, rain, influence window). */
+    staging?: FlatStaging;
   };
 }

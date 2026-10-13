@@ -1,6 +1,6 @@
 // First-run gate for solo play (GDD §7.1): the hook, the disclaimer and data notice, "Which fits you best?"
 // (a school level, never an age or birthday), and a hands-on HOLD rehearsal. Nothing typed, nothing uploaded.
-import { useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useId, useRef, useState } from 'react';
 import { AnimatePresence, m } from 'motion/react';
 import { Link, useLocation } from 'wouter';
 import { BANDS, GAME, missionById, type BandId } from '@shieldquest/shared';
@@ -56,25 +56,26 @@ export function Onboarding() {
   const [step, setStep] = useState<Step>('welcome');
   const [band, setBand] = useState<BandId | null>(savedBand);
   const [, navigate] = useLocation();
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const firstRender = useRef(true);
+  const moved = useRef(false);
   const reduced = useReducedMotionSetting();
   const sfx = useSfx();
   const bandName = useId();
   const tutorial = missionById(TUTORIAL_ID);
   const index = STEPS.findIndex((s) => s.id === step);
 
-  // Move focus to the new step's heading so screen readers and keyboards follow along.
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    headingRef.current?.focus();
-  }, [step]);
+  // The next step mounts only after the old one has animated out, so focus is moved from a callback ref
+  // (an effect on `step` would focus the outgoing heading). Screen readers and keyboards follow along,
+  // and the new card starts at the top instead of wherever the old one was scrolled to.
+  const headingRef = useCallback((el: HTMLHeadingElement | null) => {
+    if (!el || !moved.current) return;
+    moved.current = false;
+    window.scrollTo({ top: 0 });
+    el.focus({ preventScroll: true });
+  }, []);
 
   const go = (next: Step) => {
     sfx('pageTurn');
+    moved.current = true;
     setStep(next);
   };
 

@@ -1,0 +1,255 @@
+/* Flat View mission scene (w-flat): the set's SVG snapshot scaled to fit its stage, hotspot buttons and name
+   tags positioned over it in percentages of the drawing, and the Hold look in CSS. Text is DOM, sized in rem. */
+
+.w-flat {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg-2);
+  container-type: size;
+  container-name: w-flat;
+}
+
+/* Contain-fit the drawing: as wide as the stage allows without overflowing its height. */
+.w-flat__frame {
+  position: relative;
+  width: min(100cqw, calc(100cqh * var(--w-flat-ar, 1.6)));
+  aspect-ratio: var(--w-flat-ar, 1.6);
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.w-flat__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+}
+
+.w-flat__still {
+  fill: var(--still-blue);
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out);
+  pointer-events: none;
+}
+
+.w-flat[data-mode='frozen'] .w-flat__still {
+  opacity: 0.34;
+}
+
+.w-flat__drops {
+  animation: w-flat-fall 1.1s linear infinite;
+}
+
+@keyframes w-flat-fall {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--w-flat-fall, 250px));
+  }
+}
+
+.w-flat__beads circle {
+  filter: drop-shadow(0 0 1.5px rgba(207, 232, 255, 0.9));
+}
+
+/* Hotspots: real buttons sitting over their anchors (>= 48 px), shape + icon carry the state, plus a word. */
+.w-flat__spots {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.w-flat__spot {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.w-flat__spot-btn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  min-width: 3rem;
+  min-height: 3rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+span.w-flat__spot-btn {
+  cursor: default;
+  pointer-events: none;
+}
+
+.w-flat__spot-btn svg {
+  filter: drop-shadow(0 1px 2px rgba(20, 32, 51, 0.55));
+  transition: transform var(--dur) var(--ease-out);
+}
+
+button.w-flat__spot-btn[data-state='available'] svg {
+  animation: w-flat-pulse 1.4s var(--ease-out) infinite;
+}
+
+button.w-flat__spot-btn:hover svg,
+button.w-flat__spot-btn:focus-visible svg {
+  transform: scale(1.18);
+  animation: none;
+}
+
+.w-flat__spot-btn:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--bg) 70%, transparent);
+}
+
+@keyframes w-flat-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.w-flat__spot-word {
+  position: absolute;
+  bottom: calc(100% - 0.4rem);
+  left: 50%;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* "Look" only shows on hover and focus; found states always show their word. */
+.w-flat__spot-btn[data-state='available'] .w-flat__spot-word {
+  opacity: 0;
+}
+
+.w-flat__spot-btn[data-state='available']:hover .w-flat__spot-word,
+.w-flat__spot-btn[data-state='available']:focus-visible .w-flat__spot-word {
+  opacity: 1;
+}
+
+/* Sign text over the drawing (DOM, so it follows the text-size setting). */
+.w-flat__signs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.w-flat__sign {
+  position: absolute;
+  padding: 0.05rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.w-flat__sign--small {
+  font-size: 0.5625rem;
+}
+
+.w-flat[data-mode='frozen'] .w-flat__sign {
+  background: color-mix(in srgb, var(--still-blue) 72%, var(--paper));
+}
+
+.w-flat__names {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.w-flat__name {
+  position: absolute;
+  padding: 0.02rem 0.35rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-solid) 82%, transparent);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 650;
+  line-height: 1.35;
+  white-space: nowrap;
+  transform: translate(-50%, 0.2rem);
+}
+
+.w-flat__name[data-resident] {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@container w-flat (min-width: 40rem) {
+  .w-flat__name {
+    font-size: 0.75rem;
+  }
+
+  .w-flat__spot-word {
+    font-size: 0.75rem;
+  }
+}
+
+@container w-flat (min-width: 80rem) {
+  .w-flat__name {
+    font-size: 1rem;
+  }
+
+  .w-flat__spot-word {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .w-flat__drops,
+  :root:not([data-motion='full']) .w-flat__spot-btn svg {
+    animation: none;
+  }
+
+  :root:not([data-motion='full']) .w-flat__still {
+    transition: none;
+  }
+}
+
+:root[data-motion='reduced'] .w-flat__drops,
+:root[data-motion='reduced'] .w-flat__spot-btn svg {
+  animation: none;
+}
+
+:root[data-motion='reduced'] .w-flat__still {
+  transition: none;
+}

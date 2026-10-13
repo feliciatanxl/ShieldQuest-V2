@@ -3,8 +3,8 @@
 // About ten native nodes and two timers per pad: effectively free on the CPU.
 import type { DistrictId } from '@shieldquest/shared';
 import { engine, keepAwakeWhile, liveGraph, onReconcile, report, soundOn, type Graph } from './engine';
-import { Voice, mtof, pick, pluck } from './synth';
 import { noiseBuffer } from './engine';
+import { Voice, mtof, pick, pluck } from './synth';
 
 export type AmbientPlace = DistrictId | 'city';
 
@@ -211,25 +211,35 @@ let mood: AmbientMood = 'normal';
 
 interface Request {
   where: AmbientPlace | null;
-  seq: number;
+  order: number;
 }
-let seq = 0;
+let order = 0;
+let ids = 0;
 const hookRequests = new Map<number, Request>();
 let manual: Request | null = null;
 
-function desired(): AmbientPlace | null {
+/** The place the newest request asks for (null = silence). */
+export function wantedAmbient(): AmbientPlace | null {
   let best: Request | null = manual;
-  for (const r of hookRequests.values()) if (!best || r.seq > best.seq) best = r;
+  for (const r of hookRequests.values()) if (!best || r.order > best.order) best = r;
   return best ? best.where : null;
 }
 
-export function setManualAmbient(where: AmbientPlace | null): void {
-  manual = { where, seq: ++seq };
+/**
+ * Reserves a place in the queue. Hooks reserve theirs during render (parents render before children), so a nested
+ * screen's request outranks its parent's even though the child's effect runs first.
+ */
+export function nextAmbientOrder(): number {
+  return ++order;
 }
 
-export function addAmbientRequest(where: AmbientPlace | null): number {
-  const id = ++seq;
-  hookRequests.set(id, { where, seq: id });
+export function setManualAmbient(where: AmbientPlace | null): void {
+  manual = { where, order: nextAmbientOrder() };
+}
+
+export function addAmbientRequest(where: AmbientPlace | null, at = nextAmbientOrder()): number {
+  const id = ++ids;
+  hookRequests.set(id, { where, order: at });
   return id;
 }
 
@@ -250,7 +260,12 @@ export function setMood(next: AmbientMood): void {
 
 function colourFactors(): { cutoff: number; rain: number; pad: number; sparkle: number } {
   const calm = engine.calm;
-  const m = mood === 'sober' ? { cutoff: 0.55, rain: 1.15, pad: 0.6 } : mood === 'glow' ? { cutoff: 1.45, rain: 0.8, pad: 1.1 } : { cutoff: 1, rain: 1, pad: 1 };
+  const m =
+    mood === 'sober'
+      ? { cutoff: 0.55, rain: 1.15, pad: 0.6 }
+      : mood === 'glow'
+        ? { cutoff: 1.45, rain: 0.8, pad: 1.1 }
+        : { cutoff: 1, rain: 1, pad: 1 };
   return {
     cutoff: m.cutoff * (calm ? 0.6 : 1),
     rain: m.rain * (calm ? 0.5 : 1),
@@ -273,7 +288,14 @@ function applyColour(pad: Pad): void {
   pad.padGain.gain.setTargetAtTime(p.pad * f.pad, t, 0.8);
 }
 
-function lfo(ctx: AudioContext, hz: number, depth: number, target: AudioParam, t: number, sources: AudioScheduledSourceNode[]) {
+function lfo(
+  ctx: AudioContext,
+  hz: number,
+  depth: number,
+  target: AudioParam,
+  t: number,
+  sources: AudioScheduledSourceNode[],
+): GainNode {
   const o = ctx.createOscillator();
   o.frequency.value = hz;
   const g = ctx.createGain();
@@ -287,7 +309,8 @@ function lfo(ctx: AudioContext, hz: number, depth: number, target: AudioParam, t
 
 function createPad(g: Graph, where: AmbientPlace): Pad {
   const { ctx } = g;
-  const p = PRESETS[where];
+  // Unknown places (content added before a preset exists) fall back to the city bed.
+  const p = PRESETS[where] ?? PRESETS.city;
   const t = ctx.currentTime + 0.02;
   const sources: AudioScheduledSourceNode[] = [];
   const f = colourFactors();
@@ -496,7 +519,7 @@ function destroy(pad: Pad): void {
 
 function reconcileAmbient(): void {
   const g = engine.graph;
-  const want = g && soundOn() && engine.profile !== 'squad-phone' ? desired() : null;
+  const want = g && soundOn() && engine.profile !== 'squad-phone' ? wantedAmbient() : null;
 
   if (current && current.where === want) {
     if (current.leaving) revive(current);

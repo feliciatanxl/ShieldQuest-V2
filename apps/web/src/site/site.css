@@ -668,11 +668,12 @@
   color: var(--ink);
   box-shadow: var(--shadow);
 }
-.site-contact h3 {
+.site-contact__title {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin: 0 0 0.35rem;
+  font-size: clamp(1.3rem, 1.2vw + 1rem, 1.6rem);
   color: var(--ink);
 }
 .site-contact p {
@@ -883,7 +884,8 @@
 }
 .site h1,
 .site h2,
-.site h3 {
+.site h3,
+.site h4 {
   hyphens: auto;
 }
 

@@ -5,6 +5,8 @@
   position: relative;
   height: 100dvh;
   overflow: hidden;
+  /* clip (not just hidden): focusing an off-screen plate must never scroll the whole overlay sideways. */
+  overflow: clip;
   background:
     radial-gradient(70rem 40rem at 50% 30%, rgba(42, 47, 107, 0.9), transparent 70%),
     var(--bg);
@@ -183,6 +185,14 @@
     'dock';
   row-gap: 0.5rem;
   pointer-events: none;
+  /* Fallback for very large text on small phones: the overlay scrolls rather than pushing the district
+     plates off the bottom of the screen. At normal sizes everything fits and nothing scrolls. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  /* A scroller clips its edges: this inset keeps focus rings and shadows visible. */
+  margin-inline: -0.6rem;
+  padding: 0 0.6rem 0.25rem;
 }
 
 .hub-strip {
@@ -196,6 +206,10 @@
 }
 .hub-strip > * {
   pointer-events: auto;
+}
+/* Phones in portrait: an open district sheet gets the room; the chips come back when it closes. */
+.hub[data-panel='open'] .hub-strip {
+  display: none;
 }
 .hub-motion {
   display: flex;
@@ -445,6 +459,8 @@
 .hub-dock {
   grid-area: dock;
   display: grid;
+  /* minmax(0, 1fr): the scrolling plate row must not widen the dock past the screen. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.5rem;
   min-width: 0;
   pointer-events: none;
@@ -500,6 +516,8 @@
 }
 .hub-continue__actions {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
   gap: 0.4rem;
   margin-left: auto;
@@ -511,6 +529,9 @@
   display: block;
 }
 
+.hub-picker {
+  min-width: 0;
+}
 .hub-picker__list {
   list-style: none;
   margin: 0;
@@ -613,6 +634,9 @@
     align-self: stretch;
     max-height: none;
     margin-top: 0.5rem;
+  }
+  .hub[data-panel='open'] .hub-strip {
+    display: flex;
   }
   .hub-picker__list {
     flex-wrap: wrap;

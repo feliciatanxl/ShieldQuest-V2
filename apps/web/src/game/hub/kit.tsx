@@ -87,6 +87,19 @@ export function useFirstGesture(then?: () => void) {
   }, []);
 }
 
+/**
+ * Scrolls a horizontally scrolling row just enough to show `item`. Only the row moves: scrollIntoView
+ * would also nudge the page or the overlay vertically on phones.
+ */
+export function revealInRow(row: HTMLElement | null, item: Element | null, reduced: boolean): void {
+  if (!row || !item || row.scrollWidth <= row.clientWidth + 1) return;
+  const r = row.getBoundingClientRect();
+  const b = item.getBoundingClientRect();
+  const pad = 12;
+  const by = b.left < r.left + pad ? b.left - r.left - pad : b.right > r.right - pad ? b.right - r.right + pad : 0;
+  if (by !== 0) row.scrollBy({ left: by, behavior: reduced ? 'auto' : 'smooth' });
+}
+
 /** Per-viewer conveniences only (remembered district, seen Bond marks). Never game state. */
 export function readStored<T>(store: 'local' | 'session', key: string, fallback: T): T {
   try {

@@ -115,15 +115,30 @@ export function PageHero({
  * "Partner with us": a way to reach the team, never a form. The email line appears only once
  * the team has set an official address in CONTACT.
  */
-export function ContactBlock({ id, title = 'Partner with us' }: { id?: string; title?: string }) {
+export function ContactBlock({
+  id,
+  title = 'Partner with us',
+  text = CONTACT.text,
+  action = { href: '/educators', label: 'What a pilot looks like' },
+  headingLevel = 3,
+  headingId,
+}: {
+  id?: string;
+  headingId?: string;
+  title?: string;
+  text?: string;
+  action?: { href: string; label: string } | null;
+  headingLevel?: 2 | 3;
+}) {
   const email = CONTACT.email.trim();
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
   return (
     <div className="site-contact" id={id}>
       <div>
-        <h3>
+        <Heading className="site-contact__title" id={headingId}>
           <Icon name="users" /> {title}
-        </h3>
-        <p>{CONTACT.text}</p>
+        </Heading>
+        <p>{text}</p>
         {email ? (
           <p className="site-contact__email">
             Email: <a href={`mailto:${email}`}>{email}</a>
@@ -132,10 +147,77 @@ export function ContactBlock({ id, title = 'Partner with us' }: { id?: string; t
           <p className="site-contact__via">{CONTACT.via}</p>
         )}
       </div>
-      <LinkButton href="/educators" className="site-btn-ink" iconRight="arrowRight">
-        What a pilot looks like
-      </LinkButton>
+      {action && (
+        <LinkButton href={action.href} className="site-btn-ink" iconRight="arrowRight">
+          {action.label}
+        </LinkButton>
+      )}
     </div>
+  );
+}
+
+/** Closing call-to-action band for the inner pages. */
+export function PageCta({
+  title,
+  lead,
+  children,
+}: {
+  title: string;
+  lead?: string;
+  children?: ReactNode;
+}) {
+  return (
+    <section className="site-pagecta" aria-labelledby="site-pagecta-title">
+      <div className="container">
+        <Reveal className="site-pagecta__inner">
+          <div>
+            <h2 id="site-pagecta-title">{title}</h2>
+            {lead && <p>{lead}</p>}
+          </div>
+          <div className="site-actions">
+            {children ?? (
+              <>
+                <LinkButton href="/play" size="lg" icon="play">
+                  Play the demo
+                </LinkButton>
+                <LinkButton href="/host" size="lg" variant="secondary" icon="qr">
+                  Run a class session
+                </LinkButton>
+              </>
+            )}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/** A titled block inside an inner page, with its own anchor for the on-page contents. */
+export function DocSection({
+  id,
+  kicker,
+  title,
+  lead,
+  tone = 'night',
+  className,
+  children,
+}: {
+  id: string;
+  kicker?: string;
+  title: string;
+  lead?: string;
+  tone?: 'night' | 'tint' | 'paper';
+  className?: string;
+  children: ReactNode;
+}) {
+  const toneClass = tone === 'tint' ? ' site-section--tint' : tone === 'paper' ? ' site-paperband' : '';
+  return (
+    <section id={id} className={`site-section site-doc${toneClass}${className ? ` ${className}` : ''}`} aria-labelledby={`${id}-title`}>
+      <div className="container">
+        <SectionHead id={`${id}-title`} kicker={kicker ?? title} title={title} lead={lead} tone={tone === 'paper' ? 'paper' : 'night'} />
+        {children}
+      </div>
+    </section>
   );
 }
 

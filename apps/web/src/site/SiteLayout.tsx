@@ -101,8 +101,12 @@ function MobileMenu({
         </button>
       </div>
       <p className="site-menu__help">
-        <Icon name="heart" /> In danger now? Call <strong>999</strong>. Not sure if it’s a scam? Call{' '}
-        <strong>{helpById('scamshield-1799').contact}</strong>.
+        <Icon name="heart" />
+        {/* One text run, so the flex row treats the sentence as a single item. */}
+        <span>
+          In danger now? Call <strong>{helpById('police-999').contact}</strong>. Not sure if it’s a scam? Call{' '}
+          <strong>{helpById('scamshield-1799').contact}</strong>.
+        </span>
       </p>
     </div>
   );

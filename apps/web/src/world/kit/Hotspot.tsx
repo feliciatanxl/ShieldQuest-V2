@@ -30,6 +30,8 @@ export interface HotspotProps {
   label: string;
   /** Called on tap, click, Enter or Space. */
   onSelect?: () => void;
+  /** Alias of onSelect (either works; onSelect wins when both are given). */
+  onClick?: () => void;
   /** World size of the marker (m). Default 0.5. */
   size?: number;
   /** Minimum on-screen size in CSS pixels (tap target). Default 48. */
@@ -63,6 +65,7 @@ export function Hotspot({
   state,
   label,
   onSelect,
+  onClick,
   size = 0.5,
   minPixels = 48,
   interactive = true,
@@ -79,7 +82,8 @@ export function Hotspot({
   const [hot, setHot] = useState(false);
   const anim = useRef({ scale: 1, pop: 1, last: state });
   const button = useRef<HTMLButtonElement | null>(null);
-  const select = interactive && onSelect ? onSelect : undefined;
+  const handler = onSelect ?? onClick;
+  const select = interactive && handler ? handler : undefined;
   const selectRef = useRef(select);
   selectRef.current = select;
   const wantsButton = domButton && Boolean(select) && state !== 'hidden';

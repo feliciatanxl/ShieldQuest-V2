@@ -143,11 +143,12 @@ ShieldQuest-V2/
 | `/play/m/:id` | Play a mission (start with `/play/m/first-hold`) |
 | `/play/guardians` | Bond Book: Guardians, tactics codex and If-Then cards |
 | `/play/nightfall` | Land any pending Aftershocks at the end of a solo session |
-| `/join`, `/j/:code` | Join a squad session (students) |
-| `/host` | Facilitator console |
+| `/join`, `/j/:code`, `/j/:code/:totem` | Join a squad session (students; the totem form comes from tent-card QR codes) |
+| `/host`, `/host/:code` | Facilitator console |
 | `/screen/:code` | Projector Big Screen |
 | `/assess` | Before / after / return check |
 | `/portal` | Scenario Management Portal and youth mission submissions |
+| `/portal/analytics` | Educator analytics (aggregates only, n ≥ 5) |
 
 ## Configuration
 
@@ -161,8 +162,10 @@ Environment variables (all optional in development):
 | `CORS_ORIGIN` | server | allow all | Comma-separated list of allowed origins |
 | `LOG_LEVEL` | server | `info` | Log level (logs never include IP addresses or request bodies) |
 | `SHIELDQUEST_DATA_DIR` | server | `apps/server/data` | Folder for the file-based data store |
-| `SHIELDQUEST_SERVER` | web (dev) | `http://localhost:8787` | Where Vite proxies API calls |
-| `PORTAL_PASSCODE` | server | dev passcode outside production | Educator portal passcode (portal in progress). **Required in production** |
+| `SHIELDQUEST_SERVER` | web (dev) | `http://127.0.0.1:8787` | Where Vite proxies API calls |
+| `PORTAL_PASSCODE` | server | dev passcode outside production | Educator portal passcode (at least 8 characters). **Required in production** |
+| `NODE_ENV` | server | unset (`production` on Railway) | `production` disables the dev portal passcode and the public assessment summary route |
+| `ASSESSMENT_PURGE_DATE` | server | unset | `YYYY-MM-DD`, 90 days after the final report: from that date the server deletes every stored assessment response (GDD §11.15) |
 
 Never commit `.env` files. They are git-ignored.
 
@@ -203,13 +206,16 @@ This is an active student project heading towards a pilot.
 | Area | Status |
 |---|---|
 | Shared framework, mission schema, rules engine, content lint | Done |
-| Solo mission player (full loop, playable end to end) | Done; polishing |
-| Digi-District missions + tutorial | Done (drafts awaiting review) |
-| Public website | Home page done; other pages in progress |
-| 3D city and mission scenes | In progress (placeholders shown) |
-| School Street and Retail District missions | In progress |
-| Squad sessions (facilitator console, phones, Big Screen) | In progress |
-| Assessment, Scenario Portal, analytics | In progress |
+| Solo mission player (full loop, playable end to end) | Done |
+| 19 missions across School Street, Retail District and Digi-District | Done (drafts awaiting two human sign-offs) |
+| Public website (home, how it works, educators, safety, about, help) | Done |
+| 3D city of Lumen, 7 mission sets, origami Guardians, 2D mode | Done |
+| Squad sessions (facilitator console, phones, Big Screen) | Done |
+| Before/after assessment, Scenario Portal, analytics | Done |
+| Synthesised sound and haptics | Done |
+| Tested on real mid-range Android phones and in a real classroom | Not yet: planned before the pilot |
+
+**Before the pilot:** two human sign-offs on every mission, a re-check of every statistic, helpline and legal line against official sources, and setting `PORTAL_PASSCODE` and `ASSESSMENT_PURGE_DATE` in production.
 
 ## Contributing
 

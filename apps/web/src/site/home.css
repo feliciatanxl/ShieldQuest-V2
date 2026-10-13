@@ -1463,7 +1463,8 @@
   text-transform: uppercase;
   color: var(--site-paper-kicker);
 }
-.site-roadmap h3 {
+.site-roadmap h3,
+.site-roadmap h4 {
   margin: 0 0 0.3rem;
   color: var(--ink);
   font-size: 1.2rem;

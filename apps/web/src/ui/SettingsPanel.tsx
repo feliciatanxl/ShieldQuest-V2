@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BANDS } from '@shieldquest/shared';
-import { TEXT_SCALES, useSettings, type MotionSetting, type QualitySetting } from '../state/settings';
+import { HOLD_MS_OPTIONS, TEXT_SCALES, useSettings, type MotionSetting, type QualitySetting } from '../state/settings';
 import { Icon } from './Icon';
 import { Sheet } from './Sheet';
 
@@ -83,6 +83,22 @@ export function SettingsPanel({ open, onClose }: { open: boolean; onClose: () =>
         <label className="ui-toggle">
           <input type="checkbox" checked={s.tapToHold} onChange={(e) => s.set({ tapToHold: e.target.checked })} />
           <span>Tap once to Hold (instead of press and hold)</span>
+        </label>
+        {!s.tapToHold && (
+          <fieldset>
+            <legend>How long to press HOLD</legend>
+            <select value={s.holdMs} onChange={(e) => s.set({ holdMs: Number(e.target.value) })}>
+              {HOLD_MS_OPTIONS.map((ms) => (
+                <option key={ms} value={ms}>
+                  {(ms / 1000).toFixed(1)} seconds{ms === 600 ? ' (standard)' : ''}
+                </option>
+              ))}
+            </select>
+          </fieldset>
+        )}
+        <label className="ui-toggle">
+          <input type="checkbox" checked={s.gentle} onChange={(e) => s.set({ gentle: e.target.checked })} />
+          <span>Gentle mode in solo play (no countdowns or pressure surges)</span>
         </label>
       </div>
     </Sheet>

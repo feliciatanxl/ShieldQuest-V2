@@ -52,6 +52,34 @@ export const joinPath = (code: string, squad?: SquadTotemId): string => (squad ?
 export const hostPath = (code: string): string => `/host/${code}`;
 export const screenPath = (code: string): string => `/screen/${code}`;
 
+const B64URL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
+/**
+ * base64url (no padding) for a seat token. Clients call it with 16+ bytes from crypto.getRandomValues
+ * and keep the result in localStorage; the same token always rejoins the same seat.
+ */
+export function encodeSeatToken(bytes: Uint8Array): string {
+  let out = '';
+  for (let i = 0; i < bytes.length; i += 3) {
+    const n = ((bytes[i] ?? 0) << 16) | ((bytes[i + 1] ?? 0) << 8) | (bytes[i + 2] ?? 0);
+    const chars = Math.min(4, Math.ceil(((bytes.length - i) * 8) / 6));
+    for (let k = 0; k < chars; k++) out += B64URL[(n >> (18 - 6 * k)) & 63];
+  }
+  return out;
+}
+
+/** A seat disconnected for at least this long may be taken over by a new device (Reclaim Seat). */
+export const RECLAIM_AFTER_MS = 30_000;
+/** Sessions with no activity for this long are closed; their seats are deleted. */
+export const SESSION_IDLE_TTL_MS = 6 * 60 * 60 * 1000;
+
+/**
+ * Clock offset from one clockPing round trip: add it to Date.now() to get server time.
+ * `sentAt` = the `c` you sent, `serverAt` = the `s` you got back, `receivedAt` = Date.now() on the ack.
+ */
+export const clockOffset = (sentAt: number, serverAt: number, receivedAt: number): number =>
+  Math.round(serverAt - (sentAt + receivedAt) / 2);
+
 // ---------------------------------------------------------------------------------------------
 // Squads
 
@@ -62,6 +90,8 @@ export const SQUAD_LIMITS = {
   maxSquads: SQUAD_TOTEMS.length,
   /** Auto-balancing aims for squads of 4-5. */
   targetSize: 5,
+  /** Smallest squad auto mode leaves in play: before roles are first dealt, smaller squads are evened out. */
+  minSize: 3,
   /** Hard cap per squad (beyond 5, extra seats get a Shadow Clue lens). */
   maxSize: 8,
   maxSeats: 48,
@@ -144,6 +174,19 @@ export interface SessionConfig extends SessionOptions {
 }
 
 export type SessionOptionKey = keyof SessionOptions;
+export const SESSION_OPTION_KEYS = ['gentle', 'discreet', 'calm', 'relaxed', 'autoAdvance'] as const satisfies readonly SessionOptionKey[];
+
+/** Projector defaults to Discreet for 10-13 and 14-16 and Open for 17-24 (GDD §5.4). */
+export const defaultSessionOptions = (band: BandId): SessionOptions => ({
+  gentle: false,
+  discreet: band !== 'young-adult',
+  calm: false,
+  relaxed: false,
+  autoAdvance: true,
+});
+
+/** Pressure Surges never run for the junior band or in Gentle mode (GDD §11.21). */
+export const surgesEnabled = (band: BandId, gentle: boolean): boolean => band !== 'junior' && !gentle;
 
 /** Seconds for each part of a squad mission (GDD §5.3, §5.4). */
 export interface PhaseTiming {
@@ -519,6 +562,11 @@ export const emptyHoldBuckets = (): Record<HoldBucket, number> => ({ '0-5': 0, '
 
 /** Room-level numbers are shown to the Conductor only once at least this many responses exist. */
 export const ROOM_MIN_N = 5;
+/**
+ * ...and only once this many squads have decided, so room-level counts can never be one squad's split in
+ * disguise (the Conductor sees each squad's agreement only as United / Mostly / Split, GDD §11.12).
+ */
+export const ROOM_MIN_SQUADS = 2;
 
 // ---------------------------------------------------------------------------------------------
 // Snapshot building blocks
@@ -710,6 +758,8 @@ export interface SquadView {
   id: SquadTotemId;
   name: string;
   shape: string;
+  /** Gentle mode for this squad (no surges, no countdown visuals), set by the Conductor. */
+  gentle: boolean;
   members: SquadMember[];
   /** Guardians the squad has bonded this session (shared credit). */
   guardians: GuardianId[];
@@ -808,11 +858,15 @@ export interface HostSquad {
   decided: boolean;
   tiePending: boolean;
   shared: boolean;
+  gentle: boolean;
 }
 
 export interface RoomVotes {
   missionId: string;
-  /** Room-level counts across all squads; null until at least ROOM_MIN_N votes exist. */
+  /**
+   * Room-level counts across all decided squads; null until at least ROOM_MIN_N votes from at least
+   * ROOM_MIN_SQUADS squads exist (a one-squad room never shows counts, only agreement).
+   */
   first: ChoiceCount[] | null;
   final: ChoiceCount[] | null;
   firstTotal: number;
@@ -1025,6 +1079,8 @@ export type HostCommand =
   | { type: 'pause' }
   | { type: 'resume' }
   | { type: 'setOption'; key: SessionOptionKey; value: boolean }
+  /** Gentle mode for one squad: no surges, no countdown visuals. */
+  | { type: 'squadGentle'; squadId: SquadTotemId; on: boolean }
   | { type: 'lockJoins'; locked: boolean }
   | { type: 'moveSeat'; seatId: string; squadId: SquadTotemId }
   | { type: 'setSeatPlayers'; seatId: string; players: number }
@@ -1086,6 +1142,8 @@ export interface SocketData {
   audience: Audience | 'probe';
   code: string;
   seatId: string | null;
+  /** Seat epoch at connect; a seat reclaimed by another device turns away recovered old sockets. */
+  epoch: number;
 }
 
 // ---------------------------------------------------------------------------------------------

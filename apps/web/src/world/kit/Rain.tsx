@@ -97,7 +97,7 @@ varying float vAlpha;
 varying float vTw;
 void main() {
   vec3 c = mix( uColor, uBead * ( 1.0 + 0.3 * vTw ), vF );
-  float a = mix( 0.38, 0.95, vF ) * vAlpha * uOpacity;
+  float a = mix( 0.3, 0.95, vF ) * vAlpha * uOpacity;
   if ( a < 0.01 ) discard;
   gl_FragColor = vec4( c, a );
   #include <colorspace_fragment>

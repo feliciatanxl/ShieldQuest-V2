@@ -36,7 +36,8 @@ const VICTIM_BLAMING = [
   /\bdeserved?\b/i,
   /\byour (own )?fault\b/i,
   /\bshould have known\b/i,
-  /\bfell for it\b/i,
+  /\bfell for\b/i,
+  /\bcareless\b/i,
   /\bdumb\b/i,
 ];
 

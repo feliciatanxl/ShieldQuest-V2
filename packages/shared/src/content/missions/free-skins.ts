@@ -61,7 +61,7 @@ export const freeSkins: Mission = {
     ],
   },
   forecast: {
-    question: 'If Kai sends the code, what is most likely to happen by tomorrow?',
+    question: 'If Kai sends the code, what is most likely to happen tonight?',
     horizon: 'tonight',
     options: [
       { id: 'f-skins', text: 'Kai gets the rare skins.', likely: false },
@@ -83,7 +83,7 @@ export const freeSkins: Mission = {
       },
       feedback: {
         tactic: 'too-good',
-        saferMove: 'never send a code from your SMS to anyone, and check giveaways inside the game\'s own app',
+        saferMove: 'to never send a code from your SMS to anyone, and to check giveaways inside the game\'s own app',
         ifItHappened: 'tell a parent or teacher straight away, use the game\'s own help page together to get the account back, and warn your friends.',
       },
       aftershock: {
@@ -96,7 +96,7 @@ export const freeSkins: Mission = {
         effects: { trust: -2, risk: 1 },
         fact: {
           text: 'Never share one-time codes, even with friends. A code sent to your phone is a key to your account.',
-          source: 'SPF advisory on account takeovers, 12 Mar 2026',
+          source: 'SPF, advisory on compromised messaging accounts (12 Mar 2026)',
           asOf: '2026-10-08',
         },
         recovery: {
@@ -121,8 +121,8 @@ export const freeSkins: Mission = {
       },
       feedback: {
         tactic: 'fake-proof',
-        saferMove: 'check giveaways inside the game\'s own app, and remember that no real gift needs your code',
-        ifItHappened: 'if you already sent a code, tell a grown-up right away and use the game\'s own help page to change your password.',
+        saferMove: 'to check giveaways inside the game\'s own app. No real gift ever needs your code',
+        ifItHappened: 'tell a grown-up right away and use the game\'s own help page together to change your password.',
       },
     },
     {
@@ -138,8 +138,8 @@ export const freeSkins: Mission = {
       feedback: {
         tactic: 'small-ask',
         designedTo: 'make handing over a key to your account feel like a tiny, harmless step',
-        saferMove: 'keep codes to yourself, screenshot the chat, and tell a trusted adult',
-        ifItHappened: 'if a friend already sent their code, help them tell a grown-up and use the game\'s own help page.',
+        saferMove: 'to keep codes to yourself, screenshot the chat and tell a trusted adult',
+        ifItHappened: 'help your friend tell a grown-up and use the game\'s own help page to get the account back.',
       },
       aftershock: {
         id: 'afterglow-warning',
@@ -197,14 +197,13 @@ export const freeSkins: Mission = {
   },
   ifThen: {
     if: 'someone asks for a code that was sent to my phone, even a friend',
-    then: "I won't send it, and I'll tell a grown-up I trust",
+    then: 'keep the code to myself and tell a grown-up I trust',
   },
-  help: ['trusted-adult', 'tinkle-friend', 'mindline-1771', 'scamshield-1799'],
+  help: ['trusted-adult', 'tinkle-friend', 'mindline-1771'],
   sources: [
     { label: 'Advisory on the compromise of WhatsApp accounts: never share one-time codes (12 Mar 2026)', publisher: 'Singapore Police Force', asOf: '2026-10-08' },
     { label: 'Advisory on fake platforms selling gaming accounts (25 Nov 2022). Tactic only; no statistics used', publisher: 'Singapore Police Force', asOf: '2026-10-08' },
     { label: 'Get support from our partners (Tinkle Friend, mindline 1771)', publisher: 'Online Safety Commission', asOf: '2026-10-08', url: 'https://www.osc.gov.sg' },
-    { label: 'ScamShield Helpline 1799', publisher: 'Singapore Police Force, Contact Us', asOf: '2026-10-08', url: 'https://www.police.gov.sg/contact-us' },
   ],
   review: {
     status: 'draft',

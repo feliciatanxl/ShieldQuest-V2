@@ -1,11 +1,11 @@
 // DOM twin of tapping a district plate in the 3D city: every district (including the fogged
 // "Coming soon" plates) is a real button, so the hub never needs the 3D view.
-import type { CSSProperties, KeyboardEvent } from 'react';
+import { useEffect, useRef, type CSSProperties, type KeyboardEvent } from 'react';
 import { DISTRICTS, type BandId, type DistrictId, type Progress } from '@shieldquest/shared';
 import { Icon } from '../../ui/Icon';
 import { StatusShape } from '../../ui/StatusBadge';
 import { districtSummary, type DistrictSummary } from './hubData';
-import { DistrictPlate } from './kit';
+import { DistrictPlate, revealInRow, useReducedMotionSetting } from './kit';
 
 interface DistrictPickerProps {
   focus: DistrictId | null;
@@ -49,6 +49,16 @@ function StatusLine({ s }: { s: DistrictSummary }) {
 }
 
 export function DistrictPicker({ focus, band, progress, onSelect, registerButton }: DistrictPickerProps) {
+  const listRef = useRef<HTMLUListElement>(null);
+  const reduced = useReducedMotionSetting();
+
+  // On phones the plates scroll sideways: keep the open district fully in view (also when it was opened
+  // from the map), so its selected state is never half hidden off the edge.
+  useEffect(() => {
+    if (!focus) return;
+    revealInRow(listRef.current, listRef.current?.querySelector('[aria-pressed="true"]') ?? null, reduced);
+  }, [focus, reduced]);
+
   // Arrow keys move between plates (Tab still works too); Home/End jump to the ends.
   const onKeyDown = (e: KeyboardEvent<HTMLUListElement>) => {
     const keys = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
@@ -68,7 +78,7 @@ export function DistrictPicker({ focus, band, progress, onSelect, registerButton
 
   return (
     <nav className="hub-picker" aria-label="Districts of Lumen">
-      <ul className="hub-picker__list" onKeyDown={onKeyDown}>
+      <ul className="hub-picker__list" ref={listRef} onKeyDown={onKeyDown}>
         {DISTRICTS.map((d) => {
           const s = districtSummary(d.id, band, progress);
           const on = focus === d.id;

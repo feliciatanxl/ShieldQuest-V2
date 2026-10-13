@@ -66,7 +66,9 @@ export function report(where: string, err: unknown): void {
 
 /** Swallows a promise rejection (resume/suspend can reject; older WebKit may not return a promise at all). */
 function settle(p: unknown, where: string): void {
-  if (p && typeof (p as Promise<void>).catch === 'function') (p as Promise<void>).catch((e: unknown) => report(where, e));
+  if (p && typeof (p as Promise<void>).catch === 'function') {
+    (p as Promise<void>).catch((e: unknown) => report(where, e));
+  }
 }
 
 export function soundOn(): boolean {

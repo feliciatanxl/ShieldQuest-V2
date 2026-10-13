@@ -29,10 +29,36 @@ const AssessPage = lazy(() => import('./assess/AssessPage'));
 const PortalPage = lazy(() => import('./portal/PortalPage'));
 const AnalyticsPage = lazy(() => import('./portal/AnalyticsPage'));
 
+// Calibration answers saved offline are retried from any page, not only /assess. The check reads storage
+// directly so the assessment code (and @shieldquest/shared) only downloads when something is waiting.
+const ASSESS_QUEUE_KEY = 'sq.assess.queue.v1';
+
+function hasQueuedAssessments(): boolean {
+  try {
+    const raw = localStorage.getItem(ASSESS_QUEUE_KEY);
+    return !!raw && raw !== '[]';
+  } catch {
+    return false;
+  }
+}
+
+function flushQueuedAssessments(): void {
+  if (!hasQueuedAssessments()) return;
+  import('./assess/storage')
+    .then((m) => m.flushAssessmentQueue())
+    .catch(() => undefined);
+}
+
 export function App() {
   const textScale = useSettings((s) => s.textScale);
   const motion = useSettings((s) => s.motion);
   useEffect(() => applySettingsToDocument({ textScale, motion }), [textScale, motion]);
+
+  useEffect(() => {
+    flushQueuedAssessments();
+    window.addEventListener('online', flushQueuedAssessments);
+    return () => window.removeEventListener('online', flushQueuedAssessments);
+  }, []);
 
   return (
     <>
@@ -55,6 +81,8 @@ export function App() {
 
           <Route path="/join" component={JoinPage} />
           <Route path="/j/:code" component={JoinPage} />
+          {/* Tent-card QR codes carry the table's totem: /j/CODE/hornbill */}
+          <Route path="/j/:code/:totem" component={JoinPage} />
           <Route path="/host" component={HostPage} />
           <Route path="/host/:code" component={HostPage} />
           <Route path="/screen/:code" component={ScreenPage} />

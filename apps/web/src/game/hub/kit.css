@@ -68,7 +68,8 @@
   font-weight: 600;
   font-size: 0.95rem;
   line-height: 1.1;
-  white-space: nowrap;
+  /* Wraps only when the text size is very large on a small phone, instead of running off-screen. */
+  max-width: 100%;
 }
 .hub-chip__word {
   color: var(--text-2);
@@ -161,6 +162,12 @@
 }
 
 /* ---- Small helpers ---- */
+/* Icons and shapes keep their size in tight rows (large text on small phones) instead of being squeezed. */
+.hub svg,
+.hub-ob svg,
+.hub-bb svg {
+  flex-shrink: 0;
+}
 .hub-plate {
   flex: none;
   display: block;

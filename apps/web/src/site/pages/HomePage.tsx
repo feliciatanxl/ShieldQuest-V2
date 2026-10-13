@@ -2,7 +2,7 @@ import { BANDS, GAME, GUARDIANS, LEARNING_LOOP, SKILLS, TACTICS, guardianById, s
 import { Link } from 'wouter';
 import { LinkButton } from '../../ui/Button';
 import { Icon, type IconName } from '../../ui/Icon';
-import { GuardianIcon } from '../../world';
+import { GuardianIcon } from '../../world/flat/GuardianIcon';
 import { StillpointClock } from '../art/Skyline';
 import { ClassroomArt, LoopArt } from '../art/Illustrations';
 import { HOME_FAQ, KPIS, LOOP_DETAIL, RESEARCH, ROADMAP, SESSION_BLOCKS, STATS, TEAM } from '../data';
@@ -787,7 +787,7 @@ function Partners() {
             {ROADMAP.map((r) => (
               <StaggerItem key={r.title}>
                 <span className="site-roadmap__when">{r.step}</span>
-                <h3>{r.title}</h3>
+                <h4>{r.title}</h4>
                 <p>{r.body}</p>
               </StaggerItem>
             ))}

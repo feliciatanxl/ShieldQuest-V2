@@ -86,7 +86,7 @@ export const theScreenshotYa: Mission = {
       feedback: {
         tactic: 'everyone-does-it',
         designedTo: 'make joining in feel like the normal, safe thing because everyone else already has',
-        saferMove: 'skip the react, check on the person privately, and report the post to the platform',
+        saferMove: 'to skip the react, check on the person privately, and report the post to the platform',
         ifItHappened: 'delete your react or caption, apologise privately, report the reposts and tell a trusted adult in charge, like the CCA advisor.',
       },
       aftershock: {
@@ -124,8 +124,8 @@ export const theScreenshotYa: Mission = {
       },
       feedback: {
         tactic: 'everyone-does-it',
-        saferMove: 'not join in, and also check on the person privately and report the post',
-        ifItHappened: 'if you stayed quiet, it is not too late to message the person, report the post and tell the CCA advisor.',
+        saferMove: 'to stay out of it, and also check on the person privately and report the post',
+        ifItHappened: 'it is not too late to message the person, report the post and tell the CCA advisor.',
       },
     },
     {
@@ -140,8 +140,8 @@ export const theScreenshotYa: Mission = {
       },
       feedback: {
         tactic: 'everyone-does-it',
-        saferMove: 'support the person directly, report it to the platform, and bring in a trusted adult',
-        ifItHappened: 'if it already went public, keep reporting reposts; if the platform does not respond properly, the Online Safety Commission can step in.',
+        saferMove: 'to support the person directly, report it to the platform, and bring in a trusted adult',
+        ifItHappened: 'keep reporting the reposts. If the platform does not respond properly within 24 hours, the Online Safety Commission can step in.',
       },
       aftershock: {
         id: 'afterglow-removed',
@@ -165,8 +165,8 @@ export const theScreenshotYa: Mission = {
       },
       feedback: {
         tactic: 'everyone-does-it',
-        saferMove: 'pair speaking up with a private check-in and a report, so the person gets support and the post comes down',
-        ifItHappened: 'if speaking up made you a target too, screenshot it, report it and tell a trusted adult. You do not have to handle it alone.',
+        saferMove: 'to pair speaking up with a private check-in and a report, so the person gets support and the post comes down',
+        ifItHappened: 'check on the person privately too. If the group turns on you, screenshot it, report it and tell a trusted adult. You do not have to handle it alone.',
       },
     },
   ],
@@ -203,7 +203,7 @@ export const theScreenshotYa: Mission = {
       ],
       channel: [
         { id: 'c-advisor', text: 'Tell the advisor the truth and report the repost. If the page ignores reports, the Online Safety Commission can step in.', quality: 'great', why: 'Points to the people and channels that can actually get it taken down.', guard: -5, doubt: 15 },
-        { id: 'c-forum', text: 'Maybe ask an online forum what to do.', quality: 'ok', why: 'Strangers online cannot fix this, and it may spread the story further.', guard: 0, doubt: 0 },
+        { id: 'c-senior', text: 'Maybe ask one of the CCA seniors what to do.', quality: 'ok', why: 'Talking it through helps, but a senior cannot get the post taken down. The advisor and a report can.', guard: 0, doubt: 5 },
         { id: 'c-expose', text: 'DM the admin and threaten to expose him.', quality: 'harmful', why: 'Threats escalate things and could put Bryan in more trouble.', guard: 0, doubt: -15 },
       ],
     },
@@ -215,7 +215,7 @@ export const theScreenshotYa: Mission = {
   },
   ifThen: {
     if: 'someone posts an edited photo or clip to mock a person in my chat',
-    then: "I won't react. I'll message them privately, report it and tell someone who can act",
+    then: 'skip the react, message them privately, report it, and tell someone who can act',
   },
   help: ['trusted-adult', 'osc', 'mindline-1771', 'sos-1767'],
   sources: [

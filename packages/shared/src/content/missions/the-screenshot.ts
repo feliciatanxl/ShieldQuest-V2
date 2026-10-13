@@ -84,7 +84,7 @@ export const theScreenshot: Mission = {
       },
       feedback: {
         tactic: 'everyone-does-it',
-        saferMove: 'not react or forward, send the person a kind private message, and report the post',
+        saferMove: 'to skip the react and the forward, send the person a kind private message, and report the post',
         ifItHappened: 'delete your sticker, say sorry to the person privately, and tell a teacher so the post can be taken down.',
       },
       aftershock: {
@@ -117,8 +117,8 @@ export const theScreenshot: Mission = {
       },
       feedback: {
         tactic: 'everyone-does-it',
-        saferMove: 'not join in, check on the person privately, and report the post',
-        ifItHappened: 'if you stayed quiet, it is not too late to message the person, report the post and tell a teacher.',
+        saferMove: 'to stay out of it, and also check on the person privately and report the post',
+        ifItHappened: 'it is not too late to message the person, report the post and tell a teacher.',
       },
     },
     {
@@ -133,8 +133,8 @@ export const theScreenshot: Mission = {
       },
       feedback: {
         tactic: 'everyone-does-it',
-        saferMove: 'support the person privately, report the post, and tell a trusted adult',
-        ifItHappened: 'if the photo already spread, keep reporting the reposts and let a teacher help take it down.',
+        saferMove: 'to support the person privately, report the post and tell a trusted adult',
+        ifItHappened: 'keep reporting the reposts and let a teacher help get them taken down.',
       },
       aftershock: {
         id: 'afterglow-taken-down',
@@ -192,7 +192,7 @@ export const theScreenshot: Mission = {
   },
   ifThen: {
     if: 'someone posts a photo to make fun of a classmate',
-    then: "I won't react or forward it. I'll check on them and tell a teacher",
+    then: 'skip the react and the forward, check on them privately, and tell a teacher',
   },
   help: ['trusted-adult', 'tinkle-friend', 'mindline-1771', 'osc'],
   sources: [

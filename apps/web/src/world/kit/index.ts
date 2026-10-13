@@ -8,7 +8,7 @@
  * ```tsx
  * <AdaptiveCanvas quality={quality} ariaLabel="Void deck at dusk: two friends on a bench" camera={{ position: [6, 5, 8], fov: 30 }}>
  *   <Lighting timeOfDay={mission.timeOfDay} mood={mood} />
- *   <FreezeDriver frozen={mode === 'frozen'} />            // calls useFreeze(frozen ? 1 : 0)
+ *   <Freeze amount={mode === 'frozen' ? 1 : 0} />          // tweens the shared uFreeze uniform (400 ms)
  *   <KitMesh geometry={setGeometry} />                     // one merged geometry per set (mergeKit)
  *   <Bean look={cast.look} pose="phone" position={spot.position} facing={spot.facing} frozen={frozen} t={t} />
  *   <Hotspot position={...} state="available" label="Notice board" onSelect={...} />
@@ -62,6 +62,8 @@ export {
   type BeanMaterialUniforms,
   type GuardianMaterialUniforms,
 } from './materials';
+/** <Freeze amount>: component form of useFreeze (call inside AdaptiveCanvas). */
+export { Freeze, type FreezeProps } from './Freeze';
 /** Palette, grades (blue-hour / bright-room / daylight) and mood tints. */
 export {
   PALETTE,

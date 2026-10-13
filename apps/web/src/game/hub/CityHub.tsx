@@ -272,8 +272,9 @@ export function CityHub() {
               <span>
                 {lanterns.lit}/{lanterns.max}
               </span>
-              <span className="hub-chip__word">lanterns lit</span>
-              {lanterns.dimmed > 0 && <span className="hub-chip__word">· {lanterns.dimmed} dimmed</span>}
+              <span className="hub-chip__word">
+                lanterns lit{lanterns.dimmed > 0 && ` · ${lanterns.dimmed} dimmed`}
+              </span>
             </p>
             {pending > 0 && (
               <div className="hub-motion" role="group" aria-label="Consequences on the way">

@@ -9,8 +9,6 @@ import { haptic } from '../../audio/sfx';
 import { Icon } from '../../ui/Icon';
 import { useSfx, useSoundCaption } from './kit';
 
-/** Matches the default HOLD press length in the mission player (GDD §5.3: 0.6 s). */
-const HOLD_MS = 600;
 const RING_R = 44;
 const RING_C = 2 * Math.PI * RING_R;
 const COUNT_FROM = 10;
@@ -19,6 +17,8 @@ type Phase = 'live' | 'charging' | 'held';
 
 export function HoldDemo({ band }: { band: BandId | null }) {
   const tapToHold = useSettings((s) => s.tapToHold);
+  // Same press length as the mission player (Comfort settings, 0.3-2.0 s; GDD §10.1).
+  const holdMs = useSettings((s) => s.holdMs);
   const sound = useSettings((s) => s.sound);
   const set = useSettings((s) => s.set);
   const sfx = useSfx();
@@ -31,7 +31,8 @@ export function HoldDemo({ band }: { band: BandId | null }) {
   const statusId = useId();
   const urgency = tacticById('urgency');
   // Juniors get pressure through characters, not countdown digits (GDD §5.4).
-  const showCountdown = band !== 'junior';
+  const gentle = useSettings((s) => s.gentle);
+  const showCountdown = band !== 'junior' && !gentle;
 
   // The fake deadline loops forever: the point is the feeling of hurry, not a real limit.
   useEffect(() => {
@@ -55,8 +56,8 @@ export function HoldDemo({ band }: { band: BandId | null }) {
     if (phase !== 'live') return;
     setPhase('charging');
     sfx('holdCharge');
-    timer.current = window.setTimeout(complete, HOLD_MS);
-  }, [phase, sfx, complete]);
+    timer.current = window.setTimeout(complete, holdMs);
+  }, [phase, sfx, complete, holdMs]);
 
   const cancel = useCallback(() => {
     window.clearTimeout(timer.current);
@@ -155,7 +156,7 @@ export function HoldDemo({ band }: { band: BandId | null }) {
                 className="hub-hold__fill"
                 strokeDasharray={RING_C}
                 strokeDashoffset={offset}
-                style={{ transitionDuration: phase === 'charging' ? `${HOLD_MS}ms` : '180ms' }}
+                style={{ transitionDuration: phase === 'charging' ? `${holdMs}ms` : '180ms' }}
               />
             </svg>
             <span className="hub-hold__label">{held ? <Icon name="check" size="1.6em" /> : 'HOLD'}</span>

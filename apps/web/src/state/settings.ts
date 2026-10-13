@@ -17,12 +17,18 @@ export interface Settings {
   plainLanguage: boolean;
   /** Lets players complete the Hold with a single tap instead of press-and-hold. */
   tapToHold: boolean;
+  /** How long press-and-hold takes, in ms (GDD §10.1: adjustable 0.3-2.0 s). */
+  holdMs: number;
+  /** Gentle mode (GDD §5.3, §10.1): no Pressure Surges and no countdown visuals in solo play. */
+  gentle: boolean;
   band: BandId | null;
   onboarded: boolean;
   set: (patch: Partial<Omit<Settings, 'set'>>) => void;
 }
 
 export const TEXT_SCALES = [0.9, 1, 1.15, 1.3, 1.5] as const;
+export const HOLD_MS_OPTIONS = [300, 600, 1000, 1500, 2000] as const;
+export const DEFAULT_HOLD_MS = 600;
 
 export const useSettings = create<Settings>()(
   persist(
@@ -34,6 +40,8 @@ export const useSettings = create<Settings>()(
       haptics: true,
       plainLanguage: false,
       tapToHold: false,
+      holdMs: DEFAULT_HOLD_MS,
+      gentle: false,
       band: null,
       onboarded: false,
       set: (patch) => set(patch),

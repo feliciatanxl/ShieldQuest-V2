@@ -20,10 +20,10 @@ export const busStopPickup: Mission = {
   resident: 'wei',
   cast: [
     { id: 'wei', name: 'Wei', role: 'resident', anchor: 'bus-stop', pose: 'stand', look: { body: '#60a5fa', accent: '#1e3a8a', hair: 'short' } },
-    { id: 'grown-up', name: 'Grown-up Wei doesn\'t know', role: 'stranger', anchor: 'crossing', pose: 'stand', faceless: true, look: { body: '#475569', accent: '#1e293b', hair: 'none' } },
+    { id: 'grown-up', name: 'Unknown grown-up', role: 'stranger', anchor: 'crossing', pose: 'stand', faceless: true, look: { body: '#475569', accent: '#1e293b', hair: 'none' } },
     { id: 'uncle-raj', name: 'Uncle Raj (school guard)', role: 'trusted', anchor: 'guard-post', pose: 'stand', look: { body: '#a3e635', accent: '#365314', hair: 'cap' } },
-    { id: 'mum', name: 'Mum', role: 'trusted', look: { body: '#f472b6', accent: '#831843', hair: 'long' } },
-    { id: 'hana', name: 'Hana', role: 'friend', look: { body: '#fbbf24', accent: '#78350f', hair: 'long' } },
+    { id: 'mum', name: 'Mum', role: 'trusted', faceless: true, look: { body: '#f472b6', accent: '#831843', hair: 'long' } },
+    { id: 'hana', name: 'Hana', role: 'friend', faceless: true, look: { body: '#fbbf24', accent: '#78350f', hair: 'long' } },
   ],
   intro: '5.30pm. CCA is over. Wei waits at the bus stop outside the school gate. Dark clouds are rolling in.',
   live: {
@@ -87,7 +87,7 @@ export const busStopPickup: Mission = {
       feedback: {
         tactic: 'authority',
         designedTo: 'make a stranger seem like someone your family trusts, so you go along without checking',
-        saferMove: 'stay where the safe adults are and call Mum to check, even if the grown-up seems nice',
+        saferMove: 'to stay where the safe adults are and call home to check, even if the grown-up seems nice',
         ifItHappened: 'it is never too late to stop, go back to the guard or a shop, and call home. You will not be in trouble.',
       },
       aftershock: {
@@ -98,6 +98,11 @@ export const busStopPickup: Mission = {
         title: 'Wei hesitates',
         text: 'Halfway to the car park, Wei slows down. Mum never sent a message. The grown-up did not know the code word. Wei can still stop.',
         effects: { trust: -1 },
+        fact: {
+          text: 'If you are ever in danger right now, go to a safe adult and call 999.',
+          source: 'SPF, Contact Us (999, 24/7)',
+          asOf: '2026-10-08',
+        },
         recovery: {
           prompt: 'Wei hesitates. What now?',
           options: [
@@ -120,8 +125,8 @@ export const busStopPickup: Mission = {
       },
       feedback: {
         tactic: 'urgency',
-        saferMove: 'slow down and check with your family yourself before you go anywhere',
-        ifItHappened: 'if you already went with someone, go back to a safe adult as soon as you can and call home. You will not be in trouble for coming back.',
+        saferMove: 'to slow down and check with your family yourself before you go anywhere',
+        ifItHappened: 'go back to a safe adult as soon as you can and call home. You will not be in trouble for coming back.',
       },
       aftershock: {
         id: 'afterglow-code-word',
@@ -145,8 +150,8 @@ export const busStopPickup: Mission = {
       },
       feedback: {
         tactic: 'secrecy',
-        saferMove: 'go to a safe adult nearby, like a guard or a teacher, and tell them what happened',
-        ifItHappened: 'if a stranger already talked you into leaving, go back to a safe adult as soon as you can and tell them. Telling is always the right thing.',
+        saferMove: 'to go to a safe adult nearby, like a guard or a teacher, and tell them what happened',
+        ifItHappened: 'go back to a safe adult as soon as you can and tell them. Telling is always the right thing.',
       },
       aftershock: {
         id: 'afterglow-school-notice',
@@ -204,7 +209,7 @@ export const busStopPickup: Mission = {
   },
   ifThen: {
     if: 'a grown-up I do not know says my family sent them to fetch me',
-    then: 'I will stay near a safe adult, like a guard or teacher, and call my family to check',
+    then: 'stay near a safe adult, like a guard or teacher, and call my family to check',
   },
   help: ['police-999', 'trusted-adult', 'tinkle-friend', 'mindline-1771'],
   sources: [

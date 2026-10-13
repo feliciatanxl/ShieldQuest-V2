@@ -8,9 +8,15 @@ import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import Fastify from 'fastify';
 import { GAME, MISSIONS } from '@shieldquest/shared';
-import { registerAssessmentRoutes } from './assess/routes';
+import { purgeAssessmentResponses, registerAssessmentRoutes } from './assess/routes';
 import { registerPortalRoutes } from './portal/routes';
 import { registerSquad } from './squad/server';
+
+// Railway does not set NODE_ENV. Without this a deployed server would accept the portal's development passcode
+// and expose development-only routes.
+if (!process.env.NODE_ENV && (process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_ENVIRONMENT)) {
+  process.env.NODE_ENV = 'production';
+}
 
 const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.HOST ?? '0.0.0.0';
@@ -49,4 +55,39 @@ if (existsSync(WEB_DIST)) {
   });
 }
 
+// Retention (GDD §11.15): assessment responses are deleted 90 days after the final report. That date is set by
+// the team as ASSESSMENT_PURGE_DATE (YYYY-MM-DD); from then on every stored response is removed.
+const purgeDate = Date.parse(process.env.ASSESSMENT_PURGE_DATE ?? '');
+if (Number.isFinite(purgeDate)) {
+  const sweep = async () => {
+    if (Date.now() < purgeDate) return;
+    const removed = await purgeAssessmentResponses(new Date());
+    if (removed) app.log.info({ removed }, 'assessment retention purge');
+  };
+  const timer = setInterval(() => void sweep().catch((err) => app.log.error(err, 'assessment purge failed')), 6 * 3_600_000);
+  timer.unref();
+  app.addHook('onClose', async () => clearInterval(timer));
+  void sweep().catch((err) => app.log.error(err, 'assessment purge failed'));
+}
+
 await app.listen({ port: PORT, host: HOST });
+
+// Graceful stop (Railway sends SIGTERM on redeploy): app.close() runs the squad server's shutdown, which writes a
+// crash snapshot for every live session so a restart mid-class resumes paused instead of losing the room.
+let stopping = false;
+for (const signal of ['SIGTERM', 'SIGINT'] as const) {
+  process.on(signal, () => {
+    if (stopping) return;
+    stopping = true;
+    app.log.info({ signal }, 'shutting down');
+    const force = setTimeout(() => process.exit(1), 10_000);
+    force.unref();
+    app
+      .close()
+      .then(() => process.exit(0))
+      .catch((err) => {
+        app.log.error(err, 'shutdown failed');
+        process.exit(1);
+      });
+  });
+}

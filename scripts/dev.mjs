@@ -7,7 +7,7 @@ const API_PORT = process.env.API_PORT ?? '8787';
 
 const procs = [
   ['server', '@shieldquest/server', '\x1b[34m', { PORT: API_PORT }],
-  ['web', '@shieldquest/web', '\x1b[35m', { PORT: '', SHIELDQUEST_SERVER: `http://localhost:${API_PORT}` }],
+  ['web', '@shieldquest/web', '\x1b[35m', { PORT: '', SHIELDQUEST_SERVER: `http://127.0.0.1:${API_PORT}` }],
 ].map(([name, ws, color, env]) => {
   const child = spawn('npm', ['run', 'dev', '-w', ws], {
     shell: true,

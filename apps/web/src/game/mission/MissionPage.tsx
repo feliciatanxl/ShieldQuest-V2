@@ -111,6 +111,8 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
   const band = useSettings((s) => s.band);
   const motion = useSettings((s) => s.motion);
   const tapToHold = useSettings((s) => s.tapToHold);
+  const holdMs = useSettings((s) => s.holdMs);
+  const gentle = useSettings((s) => s.gentle);
   const reduced = prefersReducedMotion(motion);
   const renderMode = useRenderMode();
   const cues = useCues();
@@ -131,7 +133,7 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
   const [shockSeed] = useState(newRunSeed);
   const inShocks = shockIndex < shocks.length;
 
-  const run = useMissionRun({ mission, band, reduced, cues, announce });
+  const run = useMissionRun({ mission, band, reduced, cues, announce, gentle });
   const { state, dispatch, t, paused, setPaused, hold, exits, unfolded, completion, nudge, freezeElapsed } = run;
   const { phase } = state;
   const [selected, setSelected] = useState<string | null>(null);
@@ -248,6 +250,7 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
       onHold={hold}
       tactics={ringView}
       tapToHold={tapToHold}
+      holdMs={holdMs}
       status={phase === 'live' ? 'ready' : state.surge === 'showing' ? 'surge' : 'held'}
       disabled={paused}
       onChargeStart={onChargeStart}
@@ -332,7 +335,7 @@ function MissionRunner({ mission, onReplay }: { mission: Mission; onReplay: () =
             t={t}
             looks={state.looks}
             onLook={onLook}
-            showCountdown={band !== 'junior'}
+            showCountdown={band !== 'junior' && !gentle}
             replyTried={state.replyTried}
             onReply={() => dispatch({ type: 'reply' })}
             reduced={reduced}

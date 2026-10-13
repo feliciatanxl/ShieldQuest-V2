@@ -1,4 +1,4 @@
-// A mission as a paper card: what it is about (with a content note), which skills it trains,
+// A mission as a paper card: what it is about (premise and topic), which skills it trains,
 // how much support it gives, and how it went last time. Status is always shape + word.
 import { bandById, skillById, type Mission, type Progress } from '@shieldquest/shared';
 import { LinkButton } from '../../ui/Button';
@@ -46,7 +46,7 @@ export function MissionCard({ mission, progress, highlighted, showBands }: Missi
       <p className="hub-mcard__note">
         <Icon name="info" size="1em" />
         <span>
-          <span className="hub-mcard__notelabel">Content note:</span> {mission.theme}
+          <span className="hub-mcard__notelabel">Topic:</span> {mission.theme}
         </span>
       </p>
 

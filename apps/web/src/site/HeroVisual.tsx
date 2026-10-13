@@ -1,5 +1,9 @@
-import { Component, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
-import { CityScene, useRenderMode } from '../world';
+import { Component, Suspense, lazy, useEffect, useRef, useState, type ReactNode } from 'react';
+// Deep imports, not '../world': its index also re-exports the 2D city and mission twins, which bring every
+// mission's content into the public site's first load.
+import { useRenderMode } from '../world/quality';
+
+const CityScene = lazy(() => import('../world/city/CityScene'));
 import { arc } from './art/geometry';
 import { SkylinePoster } from './art/Skyline';
 import { useReducedMotion } from './motion';

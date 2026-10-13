@@ -3,7 +3,8 @@ import { FLOOR, noiseBuffer, nyquist } from './engine';
 
 export const mtof = (midi: number): number => 440 * Math.pow(2, (midi - 69) / 12);
 
-export const clamp01 = (x: number | undefined): number => (Number.isFinite(x) ? Math.min(1, Math.max(0, x as number)) : 0);
+export const clamp01 = (x: number | undefined): number =>
+  Number.isFinite(x) ? Math.min(1, Math.max(0, x as number)) : 0;
 
 /** Safe array pick under noUncheckedIndexedAccess. */
 export function pick<T>(list: readonly T[], i: number, fallback: T): T {
